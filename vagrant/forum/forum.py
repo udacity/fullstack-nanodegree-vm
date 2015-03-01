@@ -51,6 +51,7 @@ def View(env, resp):
     '''
     # get posts from database
     posts = forumdb.GetAllPosts()
+    # print(posts)
     # send results
     headers = [('Content-type', 'text/html')]
     resp('200 OK', headers)
@@ -63,9 +64,10 @@ def Post(env, resp):
     The message the user posted is saved in the database, then it sends a 302
     Redirect back to the main page so the user can see their new post.
     '''
+
     # Get post content
     input = env['wsgi.input']
-    length = int(env.get('CONTENT_LENGTH', 0))
+    length = int(env.get('CONTENT_LENGTH', 0)) # this could cause an error if the string is empty wathc out!! use len() if that happens
     # If length is zero, post is empty - don't save it.
     if length > 0:
         postdata = input.read(length)
