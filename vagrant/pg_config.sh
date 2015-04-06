@@ -11,12 +11,6 @@ su vagrant -c 'createdb'
 su vagrant -c 'createdb forum'
 su vagrant -c 'psql forum -f /vagrant/forum/forum.sql'
 
-alertAlreadyAdded=$(grep -c "vagrantTip.txt" /home/vagrant/.bashrc)
-if [ $alertAlreadyAdded -eq 0 ]
-then
-    echo -e "\n# Print instructions to access vagrant shared directory\ncat /vagrant/.vagrantTip.txt\n" >> /home/vagrant/.bashrc
-    echo "Shared folder alert added to .bashrc"
-else
-    echo "Shared folder alert already present"
-fi
+vagrantTip="[35m[1mThe shared directory is located at /vagrant\nTo access your shared files: cd /vagrant(B[m"
+echo -e $vagrantTip > /etc/motd
 
