@@ -1,0 +1,3 @@
+
+[35m[1mThe shared directory is located at /vagrant
+To access your shared files: cd /vagrant(B[m
