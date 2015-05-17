@@ -69,7 +69,7 @@ def playerStandings():
     """
     c = connect()
     cur = c.cursor()
-    cur.execute("SELECT id, name, (SELECT COUNT(*) FROM matches WHERE winner_id = players.id) wins, (SELECT COUNT(*) FROM matches WHERE winner_id = players.id OR loser_id = players.id) matches FROM players;")
+    cur.execute("SELECT * FROM players_standings;")
     rows = cur.fetchall()
     return rows
 
@@ -83,7 +83,7 @@ def reportMatch(winner, loser):
     """
     c = connect()
     cur = c.cursor()
-    cur.execute("INSERT INTO matches (winner_id, loser_id) VALUES (%s, %s)", (winner,loser))
+    cur.execute("INSERT INTO matches (winner_id, loser_id) VALUES (%s, %s)", (winner, loser,))
     c.commit()
     c.close()
 
@@ -102,5 +102,12 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
-
+    c = connect()
+    cur = c.cursor()
+    cur.execute("SELECT pw1.id, pw1.name, pw2.id, pw2.name \
+                    FROM players_wins pw1, players_wins pw2 \
+                    WHERE \
+                    pw2.wins = pw1.wins \
+                    AND pw2.position = pw1.position + 1;")
+    rows = cur.fetchall()
+    return rows
