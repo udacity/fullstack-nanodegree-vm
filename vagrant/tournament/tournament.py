@@ -11,32 +11,58 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
-def deleteMatches():
-    """Remove all the match records from the database."""
+def executeAndCommit(query, data=()):
+    """This function provide functionality to execute query on database
+        and commit maded changes
+
+    Args:
+        query: query to execute in db with commiting changes
+        data: data need to pass for execute method
+    """
     c = connect()
     cur = c.cursor()
-    cur.execute("DELETE FROM matches")
+    # If there is no data to execute, than not pass it to execute method
+    if not data:
+        cur.execute(query)
+    else:
+        cur.execute(query, data)
     c.commit()
     c.close()
+
+
+def executeAndFetch(query):
+    """This function provide functionality to execute query on database
+    and return all rows from it.
+
+    Args:
+        query: query to execute in db and fetch result
+    Returns:
+        all rows returned by query
+    """
+    c = connect()
+    cur = c.cursor()
+    cur.execute(query)
+    data = cur.fetchall()
+    c.close()
+    return data
+
+
+def deleteMatches():
+    """Remove all the match records from the database."""
+    executeAndCommit("DELETE FROM matches")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    c = connect()
-    cur = c.cursor()
-    cur.execute("DELETE FROM players")
-    c.commit()
-    c.close()
+    executeAndCommit("DELETE FROM players")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    c = connect()
-    cur = c.cursor()
-    cur.execute("SELECT COUNT(*) FROM players")
-    rows = cur.fetchall()
-    c.close()
-    return rows[0][0]
+    data = executeAndFetch("SELECT COUNT(*) FROM players")
+    # Players count is stored in first column of first row
+    count = data[0][0]
+    return count
 
 
 def registerPlayer(name):
@@ -48,11 +74,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    c = connect()
-    cur = c.cursor()
-    cur.execute("INSERT INTO players (name) VALUES (%s)", (name,))
-    c.commit()
-    c.close()
+    executeAndCommit("INSERT INTO players (name) VALUES (%s)", (name,))
 
 
 def playerStandings():
@@ -68,12 +90,7 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    c = connect()
-    cur = c.cursor()
-    cur.execute("SELECT * FROM players_standings;")
-    rows = cur.fetchall()
-    c.close()
-    return rows
+    return executeAndFetch("SELECT * FROM players_standings;")
 
 
 def reportMatch(winner, loser):
@@ -83,12 +100,9 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    c = connect()
-    cur = c.cursor()
-    cur.execute("INSERT INTO matches (winner_id, loser_id) VALUES (%s, %s)",
-                (winner, loser,))
-    c.commit()
-    c.close()
+    executeAndCommit("INSERT INTO matches (winner_id, loser_id)\
+                        VALUES (%s, %s)",
+                     (winner, loser,))
 
 
 def swissPairings():
@@ -106,13 +120,10 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    c = connect()
-    cur = c.cursor()
-    cur.execute("SELECT pw1.id, pw1.name, pw2.id, pw2.name \
+    # mod(pw1.position, 2) = 1 - grab only even position players
+    # pw2.position = pw1.position + 1 - grab next player ordered by wins
+    return executeAndFetch("SELECT pw1.id, pw1.name, pw2.id, pw2.name \
                     FROM players_wins pw1, players_wins pw2 \
                     WHERE \
-                    pw2.wins = pw1.wins \
+                    mod(pw1.position, 2) = 1 \
                     AND pw2.position = pw1.position + 1;")
-    rows = cur.fetchall()
-    c.close()
-    return rows

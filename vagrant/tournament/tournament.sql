@@ -19,7 +19,8 @@ CREATE TABLE matches (id SERIAL PRIMARY KEY,
 CREATE VIEW players_standings AS SELECT id, name, 
 (SELECT COUNT(*) FROM matches WHERE winner_id = players.id) wins, 
 (SELECT COUNT(*) FROM matches WHERE winner_id = players.id OR loser_id = players.id) matches 
-FROM players;
+FROM players
+ORDER BY wins DESC;
 
 CREATE VIEW players_wins AS 
 SELECT row_number() OVER(ORDER BY wins DESC) as position, ps.id, ps.name, ps.wins
