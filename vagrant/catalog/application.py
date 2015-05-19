@@ -1,4 +1,4 @@
 #!/usr/bin/env python
-from catalog import catalog
+from app import app
 
-catalog.run(host='0.0.0.0', debug = True)
+app.run(host='0.0.0.0', debug=True)

@@ -1,6 +1,6 @@
 from flask import render_template
-from catalog import catalog
+from app import app
 
-@catalog.route('/')
+@app.route('/')
 def index():
     return render_template('index.html')
