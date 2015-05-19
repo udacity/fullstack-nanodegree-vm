@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container" style="margin-top:50px">
+	<form action="/catalog" method="post" name="catalog">
+		{{form.hidden_tag()}}
+		{{form.name()}}
+		<input type="submit" value="Create" />
+	</form>
+</div>
+{% endblock %}

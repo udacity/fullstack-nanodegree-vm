@@ -1,4 +1,5 @@
-from flask import render_template
+from flask import render_template, request, url_for, redirect
+from forms import CategoryForm
 from app import app
 
 
@@ -16,31 +17,36 @@ def category_index():
 
 @app.route('/catalog/new', methods=['GET'])
 def category_create():
-    return render_template('index.html')
+    form = CategoryForm()
+    return render_template('category/create.html',
+                           form=form)
 
 
 @app.route('/catalog', methods=['POST'])
 def category_store():
-    return render_template('index.html')
+    form = CategoryForm(request.form)
+    return redirect(url_for('category_view',
+                            category_name=form.name.data))
 
 
 @app.route('/catalog/<category_name>', methods=['GET'])
-def category_view():
-    return render_template('index.html')
+def category_view(category_name):
+    return render_template('category/view.html',
+                           name=category_name)
 
 
 @app.route('/catalog/<category_name>/edit', methods=['GET'])
-def category_edit():
+def category_edit(category_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/update', methods=['POST'])
-def category_update():
+def category_update(category_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/delete', methods=['POST'])
-def category_delete():
+def category_delete(category_name):
     return render_template('index.html')
 
 
@@ -48,30 +54,30 @@ def category_delete():
 
 
 @app.route('/catalog/<category_name>/item/<item_name>/new', methods=['GET'])
-def item_create():
+def item_create(category_name, item_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/item', methods=['POST'])
-def item_store():
+def item_store(category_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/item/<item_name>', methods=['GET'])
-def item_view():
+def item_view(category_name, item_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/item/<item_name>/edit', methods=['GET'])
-def item_edit():
+def item_edit(category_name, item_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/item/<item_name>/update', methods=['POST'])
-def item_update():
+def item_update(category_name, item_name):
     return render_template('index.html')
 
 
 @app.route('/catalog/<category_name>/item/<item_name>/delete', methods=['POST'])
-def item_delete():
+def item_delete(category_name, item_name):
     return render_template('index.html')
