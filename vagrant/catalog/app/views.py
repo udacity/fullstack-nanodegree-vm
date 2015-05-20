@@ -4,10 +4,21 @@ from models import Category, Item
 from database import db_session
 from app import app
 
+# Inject categories in all views
+
+
+@app.context_processor
+def inject_categories():
+    return dict(categories=Category.query.all())
+
+
+# Basic view
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    categories = Category.query.all()
+    return render_template('index.html',
+                           categories=categories)
 
 # CRUD for categories
 
@@ -36,7 +47,10 @@ def category_store():
 
 @app.route('/catalog/<category_name>', methods=['GET'])
 def category_view(category_name):
-    category = Category.query.filter(Category.name == category_name).first()
+    category = Category.query.\
+        join(Category.items).\
+        filter(Category.name == category_name).\
+        first()
     return render_template('category/view.html',
                            category=category)
 

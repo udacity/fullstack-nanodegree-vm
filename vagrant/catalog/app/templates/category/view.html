@@ -1,8 +1,24 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container" style="margin-top:50px">
-	{{category.name}}
-	<p>{{category.description}}</p>
+<div class="header">
+    <h1>{{category.name}}</h1>
+    <h2>{{category.description}}</h2>
+    <a class="pure-button" href="{{url_for('category_edit', category_name=category.name)}}">Edit category</a>
+    <a class="pure-button" href="{{url_for('category_edit', category_name=category.name)}}">Add new item</a>
+</div>
+
+<div class="content">
+    <div class="pure-g">
+        {% for i in category.items %}
+            <div class="pure-u card">
+                <a href="{{url_for('item_view', category_name=category.name,item_name=i.name)}}">
+                    <img class="pure-img" src="http://cssdeck.com/uploads/media/items/6/6f3nXse.png" />
+                    <h3 class="text-center">{{i.name}}</h3>
+                </a>
+            </div>
+
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="header">
+    <h1>{{category.name}}</h1>
+    <h2>{{category.description}}</h2>
+    <a class="pure-button" href="#">Edit category</a>
+</div>
+
+<div class="content">
+    <div class="">
+        {% for i in category.items %}
+            <div class="">
+                <p>{{i.name}}</p>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

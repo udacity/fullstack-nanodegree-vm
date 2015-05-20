@@ -1,9 +1,17 @@
 {% extends 'base.html' %}
 
 {% block body %}
-<div class="container" style="margin-top:50px">
-	{{item.name}}
-	<p>{{item.description}}</p>
-	<p>{{item.category.name}}</p>
+<div class="header">
+    <h1>{{item.name}}</h1>
+    <h2>{{item.description}}</h2>
+</div>
+
+<div class="content">
+    <div class="pure-g">
+        <div class="pure-u">
+            <img class="pure-img" src="http://cssdeck.com/uploads/media/items/6/6f3nXse.png" />
+            <h3 class="text-center">{{item.name}}</h3>
+        </div>
+    </div>
 </div>
 {% endblock %}

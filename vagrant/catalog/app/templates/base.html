@@ -1,8 +1,5 @@
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+<html lang="en">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
@@ -12,18 +9,45 @@
 
     <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
 
-    <link rel="stylesheet" href="{{ static('css/bootstrap.css') }}">
-    <link rel="stylesheet" href="{{ static('css/main.css') }}">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="{{static('css/layouts/side-menu-old-ie.css')}}">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="{{static('css/layouts/side-menu.css')}}">
+    <!--<![endif]-->
+    <link rel="stylesheet" href="{{static('css/main.css')}}">
 </head>
 <body>
     <!--[if lt IE 7]>
         <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
     <![endif]-->
+    <div id="layout">
+        <!-- Menu toggle -->
+        <a href="#menu" id="menuLink" class="menu-link">
+            <!-- Hamburger icon -->
+            <span></span>
+        </a>
 
-    {% block body %}
-    {% endblock %}
+        <div id="menu">
+            <div class="pure-menu">
+                <a class="pure-menu-heading" href="#">Catalogs</a>
+                <ul class="pure-menu-list">
+                {% for c in categories %}
+                <li class="pure-menu-item {{ 'pure-menu-selected' if category and c.name == category.name }}">
+                    <a class="pure-menu-link" href="{{url_for('category_view',category_name=c.name)}}">{{c.name}}</a>
+                </li>
+                {% endfor %}
+                </ul>
+            </div>
+        </div>
 
-    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
-    <script>window.jQuery || document.write('<script src="{{ static('js/vendors/jquery-1.8.3.min.js') }}"><\/script>')</script>
+        <div id="main">
+        {% block body %}
+        {% endblock %}
+        </div>
+    </div>
+
+    <script src="{{static('js/ui.js')}}"></script>
 </body>
 </html>

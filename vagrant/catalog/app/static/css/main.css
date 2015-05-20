@@ -1,0 +1,16 @@
+.card {
+  margin: 8px;
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  background-color: #fafafa;
+  height: 35%;
+  transition: all 400ms cubic-bezier(0.165, 0.84, 0.44, 1);
+  box-shadow: 0 1px 4px 0 rgba(0, 0, 0, 0.37);
+}
+.card:hover {
+  cursor: pointer;
+}
+.text-center {
+  text-align: center;
+}
