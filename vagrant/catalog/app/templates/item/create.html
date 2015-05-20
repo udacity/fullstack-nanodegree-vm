@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container" style="margin-top:50px">
+	<form action="/item" method="post" name="item">
+		{{form.hidden_tag()}}
+		{{form.name()}}
+		{{form.description()}}
+		{{form.category_id()}}
+		<input type="submit" value="Create" />
+	</form>
+</div>
+{% endblock %}

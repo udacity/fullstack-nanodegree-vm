@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="container" style="margin-top:50px">
+	{{item.name}}
+	<p>{{item.description}}</p>
+	<p>{{item.category.name}}</p>
+</div>
+{% endblock %}
