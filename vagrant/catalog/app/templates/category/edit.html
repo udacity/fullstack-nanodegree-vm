@@ -3,17 +3,29 @@
 {% block body %}
 <div class="header">
     <h1>{{category.name}}</h1>
-    <h2>{{category.description}}</h2>
-    <a class="pure-button" href="#">Edit category</a>
+    <form class="pure-form pure-form-aligned" action="{{url_for('category_delete', category_name=category.name)}}" method="post">
+        <button type="submit" class="pure-button pure-button-primary">Delete</button>
+    </form>
 </div>
 
 <div class="content">
-    <div class="">
-        {% for i in category.items %}
-            <div class="">
-                <p>{{i.name}}</p>
+    <form class="pure-form pure-form-aligned" action="{{url_for('category_update', category_name=category.name)}}" method="post">
+        <fieldset>
+            {{form.hidden_tag()}}
+            <div class="pure-control-group">
+                <label for="name">Name</label>
+                {{form.name()}}
             </div>
-        {% endfor %}
-    </div>
+
+            <div class="pure-control-group">
+                <label for="name">Description</label>
+                {{form.description()}}
+            </div>
+
+            <div class="pure-controls">
+                <button type="submit" class="pure-button pure-button-primary">Submit</button>
+            </div>
+        </fieldset>
+    </form>
 </div>
 {% endblock %}

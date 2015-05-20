@@ -4,6 +4,7 @@
 <div class="header">
     <h1>{{item.name}}</h1>
     <h2>{{item.description}}</h2>
+    <a class="pure-button" href="{{url_for('item_edit', category_name=category_name, item_name=item.name)}}">Edit item</a>
 </div>
 
 <div class="content">

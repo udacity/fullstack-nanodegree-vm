@@ -16,9 +16,7 @@ def inject_categories():
 
 @app.route('/')
 def index():
-    categories = Category.query.all()
-    return render_template('index.html',
-                           categories=categories)
+    return render_template('index.html')
 
 # CRUD for categories
 
@@ -37,18 +35,18 @@ def category_create():
 
 @app.route('/catalog', methods=['POST'])
 def category_store():
-    form = CategoryForm(request.form)
-    new_category = Category(form.name.data, 'Test')
-    db_session.add(new_category)
-    db_session.commit()
-    return redirect(url_for('category_view',
-                            category_name=form.name.data))
+    form = CategoryForm()
+    if form.validate_on_submit():
+        new_category = Category(form.name.data, form.description.data)
+        db_session.add(new_category)
+        db_session.commit()
+        return redirect(url_for('category_view',
+                                category_name=form.name.data))
 
 
 @app.route('/catalog/<category_name>', methods=['GET'])
 def category_view(category_name):
     category = Category.query.\
-        join(Category.items).\
         filter(Category.name == category_name).\
         first()
     return render_template('category/view.html',
@@ -57,19 +55,26 @@ def category_view(category_name):
 
 @app.route('/catalog/<category_name>/edit', methods=['GET'])
 def category_edit(category_name):
+    form = CategoryForm()
     category = Category.query.filter(Category.name == category_name).first()
+    form.name.data = category.name
+    form.description.data = category.description
     return render_template('category/edit.html',
-                           category=category)
+                           category=category,
+                           form=form)
 
 
 @app.route('/catalog/<category_name>/update', methods=['POST'])
 def category_update(category_name):
-    form = CategoryForm(request.form)
-    category = Category.query.filter(Category.name == category_name).first()
-    db_session.add(category)
-    db_session.commit()
-    return redirect(url_for('category_view',
-                            category_name=form.name.data))
+    form = CategoryForm()
+    if form.validate_on_submit():
+        category = Category.query.filter(Category.name == category_name).first()
+        category.name = form.name.data
+        category.description = form.description.data
+        db_session.add(category)
+        db_session.commit()
+        return redirect(url_for('category_view',
+                                category_name=form.name.data))
 
 
 @app.route('/catalog/<category_name>/delete', methods=['POST'])
@@ -83,42 +88,41 @@ def category_delete(category_name):
 # CRUD for items
 
 
-@app.route('/item/new', methods=['GET'])
-def item_create():
+@app.route('/catalog/<category_name>/item/new', methods=['GET'])
+def item_create(category_name):
     form = ItemForm()
-    form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
     return render_template('item/create.html',
-                           form=form)
+                           form=form,
+                           category_name=category_name)
 
 
-@app.route('/item', methods=['POST'])
-def item_store():
+@app.route('/catalog/<category_name>/item', methods=['POST'])
+def item_store(category_name):
     form = ItemForm()
-    form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
     if form.validate_on_submit():
-        new_category = Item(form.name.data,
-                            form.name.description,
-                            'Test',
-                            form.category_id.data)
-        db_session.add(new_category)
+        category = Category.query.filter(Category.name == category_name).one()
+        new_item = Item(form.name.data,
+                        form.description.data,
+                        'Test',
+                        category.id)
+        db_session.add(new_item)
         db_session.commit()
-        category = Category.query.filter(Category.id == form.category_id.data).first()
         return redirect(url_for('item_view',
-                                category_name=category.name,
+                                category_name=category_name,
                                 item_name=form.name.data))
     return 'fail'
 
 
 @app.route('/catalog/<category_name>/item/<item_name>', methods=['GET'])
 def item_view(category_name, item_name):
-    item = Item.query.filter(Item.category.has(name=category_name)).first()
+    item = Item.query.filter(Item.category.has(name=category_name)).one()
     return render_template('item/view.html',
                            item=item)
 
 
 @app.route('/catalog/<category_name>/item/<item_name>/edit', methods=['GET'])
 def item_edit(category_name, item_name):
-    item = Item.query.filter(Item.category.has(name=category_name)).first()
+    item = Item.query.filter(Item.category.has(name=category_name)).one()
     return render_template('category/edit.html',
                            item=item)
 
@@ -127,8 +131,8 @@ def item_edit(category_name, item_name):
 def item_update(category_name, item_name):
     form = CategoryForm(request.form)
     form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
-    item = Item.query.filter(Item.category.has(name=category_name)).first()
-    category = Category.query.filter(Category.id == form.category_id.data).first()
+    item = Item.query.filter(Item.category.has(name=category_name)).one()
+    category = Category.query.filter(Category.id == form.category_id.data).one()
     db_session.add(item)
     db_session.commit()
     return redirect(url_for('item_view',
@@ -138,7 +142,7 @@ def item_update(category_name, item_name):
 
 @app.route('/catalog/<category_name>/item/<item_name>/delete', methods=['POST'])
 def item_delete(category_name, item_name):
-    item = Item.query.filter(Item.category.has(name=category_name)).first()
+    item = Item.query.filter(Item.category.has(name=category_name)).one()
     db_session.delete(item)
     db_session.commit()
     return redirect(url_for('index'))

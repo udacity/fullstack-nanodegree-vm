@@ -1,14 +1,14 @@
 from flask.ext.wtf import Form
-from wtforms import TextField, SelectField
+from wtforms import TextField
 from wtforms.validators import Required
+from wtforms.widgets import TextArea
 
 
 class CategoryForm(Form):
     name = TextField('name', validators=[Required()])
-    description = TextField('description', validators=[Required()])
+    description = TextField('description',  widget=TextArea())
 
 
 class ItemForm(Form):
     name = TextField('name', validators=[Required()])
-    description = TextField('description', validators=[Required()])
-    category_id = SelectField(u'Group', coerce=int)
+    description = TextField('description', validators=[Required()], widget=TextArea())

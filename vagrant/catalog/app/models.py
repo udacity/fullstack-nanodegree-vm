@@ -17,7 +17,7 @@ class Category(Base):
     __tablename__ = 'categories'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
+    name = Column(String(80), nullable=False, unique=True)
     description = Column(String(250), nullable=True)
     items = relationship("Item", backref="Category")
 
@@ -30,7 +30,7 @@ class Item(Base):
     __tablename__ = 'items'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String(80), nullable=False)
+    name = Column(String(80), nullable=False, unique=True)
     description = Column(String(250), nullable=False)
     image_name = Column(String(250), nullable=True)
     category_id = Column(Integer, ForeignKey('categories.id'))

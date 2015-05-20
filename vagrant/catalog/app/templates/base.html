@@ -38,6 +38,9 @@
                     <a class="pure-menu-link" href="{{url_for('category_view',category_name=c.name)}}">{{c.name}}</a>
                 </li>
                 {% endfor %}
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{url_for('category_create')}}">Add category</a>
+                </li>
                 </ul>
             </div>
         </div>
