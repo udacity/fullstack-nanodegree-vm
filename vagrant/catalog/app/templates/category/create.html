@@ -1,13 +1,14 @@
-{% extends 'base.html' %}
+{% extends 'base_form.html' %}
 
-{% block body %}
-<div class="header">
+{% block header_div %}
     <h1>Category Creation</h1>
     <h2>It is place where you can create new catalog</h2>
-</div>
+{% endblock %}
 
-<div class="content">
-	<form class="pure-form pure-form-aligned" action="{{url_for('category_store')}}" method="post">
+{% block form %}
+	<form class="pure-form pure-form-aligned" 
+			action="{{url_for('category_store')}}" 
+			method="POST">
 	    <fieldset>
 	    	{{form.hidden_tag()}}
 	        <div class="pure-control-group">
@@ -25,5 +26,4 @@
 	        </div>
 	    </fieldset>
 	</form>
-</div>
 {% endblock %}

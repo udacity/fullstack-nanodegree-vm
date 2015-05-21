@@ -3,15 +3,17 @@
 {% block body %}
 <div class="header">
     <h1>{{item.name}}</h1>
-    <h2>{{item.description}}</h2>
     <a class="pure-button" href="{{url_for('item_edit', category_name=category_name, item_name=item.name)}}">Edit item</a>
 </div>
 
 <div class="content">
     <div class="pure-g">
         <div class="pure-u">
-            <img class="pure-img" src="http://cssdeck.com/uploads/media/items/6/6f3nXse.png" />
-            <h3 class="text-center">{{item.name}}</h3>
+            <img class="pure-img" src="{{static('uploads/' + item.image_name)}}" />
+        </div>
+		<div class="pure-u">
+			<h2>Description:</h2>
+            <p>{{item.description}}</p>
         </div>
     </div>
 </div>

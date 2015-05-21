@@ -13,11 +13,10 @@
         {% for i in category.items %}
             <div class="pure-u card">
                 <a href="{{url_for('item_view', category_name=category.name,item_name=i.name)}}">
-                    <img class="pure-img" src="http://cssdeck.com/uploads/media/items/6/6f3nXse.png" />
+                    <img class="pure-img" src="{{static('uploads/' + i.image_name)}}" />
                     <h3 class="text-center">{{i.name}}</h3>
                 </a>
             </div>
-
         {% endfor %}
     </div>
 </div>
