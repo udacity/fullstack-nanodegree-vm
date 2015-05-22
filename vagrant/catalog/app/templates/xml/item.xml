@@ -1,0 +1,6 @@
+<item>
+    <id>{{item.id}}</id>
+    <name>{{item.name}}</name>
+    <description>{{item.description}}</description>
+    <image>{{static('uploads/' + item.image_name)}}</image>
+</item>

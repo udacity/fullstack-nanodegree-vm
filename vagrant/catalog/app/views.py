@@ -1,4 +1,4 @@
-from flask import render_template, request, url_for, redirect, flash
+from flask import render_template, request, url_for, redirect, flash, jsonify
 from forms import CategoryForm, ItemForm, DeleteForm, images
 from models import Category, Item, User
 from database import db_session
@@ -38,16 +38,23 @@ def inject_categories():
 def index():
     """Basic view, that grab last five items"""
     items = Item.query.order_by(Item.id.desc()).limit(5)
+    return render_template('index.html',
+                           items=items)
+
+
+@app.route('/login')
+def login():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
-    return render_template('index.html',
-                           items=items,
+    return render_template('login.html',
                            STATE=state)
 
 
 @app.route('/catalog/new', methods=['GET'])
 def category_create():
     """Create category with WTFForm"""
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     form = CategoryForm()
     return render_template('category/create.html',
                            form=form)
@@ -56,10 +63,14 @@ def category_create():
 @app.route('/catalog', methods=['POST'])
 def category_store():
     """Store new category, check for database & forms error"""
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     form = CategoryForm()
     if form.validate_on_submit():
         try:
-            new_category = Category(form.name.data, form.description.data)
+            new_category = Category(form.name.data,
+                                    form.description.data,
+                                    login_session['user_id'])
             db_session.add(new_category)
             db_session.commit()
             return redirect(url_for('category_view',
@@ -88,9 +99,13 @@ def category_view(category_name):
 def category_edit(category_name):
     """Edit category name and description method
         and button for delete"""
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    category = Category.query.filter(Category.name == category_name).first()
+    if category.author_id != login_session['user_id']:
+        return render_template('401.html', name='category')
     form = CategoryForm()
     delete_form = DeleteForm()
-    category = Category.query.filter(Category.name == category_name).first()
     form.name.data = category.name
     form.description.data = category.description
     return render_template('category/edit.html',
@@ -102,10 +117,14 @@ def category_edit(category_name):
 @app.route('/catalog/<category_name>/update', methods=['POST'])
 def category_update(category_name):
     """Update category name and description in database"""
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    category = Category.query.filter(Category.name == category_name).first()
+    if category.author_id != login_session['user_id']:
+        return ""
     form = CategoryForm()
     if form.validate_on_submit():
         try:
-            category = Category.query.filter(Category.name == category_name).first()
             category.name = form.name.data
             category.description = form.description.data
             db_session.add(category)
@@ -125,9 +144,13 @@ def category_update(category_name):
 
 @app.route('/catalog/<category_name>/delete', methods=['POST'])
 def category_delete(category_name):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    category = Category.query.filter(Category.name == category_name).first()
+    if category.author_id != login_session['user_id']:
+        return render_template('401.html', name='category')
     delete_form = DeleteForm()
     if delete_form.validate_on_submit():
-        category = Category.query.filter(Category.name == category_name).first()
         db_session.delete(category)
         db_session.commit()
         return redirect(url_for('index'))
@@ -141,6 +164,8 @@ def category_delete(category_name):
 
 @app.route('/catalog/<category_name>/item/new', methods=['GET'])
 def item_create(category_name):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     form = ItemForm()
     return render_template('item/create.html',
                            form=form,
@@ -149,6 +174,8 @@ def item_create(category_name):
 
 @app.route('/catalog/<category_name>/item', methods=['POST'])
 def item_store(category_name):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     form = ItemForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
     category = Category.query.filter(Category.name == category_name).first()
@@ -157,7 +184,8 @@ def item_store(category_name):
         try:
             new_item = Item(form.name.data,
                             form.description.data,
-                            category.id)
+                            category.id,
+                            login_session['user_id'])
             if 'image' in request.files and request.files['image']:
                 filename = images.save(request.files['image'])
                 new_item.image_name = filename
@@ -190,13 +218,17 @@ def item_view(category_name, item_name):
 
 @app.route('/catalog/<category_name>/item/<item_name>/edit', methods=['GET'])
 def item_edit(category_name, item_name):
-    form = ItemForm()
-    form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
-    delete_form = DeleteForm()
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
     item = Item.query.\
         filter(Item.name == item_name).\
         filter(Item.category.has(name=category_name)).\
         first()
+    if item.author_id != login_session['user_id']:
+        return render_template('401.html', name='category')
+    form = ItemForm()
+    form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
+    delete_form = DeleteForm()
     form.name.data = item.name
     form.description.data = item.description
     form.category_id.data = item.category_id
@@ -209,14 +241,18 @@ def item_edit(category_name, item_name):
 
 @app.route('/catalog/<category_name>/item/<item_name>/update', methods=['POST'])
 def item_update(category_name, item_name):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    item = Item.query.\
+        filter(Item.name == item_name).\
+        filter(Item.category.has(name=category_name)).\
+        first()
+    if item.author_id != login_session['user_id']:
+        return render_template('401.html', name='item')
     form = ItemForm()
     form.category_id.choices = [(c.id, c.name) for c in Category.query.order_by('name')]
     if form.validate_on_submit():
         try:
-            item = Item.query.\
-                filter(Item.name == item_name).\
-                filter(Item.category.has(name=category_name)).\
-                first()
             category = Category.query.filter(Category.id == form.category_id.data).first()
             item.name = form.name.data
             item.description = form.description.data
@@ -243,9 +279,16 @@ def item_update(category_name, item_name):
 
 @app.route('/catalog/<category_name>/item/<item_name>/delete', methods=['POST'])
 def item_delete(category_name, item_name):
+    if 'username' not in login_session:
+        return redirect(url_for('login'))
+    item = Item.query.\
+        filter(Item.name == item_name).\
+        filter(Item.category.has(name=category_name)).\
+        first()
+    if item.author_id != login_session['user_id']:
+        return render_template('401.html', name='item')
     delete_form = DeleteForm()
     if delete_form.validate_on_submit():
-        item = Item.query.filter(Item.category.has(name=category_name)).first()
         db_session.delete(item)
         db_session.commit()
         return redirect(url_for('index'))
@@ -312,7 +355,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
     # Get user info
@@ -334,16 +377,9 @@ def gconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
 
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
-    flash("you are now logged in as %s" % login_session['username'])
-    print "done!"
-    return output
+    return render_template('user/view.html',
+                           username=login_session['username'],
+                           picture=login_session['picture'])
 
 # User Helper Functions
 
@@ -381,13 +417,82 @@ def gdisconnect():
             json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    access_token = credentials.access_token
+    access_token = credentials
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
+    if result['status'] == '200':
+        # Reset the user's sesson.
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        return redirect(url_for('index'))
     if result['status'] != '200':
         # For whatever reason, the given token was invalid.
         response = make_response(
             json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
+# API Endpoints
+
+
+@app.route('/catalog.json')
+def categories_json():
+    categories = Category.query.all()
+    return jsonify(Categories=[c.to_json for c in categories])
+
+
+@app.route('/catalog/<category_name>.json')
+def category_json(category_name):
+    category = Category.query.\
+        filter(Category.name == category_name).\
+        first()
+    return jsonify(Category=category.to_json)
+
+
+@app.route('/catalog/<category_name>/item/<item_name>.json')
+def item_json(category_name, item_name):
+    item = Item.query.\
+        filter(Item.name == item_name).\
+        filter(Item.category.has(name=category_name)).\
+        first()
+    return jsonify(item=item.to_json)
+
+
+@app.route('/catalog.xml')
+def categories_xml():
+    categories = Category.query.all()
+    xml = render_template('xml/categories.xml',
+                          categories=categories)
+    response = make_response(xml, 200)
+    response.headers['Content-Type'] = 'text/xml'
+    return response
+
+
+@app.route('/catalog/<category_name>.xml')
+def category_xml(category_name):
+    category = Category.query.\
+        filter(Category.name == category_name).\
+        first()
+    xml = render_template('xml/category.xml',
+                          category=category)
+    response = make_response(xml, 200)
+    response.headers['Content-Type'] = 'text/xml'
+    return response
+
+
+@app.route('/catalog/<category_name>/item/<item_name>.xml')
+def item_xml(category_name, item_name):
+    item = Item.query.\
+        filter(Item.name == item_name).\
+        filter(Item.category.has(name=category_name)).\
+        first()
+    xml = render_template('xml/item.xml',
+                          item=item)
+    response = make_response(xml, 200)
+    response.headers['Content-Type'] = 'text/xml'
+    return response

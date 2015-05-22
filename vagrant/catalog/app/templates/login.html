@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="header">
+    <h1>Welcome to Vanadium23 Catalog Project</h1>
+    <h2>List of recently added items</h2>
+</div>
+
+<div class="content">
+    <div class="pure-g">
+        <div class="pure-u">
+        {% if 'username' not in session %}
+        <span id="signinButton">
+          <span
+            class="g-signin"
+            data-scope="openid email"
+            data-clientid="261874505746-c2qvcgtn95o8v20hribca3osa39s1vkt.apps.googleusercontent.com"
+            data-redirecturi="postmessage"
+            data-accesstype="offline"
+            data-cookiepolicy="single_host_origin"
+            data-callback="signInCallback"
+            data-approvalprompt="force"
+            data-scope="https://www.googleapis.com/auth/plus.login">
+          </span>
+        </span>
+        {% else %}
+        <a href="{{url_for('gdisconnect')}}">Logout</a>
+        {% endif %}
+        </div>
+        <div class="pure-u">
+            <div id="result"></div>
+        </div>
+    </div>
+</div>
+{% endblock %}

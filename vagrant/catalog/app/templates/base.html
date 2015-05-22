@@ -43,26 +43,18 @@
                     <a class="pure-menu-link" href="{{url_for('category_view',category_name=c.name)}}">{{c.name}}</a>
                 </li>
                 {% endfor %}
+                {% if 'username' not in session %}
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{url_for('login')}}">Login</a>
+                </li>
+                {% else %}
                 <li class="pure-menu-item">
                     <a class="pure-menu-link" href="{{url_for('category_create')}}">Add category</a>
                 </li>
                 <li class="pure-menu-item">
-                <div class="content">
-                    <span id="signinButton">
-                      <span
-                        class="g-signin"
-                        data-scope="openid email"
-                        data-clientid="261874505746-c2qvcgtn95o8v20hribca3osa39s1vkt.apps.googleusercontent.com"
-                        data-redirecturi="postmessage"
-                        data-accesstype="offline"
-                        data-cookiepolicy="single_host_origin"
-                        data-callback="signInCallback"
-                        data-approvalprompt="force"
-                        data-scope="https://www.googleapis.com/auth/plus.login">
-                      </span>
-                    </span>
-                </div>
+                    <a class="pure-menu-link" href="{{url_for('gdisconnect')}}">Logout</a>
                 </li>
+                {% endif %}
                 </ul>
             </div>
         </div>
@@ -89,7 +81,7 @@
                     success: function(result) {
                         // Handle or verify the server response if necessary.
                         if (result) {
-                            $('#result').html('Login Successful!</br>' + result + '</br>Redirecting...')
+                            $("#result").html('Login Successful!</br>' + result + '</br>Redirecting...')
                             setTimeout(function() {
                                 window.location.href = "/";
                             }, 4000);
@@ -97,7 +89,7 @@
                         } else if (authResult['error']) {
                             console.log('There was an error: ' + authResult['error']);
                         } else {
-                            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+                            $("#result").html('Failed to make a server-side call. Check your configuration and console.');
                         }
                     }
 

@@ -1,0 +1,19 @@
+<categories>
+{% for c in categories %}
+    <category>
+    <id>{{c.id}}</id>
+    <name>{{c.name}}</name>
+    <description>{{c.description}}</description>
+    <items>
+    {% for i in c.items %}
+        <item>
+            <id>{{i.id}}</id>
+            <name>{{i.name}}</name>
+            <description>{{i.description}}</description>
+            <image>{{url_for('item_view', category_name=c.name, item_name=i.name)}}</image>
+        </item>
+    {% endfor %}
+    </items>
+    </category>
+{% endfor %}
+</categories>

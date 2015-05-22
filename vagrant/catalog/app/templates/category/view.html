@@ -4,8 +4,10 @@
 <div class="header">
     <h1>{{category.name}}</h1>
     <h2>{{category.description}}</h2>
+    {% if 'username' in session and session['user_id'] == category.author_id %}
     <a class="pure-button" href="{{url_for('category_edit', category_name=category.name)}}">Edit category</a>
     <a class="pure-button" href="{{url_for('item_create', category_name=category.name)}}">Add new item</a>
+    {% endif %}
 </div>
 
 <div class="content">

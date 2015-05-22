@@ -3,7 +3,9 @@
 {% block body %}
 <div class="header">
     <h1>{{item.name}}</h1>
+    {% if 'username' in session and session['user_id'] == item.author_id %}
     <a class="pure-button" href="{{url_for('item_edit', category_name=category_name, item_name=item.name)}}">Edit item</a>
+    {% endif %}
 </div>
 
 <div class="content">
@@ -14,6 +16,8 @@
 		<div class="pure-u">
 			<h2>Description:</h2>
             <p>{{item.description}}</p>
+            <h2>Created by:</h2>
+            <p>{{item.author.name}}</p>
         </div>
     </div>
 </div>

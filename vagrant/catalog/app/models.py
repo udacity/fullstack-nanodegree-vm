@@ -20,10 +20,22 @@ class Category(Base):
     name = Column(String(80), nullable=False, unique=True)
     description = Column(String(250), nullable=True)
     items = relationship("Item", backref="Category")
+    author_id = Column(Integer, ForeignKey('users.id'))
+    author = relationship('User')
 
-    def __init__(self, name, description):
+    def __init__(self, name, description, author_id):
         self.name = name
         self.description = description
+        self.author_id = author_id
+
+    @property
+    def to_json(self):
+        category = {"name": self.name,
+                    "description": self.description,
+                    "id": self.id
+                    }
+        category['items'] = [i.to_json for i in self.items]
+        return category
 
 
 class Item(Base):
@@ -35,9 +47,20 @@ class Item(Base):
     image_name = Column(String(250), nullable=False, default='no-image-large.png')
     category_id = Column(Integer, ForeignKey('categories.id'))
     category = relationship('Category')
+    author_id = Column(Integer, ForeignKey('users.id'))
+    author = relationship('User')
 
-    def __init__(self, name, description, category_id):
+    def __init__(self, name, description, category_id, author_id):
         self.name = name
         self.description = description
-        # self.image_name = image_name
         self.category_id = category_id
+        self.author_id = author_id
+
+    @property
+    def to_json(self):
+        return {"id": self.id,
+                "name": self.name,
+                "description": self.description,
+                "image_name": self.image_name,
+                "category_id": self.category_id
+                }
