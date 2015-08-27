@@ -10,25 +10,26 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+
 """Method to exit connection after commiting to  database"""
-def exit(connection)
-	connection.commit()
-	connection.close()
+def exit(connection):
+    connection.commit()
+    connection.close()
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-	connection = connect()
-	context = connection.cursor()
+    connection = connect()
+    context = connection.cursor()
 
-	"""Call database to delete all matches."""
-	context.execute("DELETE FROM Matches;")
-	exit(connection)
+    """Call database to delete all matches."""
+    context.execute("DELETE FROM Matches;")
+    exit(connection)
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-	connection = connect()
+    connection = connect()
     context = connection.cursor()
 
     """Call database to delete all registered players."""
@@ -38,15 +39,15 @@ def deletePlayers():
 
 def countPlayers():
     """Returns the number of players currently registered."""
-	connection = connect()
+    connection = connect()
     context = connection.cursor()
 
     """Call database to the Players' count."""
     context.execute("SELECT COUNT(*) FROM Players;")
-	count = context.fetchone()
+    count = context.fetchone()
 	
-	connection.close(
-	return count[0])
+    connection.close()
+    return count[0]
 
 
 def registerPlayer(name):
@@ -58,7 +59,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-	connection = connect()
+    connection = connect()
     context = connection.cursor()
 
     """Call database to insert new player to tournament."""
@@ -79,15 +80,15 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-	connection = connect()
+    connection = connect()
     context = connection.cursor()
-
+    
     """Call database to delete all matches."""
-    context.execute("SELECT * FROM PlayerStandings;")
-	result = context.fetchall()
+    context.execute("SELECT * FROM Standings;")
+    result = context.fetchall()
     connection.close()
-	
-	return results
+    
+    return results
 
 
 def reportMatch(winner, loser=None, is_a_draw=False):
@@ -98,16 +99,16 @@ def reportMatch(winner, loser=None, is_a_draw=False):
       loser:  the id number of the player who lost, Default value is 'None' which indicates a bye for the winner
 	  is_a_draw: optional parameter that indicates whether the match is a draw. Default is false
     """
-	connection = connect()
+    connection = connect()
     context = connection.cursor()
-	
-	"""If it is a bye insert the winner, otherwise insert all fields"""
-	if (loser == None)
-		context.execute("INSERT INTO Matches (winner_id) Values(%s);",(winner,))
-	else
-		context.execute("INSERT INTO Matches (winner_id, loser_id, is_a_draw) VALUES(%s, %s, %s);",(winner, loser, is_a_draw,))
-
-	exit(connection)
+    
+    """If it is a bye insert the winner, otherwise insert all fields"""
+    if loser==None:
+        context.execute("INSERT INTO Matches (winner_id) Values(%s);",(winner,))
+    else:
+        context.execute("INSERT INTO Matches (winner_id, loser_id, is_a_draw) VALUES(%s, %s, %s);",(winner, loser, is_a_draw,))
+    
+    exit(connection)
 
  
 def swissPairings():

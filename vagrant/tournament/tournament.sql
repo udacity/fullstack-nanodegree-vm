@@ -6,11 +6,9 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
--- The tournament database
-\c tournament;
 
 -- Ability to drop database, tables and views
-drop database if exists  tournament;
+drop DATABASE if exists tournament;
 drop table if exists Players;
 drop table if exists Matches;
 drop view if exists Standings;
@@ -19,6 +17,10 @@ drop view if exists OponentWins;
 drop view if exists TotalWins;
 drop view if exists TotalLosses;
 drop view if exists TotalDraws;
+
+-- The tournament database
+CREATE DATABASE tournament;
+\c tournament
 
 -- The players table
 CREATE TABLE Players(
