@@ -4,6 +4,7 @@
 #
 
 import psycopg2
+import bleach
 
 
 def connect():
@@ -63,7 +64,7 @@ def registerPlayer(name):
     context = connection.cursor()
 
     """Call database to insert new player to tournament."""
-    context.execute("INSERT INTO Players VALUES (%s)", (name,))
+    context.execute("INSERT INTO Players (name)  VALUES (%s);", (name,))
     exit(connection)
 
 
@@ -88,7 +89,8 @@ def playerStandings():
     result = context.fetchall()
     connection.close()
     
-    return results
+    print(result)
+    return result
 
 
 def reportMatch(winner, loser=None, is_a_draw=False):
@@ -106,7 +108,7 @@ def reportMatch(winner, loser=None, is_a_draw=False):
     if loser==None:
         context.execute("INSERT INTO Matches (winner_id) Values(%s);",(winner,))
     else:
-        context.execute("INSERT INTO Matches (winner_id, loser_id, is_a_draw) VALUES(%s, %s, %s);",(winner, loser, is_a_draw,))
+        context.execute("INSERT INTO Matches (winner_id, loser_id, draw) VALUES(%s, %s, %s);",(winner, loser, is_a_draw,))
     
     exit(connection)
 
@@ -127,4 +129,32 @@ def swissPairings():
         name2: the second player's name
     """
 
+    """Access current standings"""
+    standings = playerStandings()
+    print('standings')
+    print(standings)
+    pairings = []
+
+    last_index = len(standings) - 1
+    iterations = []
+    for iterate in range(0, len(standings)/2):
+        print iterate
+        iterations.append(iterate * 2)
+ 
+    print iterations
+    for player_index in iterations:
+        pairing = ()
+        print('player_index')
+        print(player_index)
+        for index in range(player_index, player_index + 2):
+            print('index')
+            print(index)
+            pairing+=(standings[index][0],standings[index][1])
+            print(pairing)
+        pairings.append(pairing)
+    
+    if last_index%2==0:
+        pairings.append(standings[last_index][0],standings[last_index][1])
+
+    return pairings
 
