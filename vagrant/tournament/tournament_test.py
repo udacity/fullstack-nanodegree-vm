@@ -101,57 +101,6 @@ def testReportMatches():
     print "7. After a match, players have updated standings."
 
 
-def testReportMatchesWithDraws():
-    deleteMatches()
-    deletePlayers()
-    registerPlayer("Bruno Walton")
-    registerPlayer("Boots O'Neal")
-    registerPlayer("Cathy Burton")
-    registerPlayer("Diane Grant")
-    """registerPlayer("John Woods")
-    registerPlayer("Julia Sky")"""
-    standings = playerStandings()
-    [id1, id2, id3, id4, id5, id6] = [row[0] for row in standings]
-    reportMatch(id1, id2, true)
-    reportMatch(id3, id4, true)
-    standings = playerStandings()
-    for (i, n, w, m) in standings:
-        if m != 1:
-            raise ValueError("Each player should have one match recorded.")
-        if i in (id1, id3) and w != 1:
-            raise ValueError("Each match winner should have one win recorded.")
-        elif i in (id2, id4) and w != 0:
-            raise ValueError("Each match loser should have zero wins recorded.")
-    print "7. After a match, players have updated standings."
-
-
-def testReportMatchesWithRematch():
-    deleteMatches()
-    deletePlayers()
-    registerPlayer("Bruno Walton")
-    registerPlayer("Boots O'Neal")
-    registerPlayer("Cathy Burton")
-    registerPlayer("Diane Grant")
-    standings = playerStandings()
-    [id1, id2, id3, id4] = [row[0] for row in standings]
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
-    """These are the rematches that should not occur"""
-    reportMatch(id2, id1)
-    reportMatch(id4, id13)
-    reportMatch(id1, id2)
-    reportMatch(id3, id4)
-    standings = playerStandings()
-    for (i, n, w, m) in standings:
-        if m != 1:
-            raise ValueError("Each player should have one match recorded.")
-        if i in (id1, id3) and w != 1:
-            raise ValueError("Each match winner should have one win recorded.")
-        elif i in (id2, id4) and w != 0:
-            raise ValueError("Each match loser should have zero wins recorded.")
-    print "7. After a match, players have updated standings."
-
-
 def testPairings():
     deleteMatches()
     deletePlayers()
@@ -176,6 +125,122 @@ def testPairings():
     print "8. After one match, players with one win are paired."
 
 
+def testReportMatchesWithDraws():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("Bruno Walton")
+    registerPlayer("Boots O'Neal")
+    registerPlayer("Cathy Burton")
+    registerPlayer("Diane Grant")
+    standings = playerStandings()
+    [id1, id2, id3, id4] = [row[0] for row in standings]
+    reportMatch(id1, id2, True)
+    reportMatch(id3, id4, True)
+    standings = playerStandings()
+    for (i, n, w, m) in standings:
+        if m != 1:
+            raise ValueError("Each player should have one match recorded.")
+        if i in (id1, id2, id3, id4) and playerDrawCount(i) != 1:
+            raise ValueError("Each match player should have a draw recorded.")
+        elif i in (id1, id2, id3, id4) and w != 0:
+            raise ValueError("Each match player  should have zero wins recorded.")
+    print "9. After a match with draws, players have updated standings."
+
+
+def testReportMatchesWithPreventRematch():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("Bruno Walton")
+    registerPlayer("Boots O'Neal")
+    registerPlayer("Cathy Burton")
+    registerPlayer("Diane Grant")
+    standings = playerStandings()
+    [id1, id2, id3, id4] = [row[0] for row in standings]
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
+
+    """These are the rematches that should not occur"""
+    reportMatch(id2, id1)
+    reportMatch(id4, id3)
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
+    standings = playerStandings()
+    for (i, n, w, m) in standings:
+        if m != 1:
+            raise ValueError("Each player should have one match recorded.")
+        if i in (id1, id3) and w != 1:
+            raise ValueError("Each match winner should have one win recorded.")
+        elif i in (id2, id4) and w != 0:
+            raise ValueError("Each match loser should have zero wins recorded.")
+    print "10. After preventing rematches, players have updated standings."
+
+
+def testReportMatchesWithBuy():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("John Woods")
+    registerPlayer("Julia Sky")
+    standings = playerStandings()
+    [id1, id2] = [row[0] for row in standings]
+    reportMatch(id1)
+    reportMatch(id2)
+    standings = playerStandings()
+    for (i, n, w, m) in standings:
+        if m != 1:
+            raise ValueError("Each player should have one match recorded.")
+        if i in (id1, id2) and w != 1:
+            raise ValueError("Each match winner should have one win recorded.")
+    print "11. After a bye match, players have updated standings."
+
+
+def testReportMatchesWithNoBuyRematch():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("John Woods")
+    registerPlayer("Julia Sky")
+    standings = playerStandings()
+    [id1, id2] = [row[0] for row in standings]
+    reportMatch(id1)
+    reportMatch(id2)
+
+    """ Attempt to give these players another bye win"""
+    reportMatch(id1)
+    reportMatch(id2)
+
+    standings = playerStandings()
+    for (i, n, w, m) in standings:
+        if m != 1:
+            raise ValueError("Each player should have one match recorded.")
+        if i in (id1, id2) and w != 1:
+            raise ValueError("Each match winner should have one win recorded.")
+    print "12. After a bye match with rematch prevention, players have updated standings."
+
+
+def testPlayoffsPairings():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("Bruno Walton")
+    registerPlayer("Boots O'Neal")
+    registerPlayer("Cathy Burton")
+    registerPlayer("Diane Grant")
+    registerPlayer("John Woods")
+    registerPlayer("Julia Sky")
+    standings = playerStandings()
+    [id1, id2, id3, id4, id5, id6] = [row[0] for row in standings]
+    reportMatch(id1, id2, true)
+    reportMatch(id3, id4, true)
+    standings = playerStandings()
+    for (i, n, w, m) in standings:
+        if m != 1:
+            raise ValueError("Each player should have one match recorded.")
+        if i in (id1, id3) and w != 1:
+            raise ValueError("Each match winner should have one win recorded.")
+        elif i in (id2, id4) and w != 0:
+            raise ValueError("Each match loser should have zero wins recorded.")
+    print "9. After a match, players have updated standings."
+
+
+
 if __name__ == '__main__':
     testDeleteMatches()
     testDelete()
@@ -185,6 +250,10 @@ if __name__ == '__main__':
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
+    testReportMatchesWithDraws()
+    testReportMatchesWithPreventRematch()
+    testReportMatchesWithBuy()
+    testReportMatchesWithNoBuyRematch()
     print "Success!  All tests pass!"
 
 

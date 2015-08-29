@@ -32,9 +32,8 @@ CREATE TABLE Players(
 -- The matches table, matches are played by two players
 CREATE TABLE Matches(
 	PRIMARY KEY(winner_id,loser_id),
-	CONSTRAINT keys UNIQUE(winner_id,loser_id),
 	winner_id INT references players(id) NOT NULL,
-	loser_id INT references players(id),
+	loser_id INT DEFAULT 0,
 	draw BOOLEAN Default False,
 	match_date timestamp DEFAULT current_timestamp
 );
@@ -61,7 +60,7 @@ ORDER BY losses DESC;
 CREATE VIEW TotalDraws AS
 SELECT Players.id, COALESCE(COUNT(*), 0) AS draws
 FROM Players LEFT JOIN Matches
-ON Players.id = Matches.winner_id or Players.id = Matches.loser_id
+ON Players.id=Matches.winner_id OR Players.id=Matches.loser_id
 WHERE Matches.draw=True
 GROUP BY Players.id
 ORDER BY draws DESC;
@@ -81,5 +80,6 @@ SELECT Players.id, Players.name, COALESCE(TotalWins.wins, 0), TotalMatches.total
 FROM Players
 LEFT JOIN TotalWins ON Players.id=TotalWins.id
 LEFT JOIN TotalMatches ON Players.id=TotalMatches.id
-ORDER BY TotalWins.wins DESC, TotalMatches.total_matches DESC, Players.date_created DESC;
+LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
+ORDER BY TotalWins.wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC,  Players.date_created DESC;
 

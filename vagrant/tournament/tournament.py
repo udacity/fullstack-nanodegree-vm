@@ -64,7 +64,7 @@ def registerPlayer(name):
     context = connection.cursor()
 
     """Call database to insert new player to tournament."""
-    context.execute("INSERT INTO Players (name)  VALUES (%s);", (name,))
+    context.execute("INSERT INTO Players (name)  VALUES (%s);", (bleach.clean(name),))
     exit(connection)
 
 
@@ -106,9 +106,22 @@ def reportMatch(winner, loser=None, is_a_draw=False):
     
     """If it is a bye insert the winner, otherwise insert all fields"""
     if loser==None:
-        context.execute("INSERT INTO Matches (winner_id) Values(%s);",(winner,))
+        context.execute("""
+        INSERT INTO Matches (winner_id) 
+        SELECT %s 
+        WHERE 
+        NOT EXISTS (
+        SELECT * FROM Matches 
+        WHERE winner_id=%s);""",(winner, winner,))
     else:
-        context.execute("INSERT INTO Matches (winner_id, loser_id, draw) VALUES(%s, %s, %s);",(winner, loser, is_a_draw,))
+        context.execute("""
+        INSERT INTO Matches (winner_id, loser_id, draw) 
+        SELECT %s, %s, %s 
+        WHERE 
+        NOT EXISTS ( 
+        SELECT * FROM Matches 
+        WHERE (winner_id=%s AND loser_id=%s)
+        OR (loser_id=%s AND winner_id=%s));""",(winner, loser, is_a_draw, winner, loser, winner, loser,))
     
     exit(connection)
 
@@ -157,4 +170,17 @@ def swissPairings():
         pairings.append(standings[last_index][0],standings[last_index][1])
 
     return pairings
+
+"""The draw count for the player given id."""
+def playerDrawCount(id):
+    """Returns the number of draw outcomes by a player."""
+    connection = connect()
+    context = connection.cursor()
+
+    """Call database to the Players' draw count."""
+    context.execute("SELECT draws  FROM TotalDraws WHERE TotalDraws.id=%s;",[id])
+    draws = context.fetchone()
+
+    connection.close()
+    return draws[0]
 
