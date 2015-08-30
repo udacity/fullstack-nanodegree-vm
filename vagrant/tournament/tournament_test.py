@@ -216,6 +216,39 @@ def testReportMatchesWithNoBuyRematch():
     print "12. After a bye match with rematch prevention, players have updated standings."
 
 
+
+def testSortingWithOMW():
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("Bruno Walton")
+    registerPlayer("Boots O'Neal")
+    registerPlayer("Cathy Burton")
+    registerPlayer("Diane Grant")
+
+    standings = playerStandings()
+    [id1, id2, id3, id4] = [row[0] for row in standings]
+    
+    """ Having Player plays 4 matches with wins"""
+    reportMatch(id1, id2)
+    reportMatch(id1, id3)
+    reportMatch(id1, id4)
+
+    reportMatch(id2, id4)
+    reportMatch(id2)
+
+    reportMatch(id4, id3)
+    reportMatch(id3)
+
+    standings = playerStandings()
+
+    expected = [id1, id2, id4, id3]
+    actual = [row[0] for row in standings]
+
+    if expected != actual:
+       raise ValueError("The sorting order did not show as exptected.")
+    print "13. Verifying sortings, players have updated standings."
+
+
 def testPlayoffsPairings():
     deleteMatches()
     deletePlayers()
@@ -254,6 +287,7 @@ if __name__ == '__main__':
     testReportMatchesWithPreventRematch()
     testReportMatchesWithBuy()
     testReportMatchesWithNoBuyRematch()
+    testSortingWithOMW()
     print "Success!  All tests pass!"
 
 

@@ -112,7 +112,7 @@ def reportMatch(winner, loser=None, is_a_draw=False):
         WHERE 
         NOT EXISTS (
         SELECT * FROM Matches 
-        WHERE winner_id=%s);""",(winner, winner,))
+        WHERE (winner_id=%s AND loser_id=0));""",(winner, winner,))
     else:
         context.execute("""
         INSERT INTO Matches (winner_id, loser_id, draw) 

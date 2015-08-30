@@ -12,8 +12,9 @@ drop DATABASE if exists tournament;
 drop table if exists Players;
 drop table if exists Matches;
 drop view if exists Standings;
+drop view if exists CompleteStandings;
 drop view if exists TotalMatches;
-drop view if exists OponentWins;
+drop view if exists OpponentWins;
 drop view if exists TotalWins;
 drop view if exists TotalLosses;
 drop view if exists TotalDraws;
@@ -74,6 +75,21 @@ LEFT JOIN TotalLosses ON Players.id=TotalLosses.id
 LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
 ORDER BY total_matches DESC;
 
+-- Reporting opponent wins based on matches with players
+CREATE VIEW OpponentMatchWins AS
+SELECT Players.id, COALESCE(SUM(TotalWins.wins), 0) as opponent_wins
+FROM
+Players
+LEFT JOIN (
+SELECT winner_id AS player, loser_id AS opponent FROM Matches
+UNION
+SELECT winner_id AS opponent, loser_id AS player FROM Matches
+) AS OpponentTable
+ON Players.id = OpponentTable.player
+LEFT JOIN TotalWins ON OpponentTable.opponent = TotalWins.id
+GROUP BY Players.id
+ORDER BY opponent_wins DESC;
+
 -- Reporting player standings based wins, losses, draws. Report is sorted by wins, oponent wins, and name.
 CREATE VIEW Standings AS
 SELECT Players.id, Players.name, COALESCE(TotalWins.wins, 0), TotalMatches.total_matches
@@ -81,5 +97,16 @@ FROM Players
 LEFT JOIN TotalWins ON Players.id=TotalWins.id
 LEFT JOIN TotalMatches ON Players.id=TotalMatches.id
 LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
-ORDER BY TotalWins.wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC,  Players.date_created DESC;
+LEFT JOIN OpponentMatchWins on Players.id=OpponentMatchWins.id
+ORDER BY TotalWins.wins DESC, OpponentMatchWins.opponent_wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC,  Players.date_created DESC;
+
+-- Reporting complete standing of player including column for draws and wins by opponent 
+CREATE View CompleteStandings AS
+SELECT Players.id, Players.name, COALESCE(TotalWins.wins, 0) AS wins, TotalMatches.total_matches, TotalDraws.draws AS draws, OpponentMatchWins.opponent_wins AS omw
+FROM Players
+LEFT JOIN TotalWins ON Players.id=TotalWins.id
+LEFT JOIN TotalMatches ON Players.id=TotalMatches.id
+LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
+LEFT JOIN OpponentMatchWins on Players.id=OpponentMatchWins.id
+ORDER BY TotalWins.wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC, OpponentMatchWins.opponent_wins DESC, Players.date_created DESC;
 
