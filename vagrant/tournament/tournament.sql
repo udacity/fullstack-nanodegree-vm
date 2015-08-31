@@ -12,7 +12,6 @@ drop DATABASE if exists tournament;
 drop table if exists Players;
 drop table if exists Matches;
 drop view if exists Standings;
-drop view if exists CompleteStandings;
 drop view if exists TotalMatches;
 drop view if exists OpponentWins;
 drop view if exists TotalWins;
@@ -97,16 +96,7 @@ FROM Players
 LEFT JOIN TotalWins ON Players.id=TotalWins.id
 LEFT JOIN TotalMatches ON Players.id=TotalMatches.id
 LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
-LEFT JOIN OpponentMatchWins on Players.id=OpponentMatchWins.id
-ORDER BY TotalWins.wins DESC, OpponentMatchWins.opponent_wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC,  Players.date_created DESC;
-
--- Reporting complete standing of player including column for draws and wins by opponent 
-CREATE View CompleteStandings AS
-SELECT Players.id, Players.name, COALESCE(TotalWins.wins, 0) AS wins, TotalMatches.total_matches, TotalDraws.draws AS draws, OpponentMatchWins.opponent_wins AS omw
-FROM Players
-LEFT JOIN TotalWins ON Players.id=TotalWins.id
-LEFT JOIN TotalMatches ON Players.id=TotalMatches.id
-LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
-LEFT JOIN OpponentMatchWins on Players.id=OpponentMatchWins.id
-ORDER BY TotalWins.wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC, OpponentMatchWins.opponent_wins DESC, Players.date_created DESC;
+LEFT JOIN OpponentMatchWins ON Players.id=OpponentMatchWins.id
+LEFT JOIN TotalLosses ON Players.id=TotalLosses.id
+ORDER BY TotalWins.wins DESC, OpponentMatchWins.opponent_wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC, TotalLosses.losses ASC, Players.date_created DESC;
 

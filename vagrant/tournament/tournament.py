@@ -89,7 +89,6 @@ def playerStandings():
     result = context.fetchall()
     connection.close()
     
-    print(result)
     return result
 
 
@@ -147,17 +146,34 @@ def swissPairings():
     """Access current standings"""
     standings = playerStandings()
     pairings = []
-
+    buy_play=()
+    last_index = len(standings) - 1
     iterations = []
+
+    if len(standings)%2!=0:
+        buy_play=selectBuyPlay(standings)
+        standings.remove(buy_play)
+  
     for iterate in range(0, len(standings)/2):
         iterations.append(iterate * 2)
  
+    """Resetting the pairing to ensure no reruns"""
+    standing = selectBestMatch(standings)
+
+    """Creating the final pairs"""
     for player_index in iterations:
         pairing = ()
         for index in range(player_index, player_index + 2):
             pairing+=(standings[index][0],standings[index][1])
         pairings.append(pairing)
-    
+
+    """In case number of players are odd, the pairing has one singleton"""
+    if buy_play!=():
+        pairings.append((buy_play[0], buy_play[1]))
+
+    """if last_index%2==0:
+        pairings.append((standings[last_index][0],standings[last_index][1]))
+    """
     return pairings
 
 
@@ -168,9 +184,51 @@ def playerDrawCount(id):
     context = connection.cursor()
 
     """Call database to the Players' draw count."""
-    context.execute("SELECT draws  FROM TotalDraws WHERE TotalDraws.id=%s;",[id])
+    context.execute("SELECT draws FROM TotalDraws WHERE TotalDraws.id=%s;",[id])
     draws = context.fetchone()
 
     connection.close()
     return draws[0]
 
+"""Select a player for buy"""
+def selectBuyPlay(players):
+    connection = connect()
+    context = connection.cursor()
+
+    result=()
+    for player in players:
+        context.execute("""SELECT winner_id FROM Matches WHERE winner_id=%s AND loser_id=0;""",[player[0]])
+        res=context.fetchone()
+        if res!=player[0]:
+            result = player
+            break
+
+    connection.close
+    return result
+
+
+"""Select a player that has not matched before"""
+def selectBestMatch(standings):
+    connection = connect()
+    context = connection.cursor()
+
+    iterations=[]
+    for iterate in range(0, len(standings)/2):
+        iterations.append(iterate * 2)
+
+    size = len(standings)
+    for i in iterations:
+        for j in range(i+1,size):
+            context.execute("""
+                SELECT winner_id FROM Matches WHERE winner_id=%s AND loser_id=%s
+                UNION 
+                SELECT loser_id FROM Matches WHERE winner_id=%s AND loser_id=%s;""",(standings[i][0],standings[j][0],standings[j][0],standings[i][0],))
+            res=context.fetchall()
+            if res==[]:
+                if j!=i+1:
+                    tmp=standings[i+1]
+                    standings[i+1]=standings[j]
+                    standings[j]=tmp
+                break
+
+    return standings

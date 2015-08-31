@@ -249,28 +249,54 @@ def testSortingWithOMW():
     print "13. Verifying sortings, players have updated standings."
 
 
-def testPlayoffsPairings():
+def testTournamentWithSwissPairings():
     deleteMatches()
     deletePlayers()
     registerPlayer("Bruno Walton")
     registerPlayer("Boots O'Neal")
     registerPlayer("Cathy Burton")
     registerPlayer("Diane Grant")
+
     registerPlayer("John Woods")
     registerPlayer("Julia Sky")
+    registerPlayer("Bruno Mars")
+    registerPlayer("Alain De Lon")
+
+    registerPlayer("John Muir")
+    registerPlayer("Bob Marley")
+    registerPlayer("Peter Jackson")
+    registerPlayer("Michael Jackson")
+
+    registerPlayer("Elizabeth Taylor")
+    registerPlayer("Robert De Niro")
+    registerPlayer("John Travolta")
+    registerPlayer("Julia Roberts")
+
+    registerPlayer("Cindy Kool")
+
+    round=5
+    for play  in range(0,round):
+        pairings = swissPairings()
+        [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4), (pid5, pname5, pid6, pname6), (pid7, pname7, pid8, pname8), (pid9, pname9, pid10, pname10), (pid11, pname11, pid12, pname12), (pid13, pname13, pid14, pname14), (pid15, pname15, pid16, pname16), (pid17, pname17)] = pairings
+        reportMatch(pid1, pid2)
+        reportMatch(pid3, pid4)
+        reportMatch(pid5, pid6)
+        reportMatch(pid7, pid8)
+        reportMatch(pid9, pid10)
+        reportMatch(pid11, pid12)
+        reportMatch(pid13, pid14)
+        reportMatch(pid15, pid16)
+        reportMatch(pid17)
+
+
     standings = playerStandings()
-    [id1, id2, id3, id4, id5, id6] = [row[0] for row in standings]
-    reportMatch(id1, id2, true)
-    reportMatch(id3, id4, true)
-    standings = playerStandings()
+
     for (i, n, w, m) in standings:
-        if m != 1:
-            raise ValueError("Each player should have one match recorded.")
-        if i in (id1, id3) and w != 1:
-            raise ValueError("Each match winner should have one win recorded.")
-        elif i in (id2, id4) and w != 0:
-            raise ValueError("Each match loser should have zero wins recorded.")
-    print "9. After a match, players have updated standings."
+        if m != 5:
+            raise ValueError("Each player should have five  matches recorded.")
+
+
+    print "14. Congratulations, we have a winner %s with %s wins" %(standings[0][1], standings[0][2])
 
 
 
@@ -288,6 +314,7 @@ if __name__ == '__main__':
     testReportMatchesWithBuy()
     testReportMatchesWithNoBuyRematch()
     testSortingWithOMW()
+    testTournamentWithSwissPairings()
     print "Success!  All tests pass!"
 
 
