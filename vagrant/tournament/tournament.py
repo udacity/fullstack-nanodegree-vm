@@ -149,14 +149,14 @@ def swissPairings():
     iterations = []
 
     if (len(standings) %2) != 0:
-        buy_play=selectBuyPlay(standings)
+        buy_play = selectBuyPlay(standings)
         standings.remove(buy_play)
-  
+
     for iterate in range(0, len(standings) / 2):
         iterations.append(iterate * 2)
 
     """Resetting the pairing to ensure no reruns"""
-    standing = selectBestMatch(standings)
+    selectBestMatch(standings)
 
     """Creating the final pairs"""
     for player_index in iterations:
@@ -172,14 +172,14 @@ def swissPairings():
     return pairings
 
 
-def playerDrawCount(id):
+def playerDrawCount(player_id):
 
     """Returns the number of draw outcomes by a player."""
     connection = connect()
     context = connection.cursor()
 
     """Call database to the Players' draw count."""
-    context.execute("SELECT draws FROM TotalDraws WHERE TotalDraws.id=%s;", [id])
+    context.execute("SELECT draws FROM TotalDraws WHERE TotalDraws.id=%s;", [player_id])
     draws = context.fetchone()
 
     connection.close()
@@ -193,12 +193,12 @@ def selectBuyPlay(players):
     result = ()
     for player in players:
         context.execute("""SELECT winner_id FROM Matches WHERE winner_id=%s AND loser_id=0;""", [player[0]])
-        res=context.fetchone()
+        res = context.fetchone()
         if res != player[0]:
             result = player
             break
 
-    connection.close
+    connection.close()
     return result
 
 
@@ -226,4 +226,4 @@ def selectBestMatch(standings):
                     standings[j] = tmp
                 break
 
-    return standings
+    connection.close()
