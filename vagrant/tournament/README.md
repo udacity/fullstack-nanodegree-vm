@@ -36,6 +36,7 @@ These are some of the keys solutions:
 * Draws are allowed in the tournament
 * Standings are sorted by: wins, opponent wins, draws, matches, losses, and name
 * Each pair is screened to avoid rematch
+* The tournament allows both and even number of players, a buy is assigned to first player in standings with no previous buy.
  
 
 ## Tournament Tests
