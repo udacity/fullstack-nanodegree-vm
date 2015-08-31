@@ -295,7 +295,6 @@ def testTournamentWithSwissPairings():
         if m != 5:
             raise ValueError("Each player should have five  matches recorded.")
 
-
     print "14. Congratulations, we have a winner %s with %s wins" %(standings[0][1], standings[0][2])
 
 
