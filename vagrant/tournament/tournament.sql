@@ -98,5 +98,5 @@ LEFT JOIN TotalMatches ON Players.id=TotalMatches.id
 LEFT JOIN TotalDraws ON Players.id=TotalDraws.id
 LEFT JOIN OpponentMatchWins ON Players.id=OpponentMatchWins.id
 LEFT JOIN TotalLosses ON Players.id=TotalLosses.id
-ORDER BY TotalWins.wins DESC, OpponentMatchWins.opponent_wins DESC, TotalMatches.total_matches DESC, TotalDraws.draws DESC, TotalLosses.losses ASC, Players.date_created DESC;
+ORDER BY TotalWins.wins DESC, OpponentMatchWins.opponent_wins DESC, TotalDraws.draws DESC, TotalMatches.total_matches DESC, TotalLosses.losses ASC, Players.date_created DESC;
 
