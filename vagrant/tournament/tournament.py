@@ -10,18 +10,37 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def runQuery(query):
+    conn = connect()
+    c = conn.cursor()
+    c.execute(query)
+    conn.commit()
+    conn.close()
+
+def runQueryFetch(query):
+    conn = connect()
+    c = conn.cursor()
+    c.execute(query)
+    
+    outp = c.fetchall()
+    conn.commit()
+    conn.close()
+    
+    return outp
 
 def deleteMatches():
     """Remove all the match records from the database."""
-
+    runQuery("DELETE FROM matches;")
 
 def deletePlayers():
     """Remove all the player records from the database."""
-
+    runQuery("DELETE FROM players;")
+    
 
 def countPlayers():
     """Returns the number of players currently registered."""
-
+    return runQueryFetch("SELECT * FROM count_players")[0][0]
+    
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -32,6 +51,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    runQuery("INSERT INTO players(name) VALUES('%s');" % name)
 
 
 def playerStandings():
@@ -56,6 +76,9 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    runQuery(
+        "INSERT INTO matches (player1_id, player2_id, winner_id) VALUES (%s, %s, %s)" %(loser, winner, winner)
+    )
  
  
 def swissPairings():

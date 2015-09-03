@@ -125,15 +125,23 @@ def testPairings():
     print "8. After one match, players with one win are paired."
 
 
+def testWhatIWant():
+    reportMatch(12, 13)
+
 if __name__ == '__main__':
+    testWhatIWant()
+    
+    '''
     testDeleteMatches()
     testDelete()
     testCount()
     testRegister()
     testRegisterCountDelete()
+    
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
+    '''
     print "Success!  All tests pass!"
 
 
