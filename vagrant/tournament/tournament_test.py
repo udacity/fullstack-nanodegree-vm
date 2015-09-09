@@ -83,7 +83,7 @@ def testReportMatches():
     deleteMatches()
     deletePlayers()
     registerPlayer("Bruno Walton")
-    registerPlayer("Boots O'Neal")
+    registerPlayer("Boots ONeal")
     registerPlayer("Cathy Burton")
     registerPlayer("Diane Grant")
     standings = playerStandings()
@@ -124,24 +124,14 @@ def testPairings():
             "After one match, players with one win should be paired.")
     print "8. After one match, players with one win are paired."
 
-
-def testWhatIWant():
-    reportMatch(12, 13)
-
 if __name__ == '__main__':
-    testWhatIWant()
-    
-    '''
     testDeleteMatches()
     testDelete()
     testCount()
     testRegister()
     testRegisterCountDelete()
-    
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
-    '''
     print "Success!  All tests pass!"
-
 

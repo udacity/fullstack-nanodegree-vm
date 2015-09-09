@@ -35,7 +35,7 @@ def deleteMatches():
 def deletePlayers():
     """Remove all the player records from the database."""
     runQuery("DELETE FROM players;")
-    
+
 
 def countPlayers():
     """Returns the number of players currently registered."""
@@ -67,7 +67,7 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
+    return runQueryFetch("SELECT * FROM players ORDER BY wins DESC;")
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -76,8 +76,12 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+
     runQuery(
-        "INSERT INTO matches (player1_id, player2_id, winner_id) VALUES (%s, %s, %s)" %(loser, winner, winner)
+        "INSERT INTO matches (player1_id, player2_id, winner_id) VALUES ({0}, {1}, {0});"
+        "UPDATE players SET wins = wins + 1 WHERE id={0};"
+        "UPDATE players SET matches = matches + 1 WHERE id={0};"
+        "UPDATE players SET matches = matches + 1 WHERE id={1};".format(winner, loser)
     )
  
  
@@ -97,4 +101,10 @@ def swissPairings():
         name2: the second player's name
     """
 
+    result = []
+    for i in xrange(0, countPlayers(), 2):
+        query = runQueryFetch("SELECT id, name FROM players ORDER BY wins DESC LIMIT 2 OFFSET %d;" % i)
+        turp = (query[0][0], query[0][1], query[1][0], query[1][1])
+        result.append(turp)
 
+    return result

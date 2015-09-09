@@ -6,15 +6,19 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
+CREATE DATABASE tournament;
+\c tournament;
 
 CREATE TABLE players (
-	_id SERIAL PRIMARY KEY CHECK (_id > -1),
-	name TEXT NOT NULL
+	id SERIAL PRIMARY KEY,
+	name TEXT NOT NULL,
+	wins INTEGER DEFAULT 0,
+	matches INTEGER DEFAULT 0
 );
 
 CREATE TABLE matches (
-	player1_id INTEGER NOT NULL REFERENCES players(_id), -- REFERENCES makes sure the ID exists in the players table
-	player2_id INTEGER NOT NULL REFERENCES players(_id),
+	player1_id INTEGER NOT NULL REFERENCES players(id), -- REFERENCES makes sure the ID exists in the players table
+	player2_id INTEGER NOT NULL REFERENCES players(id),
     CHECK (player2_id <> player1_id),
 	winner_id INTEGER NOT NULL CHECK (
 		winner_id = player1_id OR winner_id = player2_id
@@ -23,5 +27,3 @@ CREATE TABLE matches (
 );
 
 CREATE VIEW count_players AS SELECT COUNT(*) FROM players;
-
-CREATE VIEW get_last_id AS SELECT _id FROM players ORDER BY _id DESC LIMIT 1;
