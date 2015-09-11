@@ -6,6 +6,7 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
+DROP DATABASE IF EXISTS tournament;
 CREATE DATABASE tournament;
 \c tournament;
 
@@ -17,12 +18,8 @@ CREATE TABLE players (
 );
 
 CREATE TABLE matches (
-	player1_id INTEGER NOT NULL REFERENCES players(id), -- REFERENCES makes sure the ID exists in the players table
+	player1_id INTEGER NOT NULL REFERENCES players(id),
 	player2_id INTEGER NOT NULL REFERENCES players(id),
-    CHECK (player2_id <> player1_id),
-	winner_id INTEGER NOT NULL CHECK (
-		winner_id = player1_id OR winner_id = player2_id
-	), -- Winner can be player1 or player2
 	PRIMARY KEY (player1_id, player2_id)
 );
 
