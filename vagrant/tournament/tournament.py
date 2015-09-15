@@ -10,30 +10,45 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def singleQuery(query):
+    conn = connect()
+    curr = conn.cursor()
+    curr.execute(query)
+    conn.close()
+
+def returnQuery(query):
+    conn = connect()
+    curr = conn.cursor()
+    curr.execute(query)
+    singleResult = curr.fetchone()[0]
+    conn.close()
+    return singleResult
+
+def multiQuery(query):
+    conn = connect()
+    curr = conn.cursor()
+    curr.execute(query)
+    singleResult = curr.fetchone()[0]
+    conn.close()
+    return singleResult
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
     #Delete the records from all tables which have records of matches or results
-    conn.execute("DELETE from matches;")
-    conn.close()
+    query = "DELETE from matches;"
+    singleQuery(query)
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn.connect()
-    #Delete the player records, cleanup player results
-    #Cascade delete should have done this already.
-    conn.execute("DELETE from players;")
-    conn.close()
+    #Delete the player records - cascades in place to ensure correct execution.
+    query = "DELETE from players;"
+    singleQuery(query)
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn.connect()
     #Need to examine this code to see if it can be executed more efficiently.
-    conn.execute("SELECT count(*) from players;")
-    playerCount = conn.fetchone()
-    conn.close()
-    return playerCount
+    query = "SELECT count(*) from players;"
+    return returnQuery(query)
 
 
 def registerPlayer(name):
@@ -45,10 +60,15 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn.connect()
+    conn = connect()
+    curr = conn.cursor()
     #Insert the player name, no need to return anything
-    conn.execute("INSERT INTO players (player_name) VALUES ($s)", (name))
+    query = "INSERT INTO players (player_name) VALUES (%s);"
+    curr.execute(query, (name))
+    print curr.mogrify(query, (name))
     conn.close()
+
+
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
@@ -63,12 +83,9 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn.connect()
     #Insert the player name, no need to return anything
-    conn.execute("SELECT * FROM playerStandings")
-    standings=conn.fetchall()
-    conn.close()
-    return standings
+    query = "SELECT * FROM playerStandings;"
+    return multiQuery(query)
 
 
 def reportMatch(winner, loser):
@@ -95,8 +112,3 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
-def close():
-    """Explicitly closes the database connection.
-    """
-    return psycopg2.close()
