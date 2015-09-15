@@ -14,18 +14,22 @@ def connect():
 def deleteMatches():
     """Remove all the match records from the database."""
     conn = connect()
-    conn.execute("DELETE from matches; DELETE from playerResults;")
+    #Delete the records from all tables which have records of matches or results
+    conn.execute("DELETE from matches;")
     conn.close()
 
 def deletePlayers():
     """Remove all the player records from the database."""
     conn.connect()
+    #Delete the player records, cleanup player results
+    #Cascade delete should have done this already.
     conn.execute("DELETE from players;")
     conn.close()
 
 def countPlayers():
     """Returns the number of players currently registered."""
     conn.connect()
+    #Need to examine this code to see if it can be executed more efficiently.
     conn.execute("SELECT count(*) from players;")
     playerCount = conn.fetchone()
     conn.close()
@@ -42,6 +46,7 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     conn.connect()
+    #Insert the player name, no need to return anything
     conn.execute("INSERT INTO players (player_name) VALUES ($s)", (name))
     conn.close()
 
@@ -58,6 +63,12 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    conn.connect()
+    #Insert the player name, no need to return anything
+    conn.execute("SELECT * FROM playerStandings")
+    standings=conn.fetchall()
+    conn.close()
+    return standings
 
 
 def reportMatch(winner, loser):
