@@ -14,6 +14,8 @@ def singleQuery(query):
     conn = connect()
     curr = conn.cursor()
     curr.execute(query)
+    conn.commit()
+    curr.close()
     conn.close()
 
 def returnQuery(query):
@@ -21,6 +23,8 @@ def returnQuery(query):
     curr = conn.cursor()
     curr.execute(query)
     singleResult = curr.fetchone()[0]
+    conn.commit()
+    curr.close()
     conn.close()
     return singleResult
 
@@ -28,9 +32,20 @@ def multiQuery(query):
     conn = connect()
     curr = conn.cursor()
     curr.execute(query)
-    singleResult = curr.fetchone()[0]
+    multiResult = curr.fetchall()
+    conn.commit()
+    curr.close()
     conn.close()
-    return singleResult
+    return multiResult
+
+def singleInsert(query, value):
+    conn = connect()
+    curr = conn.cursor()
+    #print curr.mogrify("INSERT INTO players (player_name) VALUES (%s);", (name))
+    curr.execute(query, (value,))
+    conn.commit()
+    curr.close()
+    conn.close()
 
 def deleteMatches():
     """Remove all the match records from the database."""
@@ -60,13 +75,9 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
-    curr = conn.cursor()
-    #Insert the player name, no need to return anything
+        #Insert the player name, no need to return anything
     query = "INSERT INTO players (player_name) VALUES (%s);"
-    curr.execute(query, (name))
-    print curr.mogrify(query, (name))
-    conn.close()
+    singleInsert(query, name)
 
 
 
@@ -83,7 +94,7 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    #Insert the player name, no need to return anything
+    #Return players and standings
     query = "SELECT * FROM playerStandings;"
     return multiQuery(query)
 

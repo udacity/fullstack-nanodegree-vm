@@ -12,6 +12,7 @@ def testDeleteMatches():
 def testDelete():
     deleteMatches()
     deletePlayers()
+    #print countPlayers()
     print "2. Player records can be deleted."
 
 
@@ -62,6 +63,8 @@ def testStandingsBeforeMatches():
     registerPlayer("Melpomene Murray")
     registerPlayer("Randy Schwartz")
     standings = playerStandings()
+    # rem test standings
+    # print standings
     if len(standings) < 2:
         raise ValueError("Players should appear in playerStandings even before "
                          "they have played any matches.")
