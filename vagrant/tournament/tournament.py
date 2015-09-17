@@ -47,16 +47,31 @@ def singleInsert(query, value):
     curr.close()
     conn.close()
 
+def iterativeQuery(query):
+    conn = connect()
+    curr = conn.cursor()
+    listPairings=[]
+    curr.execute(query, (0,0),)
+    for record in curr:
+        listPairings.append(record)
+        print listPairings
+        print curr.mogrify(query, (listPairings[0][0],listPairings[0][2]),)
+        curr.execute(query, (listPairings[0][0],listPairings[0][2]),)
+    conn.commit()
+    curr.close()
+    conn.close()
+    return listPairings
+
 def deleteMatches():
     """Remove all the match records from the database."""
     #Delete the records from all tables which have records of matches or results
-    query = "DELETE from matches;"
+    query = "TRUNCATE matches RESTART IDENTITY CASCADE;"
     singleQuery(query)
 
 def deletePlayers():
     """Remove all the player records from the database."""
     #Delete the player records - cascades in place to ensure correct execution.
-    query = "DELETE from players;"
+    query = "TRUNCATE players RESTART IDENTITY CASCADE;"
     singleQuery(query)
 
 def countPlayers():
@@ -130,3 +145,22 @@ def swissPairings():
     """
     players = playerStandings()
     print players
+    """
+    test sql statements
+    query =  "select p.player_id, p.player_name, ps.player_id, ps.player_name
+    from playerStandings p inner join playerStandings ps
+    on p.player_id < ps.player_id
+    and (p.player_id, ps.player_id) not in
+    (select winner_id, loser_id from matches)
+    where p.score <= ps.score and (p.player_id) not in (%s)
+    and ps.player_id not in (%s) limit 1;"
+    """
+    query = """select p.player_id, p.player_name, ps.player_id, ps.player_name
+        from playerStandings p inner join playerStandings ps
+    on p.player_id < ps.player_id
+    and (p.player_id, ps.player_id) not in
+    (select winner_id, loser_id from matches)
+    where p.score <= ps.score and (p.player_id) not in (%s)
+    and ps.player_id not in (%s) limit 1;
+    """
+    return iterativeQuery(query)
