@@ -106,7 +106,12 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-
+    query = "INSERT INTO matches (winner_id, loser_id) VALUES %s;"
+    singleInsert(query, (winner, loser),)
+    query = "UPDATE playerScore SET matches = matches + 1 WHERE player_id IN %s;"
+    singleInsert(query, (winner, loser),)
+    query = "UPDATE playerScore SET score = score + 1 WHERE player_id IN (%s);"
+    singleInsert(query, (winner),)
 
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -123,3 +128,5 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    players = playerStandings()
+    print players
