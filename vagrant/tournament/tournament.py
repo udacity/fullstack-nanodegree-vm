@@ -64,9 +64,9 @@ def iterativeQuery(query, query_clean):
         listPairings.append(record)
         p_ids = (tuple([x[0] for x in listPairings]))
         ps_ids = (tuple([x[2] for x in listPairings]))
-        # print curr.mogrify(query_clean, (p_ids, ps_ids),)
+        print curr.mogrify(query_clean, (p_ids, ps_ids),)
         curr.execute(query_clean, (p_ids, ps_ids),)
-    # conn.commit()
+    print listPairings
     curr.close()
     conn.close()
     return listPairings
@@ -162,23 +162,23 @@ def swissPairings():
     on p.player_id < ps.player_id
     and (p.player_id, ps.player_id) not in
     (select winner_id, loser_id from matches)
-    where p.score <= ps.score and (p.player_id) not in (%s)
-    and ps.player_id not in (%s) limit 1;"
+    where p.score <= ps.score and ((p.player_id) not in (%s)
+    or ps.player_id not in (%s)) limit 1;"
     """
     query = """select p.player_id, p.player_name, ps.player_id, ps.player_name
         from playerStandings p inner join playerStandings ps
     on p.player_id < ps.player_id
     and (p.player_id, ps.player_id) not in
     (select winner_id, loser_id from matches)
-    where p.score <= ps.score and (p.player_id) not in (%s)
-    and ps.player_id not in (%s) limit 1;
+    where p.score <= ps.score and ((p.player_id) not in (%s)
+    and ps.player_id not in (%s)) limit 1;
     """
     query_clean = """select p.player_id, p.player_name, ps.player_id, ps.player_name
         from playerStandings p inner join playerStandings ps
     on p.player_id < ps.player_id
     and (p.player_id, ps.player_id) not in
     (select winner_id, loser_id from matches)
-    where p.score <= ps.score and (p.player_id) not in %s
-    and ps.player_id not in %s limit 1;
+    where p.score <= ps.score and ((p.player_id) not in %s
+    and ps.player_id not in %s) limit 1;
     """
     return iterativeQuery(query, query_clean)

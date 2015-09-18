@@ -4,6 +4,7 @@
 
 from tournament import *
 
+
 def testDeleteMatches():
     deleteMatches()
     print "1. Old matches can be deleted."
@@ -12,7 +13,7 @@ def testDeleteMatches():
 def testDelete():
     deleteMatches()
     deletePlayers()
-    #print countPlayers()
+    # print countPlayers()
     print "2. Player records can be deleted."
 
 
@@ -77,7 +78,7 @@ def testStandingsBeforeMatches():
         raise ValueError(
             "Newly registered players should have no matches or wins.")
     if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
-        raise ValueError("Registered players' names should appear in standings, "
+        raise ValueError("Registered players' names should appear in standings, "  # noqa
                          "even if they have no matches played.")
     print "6. Newly registered players appear in the standings with no matches."
 
@@ -128,6 +129,29 @@ def testPairings():
     print "8. After one match, players with one win are paired."
 
 
+def tourney():
+    deleteMatches()
+    deletePlayers()
+    playerIDs = []
+    registerPlayer("Boots O'Neal")
+    registerPlayer("Jim Jobson")
+    registerPlayer("Nev Nobson")
+    registerPlayer("Bruno Walton")
+    registerPlayer("Markov Chaney")
+    registerPlayer("Joe Malik")
+    registerPlayer("Mao Tsu-hsi")
+    registerPlayer("Atlanta Hope")
+    print playerStandings()
+    standings = playerStandings()
+    [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
+    reportMatch(id5, id6)
+    reportMatch(id7, id8)
+    pairings = swissPairings()
+    print pairings
+
+
 if __name__ == '__main__':
     testDeleteMatches()
     testDelete()
@@ -137,4 +161,5 @@ if __name__ == '__main__':
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
+    tourney()
     print "Success!  All tests pass!"
