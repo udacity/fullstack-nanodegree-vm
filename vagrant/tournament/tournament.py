@@ -10,6 +10,7 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+
 def singleQuery(query):
     conn = connect()
     curr = conn.cursor()
@@ -18,65 +19,74 @@ def singleQuery(query):
     curr.close()
     conn.close()
 
+
 def returnQuery(query):
     conn = connect()
     curr = conn.cursor()
     curr.execute(query)
     singleResult = curr.fetchone()[0]
-    conn.commit()
+    # conn.commit()
     curr.close()
     conn.close()
     return singleResult
+
 
 def multiQuery(query):
     conn = connect()
     curr = conn.cursor()
     curr.execute(query)
     multiResult = curr.fetchall()
-    conn.commit()
+    # conn.commit()
     curr.close()
     conn.close()
     return multiResult
 
+
 def singleInsert(query, value):
     conn = connect()
     curr = conn.cursor()
-    #print curr.mogrify("INSERT INTO players (player_name) VALUES (%s);", (name))
+    # testing code output
+    # curr.mogrify("INSERT INTO players (player_name) VALUES (%s);", (name))
     curr.execute(query, (value,))
     conn.commit()
     curr.close()
     conn.close()
 
-def iterativeQuery(query):
+
+def iterativeQuery(query, query_clean):
     conn = connect()
     curr = conn.cursor()
-    listPairings=[]
-    curr.execute(query, (0,0),)
+    listPairings = []
+    p_ids = []
+    ps_ids = []
+    curr.execute(query, (0, 0),)
     for record in curr:
         listPairings.append(record)
-        print listPairings
-        print curr.mogrify(query, (listPairings[0][0],listPairings[0][2]),)
-        curr.execute(query, (listPairings[0][0],listPairings[0][2]),)
-    conn.commit()
+        p_ids = (tuple([x[0] for x in listPairings]))
+        ps_ids = (tuple([x[2] for x in listPairings]))
+        # print curr.mogrify(query_clean, (p_ids, ps_ids),)
+        curr.execute(query_clean, (p_ids, ps_ids),)
+    # conn.commit()
     curr.close()
     conn.close()
     return listPairings
 
+
 def deleteMatches():
-    """Remove all the match records from the database."""
-    #Delete the records from all tables which have records of matches or results
     query = "TRUNCATE matches RESTART IDENTITY CASCADE;"
     singleQuery(query)
 
+
 def deletePlayers():
     """Remove all the player records from the database."""
-    #Delete the player records - cascades in place to ensure correct execution.
+    # Delete the player records - cascades in place to ensure correct execution.
     query = "TRUNCATE players RESTART IDENTITY CASCADE;"
     singleQuery(query)
 
+
 def countPlayers():
     """Returns the number of players currently registered."""
-    #Need to examine this code to see if it can be executed more efficiently.
+    # Need to examine this code to see if it can be executed more efficiently.
     query = "SELECT count(*) from players;"
     return returnQuery(query)
 
@@ -90,10 +100,9 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-        #Insert the player name, no need to return anything
+    # Insert the player name, no need to return anything
     query = "INSERT INTO players (player_name) VALUES (%s);"
-    singleInsert(query, name)
-
+    return singleInsert(query, name)
 
 
 def playerStandings():
@@ -109,7 +118,7 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    #Return players and standings
+    # Return players and standings
     query = "SELECT * FROM playerStandings;"
     return multiQuery(query)
 
@@ -123,10 +132,11 @@ def reportMatch(winner, loser):
     """
     query = "INSERT INTO matches (winner_id, loser_id) VALUES %s;"
     singleInsert(query, (winner, loser),)
-    query = "UPDATE playerScore SET matches = matches + 1 WHERE player_id IN %s;"
+    query = "UPDATE playerScore SET matches = matches + 1 WHERE player_id IN %s;"  # noqa
     singleInsert(query, (winner, loser),)
     query = "UPDATE playerScore SET score = score + 1 WHERE player_id IN (%s);"
     singleInsert(query, (winner),)
+
 
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -143,8 +153,8 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    players = playerStandings()
-    print players
+    # players = playerStandings()
+    # print players
     """
     test sql statements
     query =  "select p.player_id, p.player_name, ps.player_id, ps.player_name
@@ -163,4 +173,12 @@ def swissPairings():
     where p.score <= ps.score and (p.player_id) not in (%s)
     and ps.player_id not in (%s) limit 1;
     """
-    return iterativeQuery(query)
+    query_clean = """select p.player_id, p.player_name, ps.player_id, ps.player_name
+        from playerStandings p inner join playerStandings ps
+    on p.player_id < ps.player_id
+    and (p.player_id, ps.player_id) not in
+    (select winner_id, loser_id from matches)
+    where p.score <= ps.score and (p.player_id) not in %s
+    and ps.player_id not in %s limit 1;
+    """
+    return iterativeQuery(query, query_clean)
