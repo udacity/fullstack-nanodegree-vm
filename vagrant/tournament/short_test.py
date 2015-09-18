@@ -148,6 +148,7 @@ def tourney():
     reportMatch(id3, id4)
     reportMatch(id5, id6)
     reportMatch(id7, id8)
+    print playerStandings()
     pairings = swissPairings()
     print pairings
 

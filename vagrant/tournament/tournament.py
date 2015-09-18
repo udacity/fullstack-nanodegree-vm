@@ -119,7 +119,7 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     # Return players and standings
-    query = "SELECT * FROM playerStandings;"
+    query = "SELECT * FROM playerStandings ORDER BY player_id ASC;"
     return multiQuery(query)
 
 
