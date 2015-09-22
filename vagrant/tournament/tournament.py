@@ -52,7 +52,8 @@ def singleInsert(query, value):
     curr.close()
     conn.close()
 
-
+"""
+Attempting new iterative query
 def iterativeQuery(query, query_clean):
     conn = connect()
     curr = conn.cursor()
@@ -69,6 +70,21 @@ def iterativeQuery(query, query_clean):
     print listPairings
     curr.close()
     conn.close()
+    return listPairings
+"""
+
+
+def iterativeQuery(query):
+    conn = connect()
+    curr = conn.cursor()
+    listPairings = []
+    curr.execute(query)
+    while (curr.rownumber < curr.rowcount):
+        pair = []
+        for record in curr.fetchmany(2):
+            pair += tuple(record)
+        listPairings.append(tuple(pair))
+        # for each pair of records make sure there is no match already in matches table - if no match, app to listPairings  # noqa
     return listPairings
 
 
@@ -165,20 +181,7 @@ def swissPairings():
     where p.score <= ps.score and ((p.player_id) not in (%s)
     or ps.player_id not in (%s)) limit 1;"
     """
-    query = """select p.player_id, p.player_name, ps.player_id, ps.player_name
-        from playerStandings p inner join playerStandings ps
-    on p.player_id < ps.player_id
-    and (p.player_id, ps.player_id) not in
-    (select winner_id, loser_id from matches)
-    where p.score <= ps.score and ((p.player_id) not in (%s)
-    and ps.player_id not in (%s)) limit 1;
+    query = """select player_id, player_name from playerStandings order by
+    -score, -matches
     """
-    query_clean = """select p.player_id, p.player_name, ps.player_id, ps.player_name
-        from playerStandings p inner join playerStandings ps
-    on p.player_id < ps.player_id
-    and (p.player_id, ps.player_id) not in
-    (select winner_id, loser_id from matches)
-    where p.score <= ps.score and ((p.player_id) not in %s
-    and ps.player_id not in %s) limit 1;
-    """
-    return iterativeQuery(query, query_clean)
+    return iterativeQuery(query)

@@ -13,7 +13,8 @@ su vagrant -c 'createdb tournament'
 su vagrant -c 'psql tournament -f /vagrant/tournament/tournament.sql'
 su vagrant -c 'psql forum -f /vagrant/forum/forum.sql'
 sudo sed -i "/listen_addresses/c\listen_addresses = '*'" /etc/postgresql/9.3/main/postgresql.conf
-sudo sed -i '1,/^host/s/^host/host\t\tall\t\tall\t\t0.0.0.0\/0\t\ttrust\n#host/' /etc/postgresql/9.3/main/pg_hba.conf
+sudo sed -i '1,/^host/s/^host/c\host\t\tall\t\tall\t\t0.0.0.0\/0\t\ttrust\n#host/' /etc/postgresql/9.3/main/pg_hba.conf
+sudo /etc/init.d/postgresql reload
 
 vagrantTip="[35m[1mThe shared directory is located at /vagrant\nTo access your shared files: cd /vagrant(B[m"
 echo -e $vagrantTip > /etc/motd
