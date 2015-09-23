@@ -41,6 +41,7 @@ def run_query(query):
 
 @app.route("/")
 def index():
+    # return 'UPDATE items SET name=%s, category=%s, descrip=%s WHERE name=%s;' % ("Boots", "Skiis", "Skiing", "Skiis let you go down the hill!")
     return render_template('index.html', categories=get_categories(),  items=get_items())
 
 
@@ -52,26 +53,72 @@ def category_items(category):
 
 @app.route("/catalog/<category>/<item_name>")
 def item_desc(category, item_name):
-    item = run_query(["SELECT name, category, descrip FROM items WHERE category=%s AND name=%s;", (category, item_name)])[0]
+    item = run_query(["SELECT * FROM items WHERE category=%s AND name=%s;", (category, item_name)])[0]
     return render_template('item.html', item=item)
 
 
-@app.route('/add', methods=['GET', 'POST'])
+@app.route('/add-item', methods=['GET', 'POST'])
 def add_item_page():
     if not session.get('logged_in'):
         abort(401)
     else:
         if request.method == 'POST':
-            add_item(request.form['title'], request.form['category'], request.form['descrip'])
-            return redirect(url_for('index'))
-    return render_template('add.html', all_categories=get_categories())
+            title = request.form['title']
+            category = request.form['category']
+            add_item(title, category, request.form['descrip'])
+            return redirect('/catalog/' + category + '/' + title)
+    return render_template('add-item.html', all_categories=get_categories(), action="/add-item", title="Add item", title_val="", desc_val="", cat_val="")
 
 
-@app.route('/edit', methods=['GET', 'POST'])
-def edit_item_page():
+@app.route('/add-category', methods=['GET', 'POST'])
+def add_category_page():
     if not session.get('logged_in'):
         abort(401)
-    return render_template('edit.html', all_categories=get_categories())
+    else:
+        if request.method == 'POST':
+            name = request.form['title']
+            add_category(name)
+            return redirect('/catalog/' + name + '/items')
+    return render_template('add-category.html')
+
+
+@app.route('/catalog/<item>/edit', methods=['GET', 'POST'])
+def edit_item_page(item):
+    action = '/catalog/' + item + '/edit'
+
+    old_title = ""
+    old_desc = ""
+    old_cat = ""
+
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        query = run_query(["SELECT name, descrip, category FROM items WHERE name = %s;", (item, )])[0]
+        old_title = query[0]
+        old_desc = query[1]
+        old_cat = query[2]
+        if request.method == 'POST':
+            new_title = request.form['title']
+            new_category = request.form['category']
+            edit_item(old_title, new_title, new_category, request.form['descrip'])
+            return redirect('/catalog/' + new_category + '/' + new_title)
+
+    return render_template('edit-item.html', all_categories=get_categories(), action=action, title="Edit item", title_val=old_title, desc_val=old_desc, cat_val=old_cat)
+
+
+@app.route('/catalog/<item>/del-confirmation')
+def delete_confirmation_page(item):
+    return render_template('delete-item.html', item=item)
+
+
+@app.route('/catalog/<item>/delete')
+def delete_item_page(item):
+    if not session.get('logged_in'):
+        abort(401)
+    else:
+        delete_item(item)
+    return redirect(url_for('index'))
+
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -102,6 +149,14 @@ def add_item(item_name, category, descrip):
     run_query(['INSERT INTO items(name, category, descrip) VALUES(%s, %s, %s);', (item_name, category, descrip)])
 
 
+def edit_item(current_name, new_name, category, descrip):
+    run_query(['UPDATE items SET name=%s, category=%s, descrip=%s WHERE name=%s;', (new_name, category, descrip, current_name)])
+
+
+def delete_item(item_name):
+    run_query(['DELETE FROM items WHERE name=%s;', (item_name,)])
+
+
 def get_categories():
     return run_query("SELECT category FROM categories;")
 
@@ -112,6 +167,7 @@ def get_items():
 
 def get_items_where(arg1, arg2):
     return run_query(["SELECT name, category FROM items WHERE %s = %s;", (arg1, arg2)])
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0')

@@ -9,7 +9,7 @@
                     <h2>{{ item[0] }}</h2>
                     <p>Description: {{ item[2] }}</p>
                     {% if session.logged_in %}
-                        <a href="/edit">Edit item</a>
+                        <a href="/catalog/{{ item[0] }}/edit">Edit item</a> | <a href="/catalog/{{ item[0] }}/del-confirmation">Delete item</a>
                     {% endif %}
                 </div>
             </div>

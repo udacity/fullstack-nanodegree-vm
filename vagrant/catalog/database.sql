@@ -10,8 +10,7 @@ CREATE TABLE categories (
 
 DROP TABLE IF EXISTS items;
 CREATE TABLE items (
-  id SERIAL PRIMARY KEY,
-  name TEXT NOT NULL,
+  name TEXT PRIMARY KEY NOT NULL,
   category TEXT REFERENCES categories NOT NULL,
   descrip TEXT NOT NULL
 );
