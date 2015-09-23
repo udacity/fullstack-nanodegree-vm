@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <section id="main" style="width: 70%; margin: auto;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h2>Add item</h2>
+                    <br>
+                    <form action="/add" method="POST" role="form">
+                        <div class="form-group">
+                            <input type="text" name="title" class="form-control" placeholder="Title...">
+                            <br>
+                            <input type="text" name="descrip" class="form-control" placeholder="Description...">
+                            <br>
+                            <select class="form-control" name="category">
+                                {% for category in all_categories %}
+                                    <option value="{{ category[0] }}">{{ category[0] }}</option>
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <input type="submit" class="btn btn-success" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

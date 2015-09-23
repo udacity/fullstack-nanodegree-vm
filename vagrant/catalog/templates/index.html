@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block body %}
+
+    <!-- Main Section -->
+    <section id="main" style="width: 70%; margin: auto;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h2>Categories</h2>
+                    <ul>
+                        {% for category in categories %}
+                            <li><a href="/catalog/{{ category[0] }}/items">{{ category[0] }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-lg-8">
+                    <h2>Latest Items</h2>
+                    <ul>
+                        {% for item in items %}
+                            <li><a href="/catalog/{{ item[1] }}/{{ item[0] }}">{{ item[0] }}</a> ({{ item[1] }})</li>
+                        {% endfor %}
+                        {% if session.logged_in %}
+                            <a href="/add">Add item</a>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
