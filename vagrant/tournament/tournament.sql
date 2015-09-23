@@ -10,48 +10,38 @@ DROP DATABASE tournament;
 CREATE DATABASE tournament;
 \c tournament;
 
-
+-- Tournamanet table - generates a new ID, and we will return that when called
+CREATE TABLE tournament (
+    tournament_id serial PRIMARY KEY,
+    tournament_name text DEFAULT "Udacity Tournament"
+);
 
 -- Players table - this records the players and details about them.
 CREATE TABLE players (
     player_id serial PRIMARY KEY,
+    tournament_id int references tournament ON DELETE CASCADE,
     player_name text
 );
 
--- Match table - records all the matches played by playerStandings
--- We will use this to record the matches played, and which user was the winner
-CREATE TABLE matches (
-    match_id serial PRIMARY KEY,
-    winner_id int references players ON DELETE CASCADE,
-    loser_id  int references players ON DELETE CASCADE
-);
-
-
-
 -- Records the stats about individual player statistics
-CREATE TABLE playerScore (
+CREATE TABLE matches (
     player_id int references players ON DELETE CASCADE,
+    tournament_id int references tournament ON DELETE CASCADE,
     score int default 0,
-    matches int default 0
+    played int default 0
 );
 
-
-CREATE TABLE playerResults (
-    player_id int references players ON DELETE CASCADE,
-    match_id int references matches ON DELETE CASCADE
-);
-
-CREATE OR REPLACE FUNCTION playerScore_create_id() RETURNS trigger AS $$
+CREATE OR REPLACE FUNCTION matches_create_id() RETURNS trigger AS $$
     BEGIN
-        INSERT INTO playerScore(player_id) values (NEW.player_id);
+        INSERT INTO matches(player_id) values (NEW.player_id);
         RETURN NEW;
     END;
 $$
 language plpgsql volatile;
 
-CREATE TRIGGER playerScore_create_id
-    AFTER INSERT ON players FOR EACH ROW EXECUTE PROCEDURE playerScore_create_id();
+CREATE TRIGGER matches_create_id
+    AFTER INSERT ON players FOR EACH ROW EXECUTE PROCEDURE matches_create_id();
 
 CREATE VIEW playerStandings as
-    SELECT p.player_id, p.player_name, ps.score, ps.matches FROM players p,
-    playerScore ps WHERE p.player_id = ps.player_id;
+    SELECT p.player_id, p.player_name, m.score, m.played FROM players p,
+    matches m WHERE p.player_id = m.player_id;
