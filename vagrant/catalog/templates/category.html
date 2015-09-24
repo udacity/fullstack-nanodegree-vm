@@ -11,7 +11,7 @@
                         {% for category in all_categories %}
                             <li><a href="/catalog/{{ category[0] }}/items">{{ category[0] }}</a></li>
                         {% endfor %}
-                        {% if session.logged_in %}
+                        {% if session.access_token %}
                             <a href="/add-category">Add category</a>
                         {% endif %}
                     </ul>
@@ -22,7 +22,7 @@
                         {% for item in items %}
                             <li><a href="/catalog/{{ item[1] }}/{{ item[0] }}">{{ item[0] }}</a></li>
                         {% endfor %}
-                        {% if session.logged_in %}
+                        {% if session.access_token %}
                             <a href="/add-item">Add item</a>
                         {% endif %}
                     </ul>

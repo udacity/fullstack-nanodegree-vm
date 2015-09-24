@@ -1,10 +1,11 @@
 import psycopg2
 from flask import Flask, request, session, g, redirect, url_for, \
      abort, render_template
+from auth import *
 
 # Configure database
 DEBUG = True
-# SECRET_KEY = 'development-key'
+SECRET_KEY = 'development-key'
 
 # Configure flask
 app = Flask(__name__)
@@ -41,7 +42,7 @@ def item_desc(category, item_name):
 # Add item page
 @app.route('/add-item', methods=['GET', 'POST'])
 def add_item_page():
-    if not session.get('logged_in'):
+    if not session.get('access_token'):
         abort(401)
     else:
         if request.method == 'POST':
@@ -65,7 +66,7 @@ def add_item_page():
 # Add category page
 @app.route('/add-category', methods=['GET', 'POST'])
 def add_category_page():
-    if not session.get('logged_in'):
+    if not session.get('access_token'):
         abort(401)
     else:
         if request.method == 'POST':
@@ -85,7 +86,7 @@ def edit_item_page(item):
     old_desc = ""
     old_cat = ""
 
-    if not session.get('logged_in'):
+    if not session.get('access_token'):
         abort(401)
     else:
         # Get items by name
@@ -124,13 +125,37 @@ def delete_confirmation_page(item):
 # Deletes item and redirects to index
 @app.route('/catalog/<item>/delete')
 def delete_item_page(item):
-    if not session.get('logged_in'):
+    if not session.get('access_token'):
         abort(401)
     else:
         delete_item(item)
     return redirect(url_for('index'))
 
 
+@app.route('/login')
+def login():
+    callback = url_for('authorized', _external=True)
+    return google.authorize(callback=callback)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('access_token', None)
+    return redirect(url_for('index'))
+
+
+@app.route(REDIRECT_URI)
+@google.authorized_handler
+def authorized(resp):
+    access_token = resp['access_token']
+    session['access_token'] = access_token, ''
+    return redirect(url_for('index'))
+
+
+@google.tokengetter
+def get_access_token():
+    return session.get('access_token')
+'''
 # Login page
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -151,7 +176,7 @@ def login():
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('index'))
-
+'''
 
 # Connect to the database
 def connect():

@@ -43,7 +43,7 @@
                         <a href="#page-top"></a>
                     </li>
                     <li class="page-scroll">
-                        {% if session.logged_in %}
+                        {% if session.access_token %}
                             <a href="{{ url_for('logout') }}">
                                 <button type="button" class="btn btn-danger">Logout</button>
                             </a>
