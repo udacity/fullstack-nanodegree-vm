@@ -5,19 +5,21 @@ Python 2.7: https://www.python.org/downloads/<br>
 Vagrant: https://www.vagrantup.com/downloads.html<br>
 VirtualBox: https://www.virtualbox.org/wiki/Downloads<br>
 
-# Start Vagrant
+##Start Vagrant
 1. Once all the software is installed, open a terminal
 2. Start Vagrant: `vagrant up`
 3. Connect to Vagrant: `vagrant ssh`
-<br>
-# Run Tournament app
+
+
+##Run Tournament app
 1. Go into the project folder: `cd /vagrant/tournament`
 2. Start PSQL: `psql`
 3. Create the database: `\i tournament.sql`
 4. Exit PSQL: `\q`
 5. Run the tests: `python tournament_test.py`
-<br>
-# Run Catalog app
+
+
+##Run Catalog app
 1. Go into the project folder: `cd /vagrant/catalog`
 2. Start PSQL: `psql`
 3. Create the database: `\i database.sql`
