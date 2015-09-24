@@ -1,5 +1,4 @@
 from flask_oauth import OAuth
-from urllib2 import Request, urlopen, URLError
 
 # https://pythonhosted.org/Flask-OAuth/
 '''
@@ -26,27 +25,3 @@ google = oauth.remote_app(
     consumer_key=GOOGLE_CLIENT_ID,
     consumer_secret=GOOGLE_CLIENT_SECRET
 )
-
-'''
-def auth():
-    access_token = session.get('access_token')
-    if access_token is None:
-        # Not logged in, redirect to login page
-        return redirect(url_for('login'))
-
-    access_token = access_token[0]
-
-    headers = {'Authorization': 'OAuth ' + access_token}
-    req = Request('https://www.googleapis.com/oauth2/v1/userinfo',
-                  None, headers)
-    try:
-        res = urlopen(req)
-    except URLError, e:
-        if e.code == 401:
-            # Unauthorized - bad token
-            session.pop('access_token', None)
-            return redirect(url_for('login'))
-        return res.read()
-
-    return res.read()
-'''
