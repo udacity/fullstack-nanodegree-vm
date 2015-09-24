@@ -4,11 +4,7 @@ from flask import Flask, request, session, g, redirect, url_for, \
 
 # Configure database
 DEBUG = True
-SECRET_KEY = 'development-key'
-
-# Default username and passwords
-USERNAME = 'admin'
-PASSWORD = 'default'
+# SECRET_KEY = 'development-key'
 
 # Configure flask
 app = Flask(__name__)

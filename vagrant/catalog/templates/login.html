@@ -14,15 +14,23 @@
                         </div>
                     {% endif %}
 
-                    <form action="{{ url_for('login') }}" method="post" role="form">
-                        <div class="form-group">
-                            <input type="text" name="username" class="form-control" placeholder="Username">
-                            <br>
-                            <input type="password" name="password" class="form-control" placeholder="Password">
-                            <br>
-                            <input type="submit" class="btn btn-success" value="Login">
-                        </div>
-                    </form>
+                    <div class="g-signin2" data-onsuccess="onSignIn"></div>
+
+                    <!-- <a href="#" onclick="signIn();"><button type="button" class="btn btn-success">Login</button></a> -->
+
+                    <a href="#" onclick="signOut();"><button type="button" class="btn btn-danger">Logout</button></a>
+                    <script>
+                      function signOut() {
+                        var auth2 = gapi.auth2.getAuthInstance();
+                        auth2.signOut().then(function () {
+                          console.log('User signed out.');
+                        });
+                      }
+
+                        function onSignIn() {
+                            console.log("Singed in");
+                        }
+                    </script>
                 </div>
             </div>
         </div>
