@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <section id="main" style="width: 70%; margin: auto;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <h2>{{ item }}</h2>
+                        <p>Are you sure you want to delete {{ item }}?</p>
+                        <br>
+                        <div class="btn-group">
+                            <a href="/catalog/{{ item }}/delete"><button type="button" class="btn btn-danger">Delete</button></a>
+                            <a href="{{ url_for('index') }}"><button type="button" class="btn btn-success">Cancel</button></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+
+{% endblock %}

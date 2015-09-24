@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <section id="main" style="width: 70%; margin: auto;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4">
+                    <h2>{{ title }}</h2>
+                    <br>
+                    <form action="{{ action }}" method="POST" role="form">
+                        <div class="form-group">
+                            <input type="text" name="title" class="form-control" placeholder="Title..." value="{{ title_val }}">
+                            <br>
+                            <input type="text" name="descrip" class="form-control" placeholder="Description..." value="{{ desc_val }}">
+                            <br>
+                            <!-- Collect and display categories -->
+                            <select class="form-control" name="category">
+                                {% if cat_val != "" %}
+                                    <option value="{{ cat_val }}">{{ cat_val }}</option>
+                                {% endif %}
+                                {% for category in all_categories %}
+                                    {% if cat_val != category[0] %}
+                                        <option value="{{ category[0] }}">{{ category[0] }}</option>
+                                    {% endif %}
+                                {% endfor %}
+                            </select>
+                            <br>
+                            <input type="submit" class="btn btn-success" value="Submit">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}

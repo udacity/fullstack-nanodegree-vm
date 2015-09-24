@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+    <section id="main" style="width: 70%; margin: auto;">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h2>{{ item[0] }}</h2>
+                    <p>Description: {{ item[2] }}</p>
+                    {% if session.access_token %}
+                        <a href="/catalog/{{ item[0] }}/edit">Edit item</a> | <a href="/catalog/{{ item[0] }}/del-confirmation">Delete item</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
