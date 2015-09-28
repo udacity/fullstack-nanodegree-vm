@@ -13,7 +13,7 @@ CREATE DATABASE tournament;
 -- Tournamanet table - generates a new ID, and we will return that when called
 CREATE TABLE tournament (
     tournament_id serial PRIMARY KEY,
-    tournament_name text DEFAULT "Udacity Tournament"
+    tournament_name text DEFAULT 'Udacity Tournament'
 );
 
 -- Players table - this records the players and details about them.
@@ -43,5 +43,5 @@ CREATE TRIGGER matches_create_id
     AFTER INSERT ON players FOR EACH ROW EXECUTE PROCEDURE matches_create_id();
 
 CREATE VIEW playerStandings as
-    SELECT p.player_id, p.player_name, m.score, m.played FROM players p,
-    matches m WHERE p.player_id = m.player_id;
+    SELECT p.tournament_id, p.player_id, p.player_name, m.score, m.played FROM players p,
+    matches m WHERE p.player_id = m.player_id ORDER BY -score, -played;

@@ -3,7 +3,12 @@
 # tournament.py -- implementation of a Swiss-system tournament
 #
 
+import dbconnect
 import psycopg2
+###
+# Note to self - make a generic connection class with inserts and
+# returns as needed
+###
 
 
 def connect():
@@ -11,56 +16,49 @@ def connect():
     return psycopg2.connect("dbname=tournament")
 
 
-def singleQuery(query, value):
+def singleQuery(**kwargs):
     conn = connect()
     curr = conn.cursor()
-    curr.execute(query, (value,))
+    query = kwargs.get('query')
+    value = kwargs.get('value')
+    name = kwargs.get('name')
+    numResults = kwargs.get('numResults', 0)
+    tournament = kwargs.get('tournament')
+    if ('tournament' in kwargs and 'value' in kwargs):
+        curr.execute(query, value, (tournament,))
+    elif ('tournament' in kwargs and 'name' in kwargs):
+        curr.execute(query, (name, tournament,))
+    elif ('tournament' in kwargs and 'value' not in kwargs):
+        curr.execute(query, (tournament,))
+    else:
+        curr.execute(query, (value,))
+    if numResults == 1:
+        Result = curr.fetchone()[0]
+    elif numResults == "all":
+        Result = curr.fetchall()
+    else:
+        conn.commit()
+        curr.close()
+        conn.close()
+        return
     conn.commit()
     curr.close()
     conn.close()
+    print Result
+    return Result
 
 
-def returnQuery(query, value):
+def iterativeQuery(**kwargs):
     conn = connect()
     curr = conn.cursor()
-    curr.execute(query, (value,))
-    singleResult = curr.fetchone()[0]
-    # conn.commit()
-    curr.close()
-    conn.close()
-    return singleResult
-
-
-def multiQuery(query, value, tournament):
-    conn = connect()
-    curr = conn.cursor()
-    curr.execute(query, (value), (tournament,))
-    multiResult = curr.fetchall()
-    # conn.commit()
-    curr.close()
-    conn.close()
-    return multiResult
-
-
-def singleInsert(query, value, tournament):
-    conn = connect()
-    curr = conn.cursor()
-    # testing code output
-    # curr.mogrify("INSERT INTO players (player_name) VALUES (%s);", (name))
-    print curr.mogrify(query, (value, tournament,),)
-    curr.execute(query, (value, tournament,),)
-    conn.commit()
-    insert_id = curr.fetchone()[0]
-    curr.close()
-    conn.close()
-    return insert_id
-
-
-def iterativeQuery(query, value, tournament):
-    conn = connect()
-    curr = conn.cursor()
+    query = kwargs.get('query')
+    # value = kwargs.get('value')
+    # name = kwargs.get('name')
+    # numResults = kwargs.get('numResults', 0)
+    tournament = kwargs.get('tournament')
     listPairings = []
-    curr.execute(query, (value,), (tournament,))
+    # print curr.mogrify(query, (tournament,))
+    curr.execute(query, (tournament,))
     while (curr.rownumber < curr.rowcount):
         pair = []
         for record in curr.fetchmany(2):
@@ -70,32 +68,37 @@ def iterativeQuery(query, value, tournament):
     return listPairings
 
 
+def tidyDB():
+    query = """
+    TRUNCATE TABLE tournament CASCADE;"""
+    singleQuery(query=query)
+
 def deleteMatches(tournament=1):
     query = "DELETE FROM matches WHERE tournament_id = %s;"
-    singleQuery(query, tournament)
+    singleQuery(query=query, tournament=tournament)
 
 
 def deletePlayers(tournament=1):
     """Remove all the player records from the database."""
     # Delete the player records - cascades in place to ensure correct execution.
     query = "DELETE FROM players WHERE tournament_id = %s;"
-    singleQuery(query, tournament)
+    singleQuery(query=query, tournament=tournament)
 
 
 def countPlayers(tournament=1):
     """Returns the number of players currently registered."""
     # Need to examine this code to see if it can be executed more efficiently.
     query = "SELECT count(1) from players WHERE tournament_id = %s;"
-    return returnQuery(query, tournament)
+    return singleQuery(query=query, tournament=tournament, numResults=1)
 
 
-def registerTournament(tournament=1):
+def registerTournament(name="Default"):
     """Registers a new tournament
     If no tournaments exist, set a default tournament_id if none specified
     """
     query = """INSERT INTO tournament (tournament_name) VALUES (%s)
     RETURNING tournament_id"""
-    return singleInsert(query, tournament)
+    return singleQuery(query=query, name=name, numResults=1)
 
 
 def registerPlayer(name, tournament=1):
@@ -109,7 +112,7 @@ def registerPlayer(name, tournament=1):
     """
     # Insert the player name, no need to return anything
     query = "INSERT INTO players (player_name, tournament_id) VALUES (%s, %s);"
-    return singleInsert(query, name, tournament)
+    return singleQuery(query=query, name=name, tournament=tournament)
 
 
 def playerStandings(tournament=1):
@@ -126,25 +129,25 @@ def playerStandings(tournament=1):
         matches: the number of matches the player has played
     """
     # Return players and standings
-    query = """SELECT * FROM playerStandings WHERE tournament_id = %s
-    ORDER BY player_id ASC;"""
-    return multiQuery(query, tournament)
+    query = """SELECT player_id, player_name, score, played FROM
+    playerStandings WHERE tournament_id = %s;"""
+    return singleQuery(query=query, tournament=tournament, numResults="all")
 
 
-def reportMatch(winner, loser, tournament = 1):
+def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
 
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    query = "UPDATE matches SET played = played + 1 WHERE player_id IN %s AND tournament_id = %s;"  # noqa
-    singleInsert(query, (winner, loser), (tournament),)
-    query = "UPDATE matches SET score = score + 1 WHERE player_id IN (%s) AND tournament_id = %s;"
-    singleInsert(query, (winner), (tournament),)
+    query = "UPDATE matches SET played = played + 1 WHERE player_id IN %s;"  # noqa
+    singleQuery(query=query, value=(winner, loser))
+    query = "UPDATE matches SET score = score + 1 WHERE player_id IN (%s);"  # noqa
+    singleQuery(query=query, value=(winner))
 
 
-def swissPairings(tournament = 1):
+def swissPairings(tournament=1):
     """Returns a list of pairs of players for the next round of a match.
 
     Assuming that there are an even number of players registered, each player
@@ -160,6 +163,6 @@ def swissPairings(tournament = 1):
         name2: the second player's name
     """
     query = """select player_id, player_name from playerStandings
-    WHERE tournamentId = %s order by -score, -matches
+    WHERE tournament_id = %s
     """
-    return iterativeQuery(query, tournament)
+    return iterativeQuery(query=query, tournament=tournament)

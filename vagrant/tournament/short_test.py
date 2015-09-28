@@ -32,6 +32,7 @@ def testCount():
 def testRegister():
     deleteMatches()
     deletePlayers()
+    tournament = registerTournament("Scott's Test")
     registerPlayer("Chandra Nalaar")
     c = countPlayers()
     if c != 1:
@@ -142,14 +143,13 @@ def tournament_test():
     registerPlayer("Joe Malik", tournament)
     registerPlayer("Mao Tsu-hsi", tournament)
     registerPlayer("Atlanta Hope", tournament)
-    print playerStandings(tournament)
+    # print playerStandings(tournament)
     standings = playerStandings(tournament)
     [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
     reportMatch(id1, id2)
     reportMatch(id3, id4)
     reportMatch(id5, id6)
     reportMatch(id7, id8)
-    print playerStandings(tournament)
     pairings = swissPairings(tournament)
     print pairings
 
@@ -164,4 +164,5 @@ if __name__ == '__main__':
     testReportMatches()
     testPairings()
     tournament_test()
+    # tidyDB()
     print "Success!  All tests pass!"
