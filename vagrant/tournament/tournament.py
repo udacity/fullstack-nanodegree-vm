@@ -4,6 +4,7 @@
 #
 
 import psycopg2
+import bleach
 ###
 # Note to self - make a generic connection class with inserts and
 # returns as needed
@@ -16,6 +17,15 @@ def connect():
 
 
 def singleQuery(**kwargs):
+    """Generic query object - pass in arguments, and only use declared variables
+    to allow us to query database objects, the name, value, number of results
+    and the tournament.  This allows us to simplify what the various methods
+    are doing and reduce the amount of code written
+    Names are one of; player, tournament
+    Value is the integer represenation of the player's ID
+    Query is either an insert, update or a select.
+    Tournament is the ID of the tournament.
+    """
     conn = connect()
     curr = conn.cursor()
     query = kwargs.get('query')
@@ -26,9 +36,9 @@ def singleQuery(**kwargs):
     if ('tournament' in kwargs and 'value' in kwargs):
         curr.execute(query, value, (tournament,))
     elif ('tournament' in kwargs and 'name' in kwargs):
-        curr.execute(query, (name, tournament,))
+        curr.execute(query, (bleach.clean(name), tournament,))
     elif ('tournament' not in kwargs and 'name' in kwargs):
-        curr.execute(query, (name,))
+        curr.execute(query, (bleach.clean(name),))
     elif ('tournament' in kwargs and 'value' not in kwargs):
         curr.execute(query, (tournament,))
     else:
@@ -50,15 +60,13 @@ def singleQuery(**kwargs):
 
 
 def iterativeQuery(**kwargs):
+    """Iterative query to process the players for a given tournament and generate new pairings.   This will be enhanced in a later iteration to
+    verify players haven't met before"""
     conn = connect()
     curr = conn.cursor()
     query = kwargs.get('query')
-    # value = kwargs.get('value')
-    # name = kwargs.get('name')
-    # numResults = kwargs.get('numResults', 0)
     tournament = kwargs.get('tournament')
     listPairings = []
-    # print curr.mogrify(query, (tournament,))
     curr.execute(query, (tournament,))
     while (curr.rownumber < curr.rowcount):
         pair = []
@@ -70,9 +78,9 @@ def iterativeQuery(**kwargs):
 
 
 def tidyDB():
+    """Clean the database and remove old players, matches, and tournaments"""
     query = """
-    DELETE FROM players; DELETE FROM matches; DELETE FROM tournament
-    WHERE tournament_id > 1;"""
+    DELETE FROM players; DELETE FROM matches; DELETE FROM tournament;"""
     singleQuery(query=query)
 
 
@@ -105,6 +113,7 @@ def registerTournament(name="Default"):
 
 
 def registerPlayer(name, tournament=1):
+
     """Adds a player to the tournament database.
 
     The database assigns a unique serial id number for the player.  (This
@@ -113,9 +122,14 @@ def registerPlayer(name, tournament=1):
     Args:
       name: the player's full name (need not be unique).
     """
-    # Insert the player name, no need to return anything
+    # Insert the player name, if there is no tournament provided, try to use
+    # the lowest numbered, if this fails, then generate a new tournament.
     query = "INSERT INTO players (player_name, tournament_id) VALUES (%s, %s);"
-    return singleQuery(query=query, name=name, tournament=tournament)
+    try:
+        singleQuery(query=query, name=name, tournament=tournament)
+    except:
+        temp_tournament = registerTournament()
+        singleQuery(query=query, name=name, tournament=temp_tournament)
 
 
 def playerStandings(tournament=1):
@@ -170,4 +184,9 @@ def swissPairings(tournament=1):
     query = """select player_id, player_name from playerStandings
     WHERE tournament_id = %s
     """
-    return iterativeQuery(query=query, tournament=tournament)
+    ### test using a regular query, and processing locally.
+    # return iterativeQuery(query=query, tournament=tournament)
+    players = singleQuery(query=query, tournament=tournament, numResults="all")
+    print players
+    for player1, player2 in players:
+        print "player 1", player1, " player ", player2
