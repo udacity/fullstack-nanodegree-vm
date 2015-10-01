@@ -31,6 +31,13 @@ CREATE TABLE matches (
     played int default 0
 );
 
+--record matches played against each other - need to work out how to fold this into a view so we don't return previous matches.
+CREATE TABLE played (
+    match serial PRIMARY KEY,
+    winner int references players on DELETE CASCADE,
+    loser int references players on DELETE CASCADE
+);
+
 CREATE OR REPLACE FUNCTION matches_create_id() RETURNS trigger AS $$
     BEGIN
         INSERT INTO matches(player_id) values (NEW.player_id);

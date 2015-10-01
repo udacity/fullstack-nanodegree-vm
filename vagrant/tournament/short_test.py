@@ -3,7 +3,7 @@
 # Test cases for tournament.py
 
 from tournament import *
-
+import random
 
 def testDeleteMatches():
     deleteMatches()
@@ -13,7 +13,6 @@ def testDeleteMatches():
 def testDelete():
     deleteMatches()
     deletePlayers()
-    # print countPlayers()
     print "2. Player records can be deleted."
 
 
@@ -33,8 +32,8 @@ def testRegister():
     deleteMatches()
     deletePlayers()
     tournament = registerTournament("Scott's Test")
-    registerPlayer("Chandra Nalaar")
-    c = countPlayers()
+    registerPlayer("Chandra Nalaar", tournament)
+    c = countPlayers(tournament)
     if c != 1:
         raise ValueError(
             "After one player registers, countPlayers() should be 1.")
@@ -44,11 +43,12 @@ def testRegister():
 def testRegisterCountDelete():
     deleteMatches()
     deletePlayers()
-    registerPlayer("Markov Chaney")
-    registerPlayer("Joe Malik")
-    registerPlayer("Mao Tsu-hsi")
-    registerPlayer("Atlanta Hope")
-    c = countPlayers()
+    tournament = registerTournament("Scott's Test")
+    registerPlayer("Markov Chaney", tournament)
+    registerPlayer("Joe Malik", tournament)
+    registerPlayer("Mao Tsu-hsi", tournament)
+    registerPlayer("Atlanta Hope", tournament)
+    c = countPlayers(tournament)
     if c != 4:
         raise ValueError(
             "After registering four players, countPlayers should be 4.")
@@ -131,10 +131,13 @@ def testPairings():
 
 
 def tournament_test():
-    tournament = registerTournament("Scott's Test")
-    deleteMatches(tournament)
-    deletePlayers(tournament)
+    """expanded test with larger numbers of players
+    need to add logic to validate that players don't meet again in later rounds.
+    """
+    deleteMatches()
+    deletePlayers()
     playerIDs = []
+    tournament = registerTournament("Scott's Test")
     registerPlayer("Boots O'Neal", tournament)
     registerPlayer("Jim Jobson", tournament)
     registerPlayer("Nev Nobson", tournament)
@@ -152,6 +155,44 @@ def tournament_test():
     reportMatch(id7, id8)
     pairings = swissPairings(tournament)
     print pairings
+    print "9. Expanded test is successful after one round"
+    for pair in pairings:
+        ids = [pair[0], pair[2]]
+        random.shuffle(ids)
+        reportMatch(ids[0],ids[1])
+    standings = playerStandings(tournament)
+    print standings
+    pairings = swissPairings(tournament)
+    for pair in pairings:
+        ids = [pair[0], pair[2]]
+        random.shuffle(ids)
+        reportMatch(ids[0],ids[1])
+    standings = playerStandings(tournament)
+    print standings
+    pairings = swissPairings(tournament)
+    # print pairings
+    for pair in pairings:
+        ids = [pair[0], pair[2]]
+        random.shuffle(ids)
+        reportMatch(ids[0], ids[1])
+    standings = playerStandings(tournament)
+    print standings
+    pairings = swissPairings(tournament)
+    # print pairings
+    for pair in pairings:
+        ids = [pair[0], pair[2]]
+        random.shuffle(ids)
+        reportMatch(ids[0],ids[1])
+    standings = playerStandings(tournament)
+    print standings
+    pairings = swissPairings(tournament)
+    # print pairings
+    for pair in pairings:
+        ids = [pair[0], pair[2]]
+        random.shuffle(ids)
+        reportMatch(ids[0],ids[1])
+    standings = playerStandings(tournament)
+    print standings
 
 
 if __name__ == '__main__':

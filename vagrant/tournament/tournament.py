@@ -3,7 +3,6 @@
 # tournament.py -- implementation of a Swiss-system tournament
 #
 
-import dbconnect
 import psycopg2
 ###
 # Note to self - make a generic connection class with inserts and
@@ -28,6 +27,8 @@ def singleQuery(**kwargs):
         curr.execute(query, value, (tournament,))
     elif ('tournament' in kwargs and 'name' in kwargs):
         curr.execute(query, (name, tournament,))
+    elif ('tournament' not in kwargs and 'name' in kwargs):
+        curr.execute(query, (name,))
     elif ('tournament' in kwargs and 'value' not in kwargs):
         curr.execute(query, (tournament,))
     else:
@@ -44,7 +45,7 @@ def singleQuery(**kwargs):
     conn.commit()
     curr.close()
     conn.close()
-    print Result
+    # print Result
     return Result
 
 
@@ -70,19 +71,21 @@ def iterativeQuery(**kwargs):
 
 def tidyDB():
     query = """
-    TRUNCATE TABLE tournament CASCADE;"""
+    DELETE FROM players; DELETE FROM matches; DELETE FROM tournament
+    WHERE tournament_id > 1;"""
     singleQuery(query=query)
 
-def deleteMatches(tournament=1):
-    query = "DELETE FROM matches WHERE tournament_id = %s;"
-    singleQuery(query=query, tournament=tournament)
+
+def deleteMatches():
+    query = "DELETE FROM matches;"
+    singleQuery(query=query)
 
 
-def deletePlayers(tournament=1):
+def deletePlayers():
     """Remove all the player records from the database."""
     # Delete the player records - cascades in place to ensure correct execution.
-    query = "DELETE FROM players WHERE tournament_id = %s;"
-    singleQuery(query=query, tournament=tournament)
+    query = "DELETE FROM players;"
+    singleQuery(query=query)
 
 
 def countPlayers(tournament=1):
@@ -97,7 +100,7 @@ def registerTournament(name="Default"):
     If no tournaments exist, set a default tournament_id if none specified
     """
     query = """INSERT INTO tournament (tournament_name) VALUES (%s)
-    RETURNING tournament_id"""
+    RETURNING tournament_id;"""
     return singleQuery(query=query, name=name, numResults=1)
 
 
@@ -145,6 +148,8 @@ def reportMatch(winner, loser):
     singleQuery(query=query, value=(winner, loser))
     query = "UPDATE matches SET score = score + 1 WHERE player_id IN (%s);"  # noqa
     singleQuery(query=query, value=(winner))
+    query = "INSERT INTO played (winner, loser) VALUES %s"
+    singleQuery(query=query, value=(winner, loser))
 
 
 def swissPairings(tournament=1):
