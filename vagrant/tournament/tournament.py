@@ -60,7 +60,8 @@ def singleQuery(**kwargs):
 
 
 def iterativeQuery(**kwargs):
-    """Iterative query to process the players for a given tournament and generate new pairings.   This will be enhanced in a later iteration to
+    """Iterative query to process the players for a given tournament and
+     generate new pairings.   This will be enhanced in a later iteration to
     verify players haven't met before"""
     conn = connect()
     curr = conn.cursor()
@@ -77,14 +78,8 @@ def iterativeQuery(**kwargs):
     return listPairings
 
 
-def tidyDB():
-    """Clean the database and remove old players, matches, and tournaments"""
-    query = """
-    DELETE FROM players; DELETE FROM matches; DELETE FROM tournament;"""
-    singleQuery(query=query)
-
-
 def deleteMatches():
+    """Clean up old matches - to be followed by delete from players """
     query = "DELETE FROM matches;"
     singleQuery(query=query)
 
@@ -181,12 +176,11 @@ def swissPairings(tournament=1):
         id2: the second player's unique id
         name2: the second player's name
     """
-    query = """select player_id, player_name from playerStandings
-    WHERE tournament_id = %s
-    """
-    ### test using a regular query, and processing locally.
-    # return iterativeQuery(query=query, tournament=tournament)
-    players = singleQuery(query=query, tournament=tournament, numResults="all")
-    print players
-    for player1, player2 in players:
-        print "player 1", player1, " player ", player2
+    # Testing alternative query to see if I can get better results.
+    # query = """select player_id1, player_name1, player_id2, player_name2 from
+    # pairings where tournament_id  = %s"""
+    # players = singleQuery(query=query, tournament=tournament, numResults="all")  # noqa
+    query = """select player_id, player_name from playerStandings where
+     tournament_id = %s"""
+    players = iterativeQuery(query=query, tournament=tournament)
+    return players

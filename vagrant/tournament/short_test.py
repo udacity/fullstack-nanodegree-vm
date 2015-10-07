@@ -5,6 +5,7 @@
 from tournament import *
 import random
 
+
 def testDeleteMatches():
     deleteMatches()
     print "1. Old matches can be deleted."
@@ -159,38 +160,7 @@ def tournament_test():
     for pair in pairings:
         ids = [pair[0], pair[2]]
         random.shuffle(ids)
-        reportMatch(ids[0],ids[1])
-    standings = playerStandings(tournament)
-    print standings
-    pairings = swissPairings(tournament)
-    for pair in pairings:
-        ids = [pair[0], pair[2]]
-        random.shuffle(ids)
-        reportMatch(ids[0],ids[1])
-    standings = playerStandings(tournament)
-    print standings
-    pairings = swissPairings(tournament)
-    # print pairings
-    for pair in pairings:
-        ids = [pair[0], pair[2]]
-        random.shuffle(ids)
         reportMatch(ids[0], ids[1])
-    standings = playerStandings(tournament)
-    print standings
-    pairings = swissPairings(tournament)
-    # print pairings
-    for pair in pairings:
-        ids = [pair[0], pair[2]]
-        random.shuffle(ids)
-        reportMatch(ids[0],ids[1])
-    standings = playerStandings(tournament)
-    print standings
-    pairings = swissPairings(tournament)
-    # print pairings
-    for pair in pairings:
-        ids = [pair[0], pair[2]]
-        random.shuffle(ids)
-        reportMatch(ids[0],ids[1])
     standings = playerStandings(tournament)
     print standings
 
