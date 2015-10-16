@@ -6,6 +6,7 @@ pip install bleach
 pip install oauth2client
 pip install requests
 pip install httplib2
+pip install redis
 su postgres -c 'createuser -dRS vagrant'
 su vagrant -c 'createdb'
 su vagrant -c 'createdb forum'
