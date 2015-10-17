@@ -9,6 +9,8 @@ pip install httplib2
 pip install redis
 pip install passlib
 pip install itsdangerous
+pip install flask-httpauth
+pip install oauth2client
 su postgres -c 'createuser -dRS vagrant'
 su vagrant -c 'createdb'
 su vagrant -c 'createdb forum'
