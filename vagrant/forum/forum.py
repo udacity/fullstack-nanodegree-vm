@@ -21,7 +21,7 @@ HTML_WRAP = '''\
       textarea { width: 400px; height: 100px; }
       div.post { border: 1px solid #999;
                  padding: 10px 10px;
-		 margin: 10px 20%%; }
+                 margin: 10px 20%%; }
       hr.postbound { width: 50%%; }
       em.date { color: #999 }
     </style>
@@ -43,7 +43,8 @@ POST = '''\
     <div class=post><em class=date>%(time)s</em><br>%(content)s</div>
 '''
 
-## Request handler for main page
+
+# Request handler for main page
 def View(env, resp):
     '''View is the 'main page' of the forum.
 
@@ -56,10 +57,11 @@ def View(env, resp):
     resp('200 OK', headers)
     return [HTML_WRAP % ''.join(POST % p for p in posts)]
 
-## Request handler for posting - inserts to database
+
+# Request handler for posting - inserts to database
 def Post(env, resp):
     '''Post handles a submission of the forum's form.
-  
+
     The message the user posted is saved in the database, then it sends a 302
     Redirect back to the main page so the user can see their new post.
     '''
@@ -79,15 +81,18 @@ def Post(env, resp):
     # 302 redirect back to the main page
     headers = [('Location', '/'),
                ('Content-type', 'text/plain')]
-    resp('302 REDIRECT', headers) 
+    resp('302 REDIRECT', headers)
     return ['Redirecting']
 
-## Dispatch table - maps URL prefixes to request handlers
-DISPATCH = {'': View,
-            'post': Post,
-	    }
 
-## Dispatcher forwards requests according to the DISPATCH table.
+# Dispatch table - maps URL prefixes to request handlers
+DISPATCH = {
+            '': View,
+            'post': Post,
+           }
+
+
+# Dispatcher forwards requests according to the DISPATCH table.
 def Dispatcher(env, resp):
     '''Send requests to handlers based on the first path component.'''
     page = util.shift_path_info(env)
@@ -96,7 +101,7 @@ def Dispatcher(env, resp):
     else:
         status = '404 Not Found'
         headers = [('Content-type', 'text/plain')]
-        resp(status, headers)    
+        resp(status, headers)
         return ['Not Found: ' + page]
 
 
@@ -104,4 +109,3 @@ def Dispatcher(env, resp):
 httpd = make_server('', 8000, Dispatcher)
 print "Serving HTTP on port 8000..."
 httpd.serve_forever()
-
