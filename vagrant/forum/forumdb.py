@@ -1,13 +1,14 @@
 #
 # Database access functions for the web forum.
-# 
+#
 
 import time
 
-## Database connection
+# Database connection
 DB = []
 
-## Get posts from database.
+
+# Get posts from database.
 def GetAllPosts():
     '''Get all the posts from the database, sorted with the newest first.
 
@@ -20,7 +21,8 @@ def GetAllPosts():
     posts.sort(key=lambda row: row['time'], reverse=True)
     return posts
 
-## Add a post to the database.
+
+# Add a post to the database.
 def AddPost(content):
     '''Add a new post to the database.
 
