@@ -6,6 +6,7 @@ import time
 
 # Import PostgreSQL DB-API module
 import psycopg2
+import bleach
 
 ## Database connection
 DB = []
@@ -58,10 +59,16 @@ def AddPost(content):
       content: The text content of the new post.
     '''
 
-    # need the extra comma after content because something about a tuple
-    cursor.execute("INSERT INTO posts(content) VALUES('%s');" % content)
+    cleanContent = bleach.clean(content)
 
-    # commit on the connection, not the cursor
+    print "content is: ", content
+
+    #cursor.execute("INSERT INTO posts(content) VALUES('%s');" % content)
+
+    # need the extra comma after content because something about a tuple
+    cursor.execute("INSERT INTO posts(content) VALUES(%s);",(cleanContent,))
+
+    # commit the transaction on the connection, not the cursor
     pg.commit()
 
     pg.close();
