@@ -59,14 +59,20 @@ class MenuItem(Base):
 	# and look for the id column whenever I ask for restaurant_id
 	restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
 
+	# this is a feature of the ORM and tells it that the two classes
+	# are related in the same way that setting up the foreign key relationship
+	# tells SQL that the tables are related. It's smart enough to figure out
+	# what kind of relationship it is based on how we set up the foreign key
 	restaurant = relationship(Restaurant)
 
 # Insert at end of file
 
 # create instance of create_engine class and point to the database we will use
 # I believe this also creates that file restaurantmenu.db too
+# it looks like this will be needed everytime you want to connect to the DB
+# too, since it will form the connection with the DB-API
 engine = create_engine('sqlite:///restaurantmenu.db')
 
-# this does into the db and adds the classes we will soon create as
+# this goes into the db and adds the classes we will soon create as
 # new tables in our database
 Base.metadata.create_all(engine)
