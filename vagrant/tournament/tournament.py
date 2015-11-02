@@ -20,8 +20,10 @@ def deletePlayers():
 
 
 def countPlayers():
-    """Returns the number of players currently registered."""
-
+    """Returns the number of players currently registered.
+    select count(*) from players
+    """
+    
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -39,6 +41,8 @@ def playerStandings():
 
     The first entry in the list should be the player in first place, or a player
     tied for first place if there is currently a tie.
+    
+    slect LastName, FirstName, Rank, Wins, matches order by rank desc
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
