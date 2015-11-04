@@ -6,23 +6,67 @@
 import psycopg2
 
 
-def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+# Declare global variables here to be used across functions
+psql = psycopg2
+conn = psql.connect("dbname='tournament'")
+cur = conn.cursor()
+"""
+##############################
+# Test Code block
+# execute SQL command, Return one result
+try:
+    cur.execute("select * from players")
+    output = cur.fetchall()
+    print output
+except:
+    print "unable to print output"
+    
 
+# End Test Code Block
+##############################
+"""
+# Declare funtions to be used in applications of the database
+def getID():
+    """use SQL to create a custom ID """
+    cur.execute("select md5(random()::text || clock_timestamp()::text)::uuid")
+    output = cur.fetchone()
+    return output
+
+def connect():
+    """Connect to the PostgreSQL database.  Returns a database connection.
+    check if database tournament exists
+    else create
+    """
+    return psycopg2.connect("dbname='tournament'")
+    
 
 def deleteMatches():
-    """Remove all the match records from the database."""
+    """Remove all the match records from the database.
+    delete * from matches;
+    """
+    cur.execute("delete from matches where mID != 0")
+    output = cur.fetchone()
+    print output
 
 
 def deletePlayers():
-    """Remove all the player records from the database."""
+    """Remove all the player records from the database.
+    delete * from players;
+    """
+    cur.execute("delete from players where PlayerID > 0")
+    output = cur.fetchall()
+    conn.commit()
 
 
 def countPlayers():
     """Returns the number of players currently registered.
     select count(*) from players
     """
+    cur.execute("""SELECT COUNT(*) FROM players""")
+    output = cur.fetchall()
+    conn.commit()
+    print output
+    
     
 
 def registerPlayer(name):
@@ -78,4 +122,26 @@ def swissPairings():
         name2: the second player's name
     """
 
+    
+"""
+##############################
+# Test Code block
+# execute SQL command, Return one result
+try:
+    cur.execute("select * from players")
+    output = cur.fetchone()
+    print output
+except:
+    print "unable to print output"
+    
 
+# End Test Code Block
+##############################
+"""
+
+##############################
+# Test Code Block
+# create player with UID
+
+# End Test Code Block
+##############################

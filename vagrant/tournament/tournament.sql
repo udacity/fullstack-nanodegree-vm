@@ -11,27 +11,35 @@
 
 -- Things below this code is written by Bret Wagner, Original code unless
 -- stated otherwise.
+-- kill connection to old database and reset
+\c vagrant
+drop database tournament;
+-- begin new database
 
-create table players
+create database tournament;
+
+\c tournament;
+
+create table if not exists players
 (
-
-    PlayerID INT,
-    FirstName VARCHAR(200),
-    LastName VARCHAR(200),
-    Rank FLOAT(2),
-    Wins INT,
-    Matches INT,
-    OppWins INT,
-    byeWeek INT
+    
+    PlayerID serial primary key, 
+    FirstName text not null,
+    LastName text not null,
+    Rank INTEGER,
+    Wins INTEGER,
+    Matches INTEGER,
+    OppWins INTEGER,
+    byeWeek INTEGER
 
 );
 
-create table global_players
+create table if not exists global_players
 (
 
     UID INT,
-    FirstName VARCHAR(200),
-    LastName VARCHAR(200),
+    FirstName text,
+    LastName text,
     Rank INT,
     Wins INT,
     Matches INT,
@@ -39,17 +47,24 @@ create table global_players
     OppWins INT,
     byeWeek INT,
     globalRank INT,
-    email VARCHAR(200),
-    phone VARCHAR(20),
+    email text,
+    phone text,
     tournamentPoints INT
 
 );
+create table if not exists matches(
+    mID int,
+    pid1 int,
+    name1 text,
+    pid2 int,
+    name2 text
+    );
 
-create table tournaments
+create table if not exists tournaments
 (
 
     id INT,
-    name VARCHAR(200)
+    name text
 
     -- will add more columns to this table later as needed
 );
