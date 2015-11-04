@@ -1,0 +1,3 @@
+-- Database definition for Catalog project
+-- Add table and view definitions in here and populate
+-- required startup
