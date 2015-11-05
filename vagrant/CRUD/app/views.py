@@ -1,4 +1,4 @@
-from app import db, models
+from app import app, db, models
 from sqlalchemy.sql import func, desc
 
 def CustomerList():

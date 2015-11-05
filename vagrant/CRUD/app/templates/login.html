@@ -1,5 +1,11 @@
 {% extends "index.html" %}
-{% block body %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
   <form action="" method=post class="form-horizontal">
     <h2>Signin to FlaskLogin(Todo) Application </h2>
     <div class="control-group">

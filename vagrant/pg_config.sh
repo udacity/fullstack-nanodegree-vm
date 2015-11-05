@@ -8,7 +8,7 @@ pip install oauth2client
 pip install requests
 pip install httplib2
 sudo pip install wtforms wtforms-alchemy --upgrade
-sudo pip install --upgrade mysql-python flask-login flask-sqlalchemy
+sudo pip install --upgrade mysql-python flask-login==0.2.9 flask-sqlalchemy
 su postgres -c 'createuser -dRS vagrant'
 su vagrant -c 'createdb'
 su vagrant -c 'createdb forum'

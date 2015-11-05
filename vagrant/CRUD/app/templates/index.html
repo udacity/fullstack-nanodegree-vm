@@ -18,19 +18,29 @@
   </head>
   <body>
       <div class="nav-collapse collapse">
-            <ul class="nav">
-                <li class="active"><a href="/">Home</a></li>
-                {% if g.user.is_authenticated()%}
-                    <li><a href="/customers">Customers</a></li>
-                    <li><a href="{{ url_for('logout') }}">Logout</a></li>
-                {% endif %}
-                {% if not g.user.is_authenticated()%}
-                    <li><a href="{{ url_for('login') }}">Login</a></li>
-                    <li><a href="{{ url_for('register') }}">Register</a></li>
-                    <li><a href="{{ url_for('customerList') }}">Customers</a></li>
-                {% endif %}
-            </ul>
-</div>
+          <ul class="nav">
+              <li class="active"><a href="/">Home</a></li>
+              {% if g.user.is_authenticated()%}
+                  <li><a href="{{ url_for('customerList') }}">Customers</a></li>
+                  <li><a href="{{ url_for('logout') }}">Logout</a></li>
+              {% endif %}
+              {% if not g.user.is_authenticated()%}
+                  <li><a href="{{ url_for('login') }}">Login</a></li>
+                  <li><a href="{{ url_for('register') }}">Register</a></li>
+              {% endif %}
+          </ul>
+      </div>
+      {% with messages = get_flashed_messages() %}
+	{% if messages %}
+	  <div class="alert">
+		    <ul class="flashes">
+		    {% for message in messages %}
+		      <li>{{ message }}</li>
+		    {% endfor %}
+		    </ul>
+		</div>
+	{% endif %}
+	{% endwith %}
     <div id="content">{% block content %}{% endblock %}</div>
     <div id="footer">
       {% block footer %}
