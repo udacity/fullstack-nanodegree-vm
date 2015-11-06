@@ -118,10 +118,24 @@ def reportMatch(winner, loser):
       add new win
       display output
     """
-    # get current wins of winners
-    cur.execute("select name, wins from players")
+    # add new match to all players after match
+    matches = 0
+    cur.execute("select matches from players where PlayerID = " + str(winner) + " or PlayerID = " + str(loser))
+    output = cur.fetchone()
+    matches = int(output[0]) + 1
+    cur.execute("update players set matches = " + str(matches) + " where PlayerID = " + str(winner) + " or PlayerID = " + str(loser))
+    conn.commit
+    # get current wins of winners and add new wins
+    cur.execute("select wins from players where PlayerID = "+str(winner))
     output = cur.fetchall()
-    #print output
+    wins = output[0]
+    cur_wins = int(wins[0]) + 1
+    cur.execute("update players set wins = " + str(cur_wins) + "where PlayerID =" + str(winner))
+    conn.commit
+    cur.execute("select name, wins, matches from players")
+    output = cur.fetchall()
+    # print output
+    # print winner[0]
     """
     cur.execute("select name from players where PlayerID = "+ str(winner))
     output=cur.fetchall()
