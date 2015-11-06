@@ -157,9 +157,26 @@ def swissPairings():
         name1: the first player's name
         id2: the second player's unique id
         name2: the second player's name
+        
+        pull standings, limit to two results at a time
     """
-
-    
+    # check if number of players is even
+    count = countPlayers()
+    offset = 0 
+    if count %2 == 0:
+        for offset in range(0,count):
+            cur.execute("select PlayerID, name from players where PlayerID != 0 order by wins desc limit 2 offset " + str(offset))
+            output = cur.fetchall()
+            print output
+            return output
+            
+        else:
+            count -= 1
+            for offset in range(0,count):
+                cur.execute("select PlayerID, name from players where PlayerID != 0 order by wins desc limit 2 offset " + str(offset))
+                output = cur.fetchall()
+                print output
+                return output
 """
 ##############################
 # Test Code block
