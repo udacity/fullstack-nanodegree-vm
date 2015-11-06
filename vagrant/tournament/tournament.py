@@ -10,6 +10,8 @@ import psycopg2
 psql = psycopg2
 conn = psql.connect("dbname='tournament'")
 cur = conn.cursor()
+num = int
+
 """
 ##############################
 # Test Code block
@@ -45,8 +47,7 @@ def deleteMatches():
     delete * from matches;
     """
     cur.execute("delete from matches where mID != 0")
-    output = cur.fetchone()
-    print output
+    conn.commit()
 
 
 def deletePlayers():
@@ -54,8 +55,8 @@ def deletePlayers():
     delete * from players;
     """
     cur.execute("delete from players where PlayerID > 0")
-    output = cur.fetchall()
     conn.commit()
+    
 
 
 def countPlayers():
@@ -63,9 +64,8 @@ def countPlayers():
     select count(*) from players
     """
     cur.execute("""SELECT COUNT(*) FROM players""")
-    output = cur.fetchall()
-    conn.commit()
-    print output
+    output = cur.fetchone()
+    return output[0]
     
     
 
@@ -78,7 +78,15 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-
+    # validate name for '
+    if '\'' in name:
+        name_part = name.split('\'')
+        print name_part
+        name = name_part[0]+'\'\''+name_part[1]
+        print name
+    cur.execute("insert into players (name) values ('"+name+"')")
+    
+    conn.commit                
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
@@ -95,7 +103,9 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-
+    cur.execute("select PlayerID, name, Wins, Matches from players where PlayerID != 0")
+    output = cur.fetchall()
+    return output
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -103,9 +113,22 @@ def reportMatch(winner, loser):
     Args:
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
+      
+      get current win count
+      add new win
+      display output
     """
- 
- 
+    # get current wins of winners
+    cur.execute("select name, wins from players")
+    output = cur.fetchall()
+    print output
+    """
+    cur.execute("select name from players where PlayerID = "+ str(winner))
+    output=cur.fetchall()
+    print output
+    """
+    
+
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
   

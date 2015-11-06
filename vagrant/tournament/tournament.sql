@@ -24,49 +24,26 @@ create table if not exists players
 (
     
     PlayerID serial primary key, 
-    FirstName text not null,
-    LastName text not null,
+--    FirstName text not null,
+--    LastName text not null,
+    name text not null,
     Rank INTEGER,
-    Wins INTEGER,
-    Matches INTEGER,
+    Wins INTEGER default 0,
+    Matches INTEGER default 0,
     OppWins INTEGER,
     byeWeek INTEGER
 
 );
 
-create table if not exists global_players
-(
 
-    UID INT,
-    FirstName text,
-    LastName text,
-    Rank INT,
-    Wins INT,
-    Matches INT,
-    TotalMatches INT,
-    OppWins INT,
-    byeWeek INT,
-    globalRank INT,
-    email text,
-    phone text,
-    tournamentPoints INT
-
-);
 create table if not exists matches(
-    mID int,
+    mID serial primary key,
     pid1 int,
     name1 text,
     pid2 int,
     name2 text
     );
 
-create table if not exists tournaments
-(
 
-    id INT,
-    name text
-
-    -- will add more columns to this table later as needed
-);
-
-
+create view standings as 
+select PlayerID, name, Wins, Matches from players where PlayerID != 0 order by Wins asc;

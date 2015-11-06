@@ -10,6 +10,7 @@ conn = psycopg2.connect("dbname='tournament'")
 cur = conn.cursor()
 
 def fillPlayers():
+    """ Creates 10 players in the database """
     pid = getID()
     cur.execute("insert into players (FirstName,LastName) values ('Bret','Wagner')")
     cur.execute("""insert into players (FirstName,LastName)
@@ -35,9 +36,4 @@ fillPlayers()
 
 conn.commit()
 
-cur.execute("select * from players")
-output = cur.fetchall()
-for rows in output:
-    print rows
 
-conn.commit()
