@@ -6,30 +6,41 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <!-- If you are using the CSS version, only link these 2 files, you may add app.css to use for your overrides if you like -->
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/font-hack/2.017/css/hack.min.css">
+      <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/foundation.css') }}">
 
     <!-- If you are using the gem version, you need this only -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
-
+    <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
     <script src="/static/js/vendor/modernizr.js"></script>
-    <title>{% block title %}{% endblock %} - My Webpage</title>
+    <title>{% block title %}{% endblock %}</title>
     {% endblock %}
   </head>
   <body>
-      <div class="nav-collapse collapse">
-          <ul class="nav">
-              <li class="active"><a href="/">Home</a></li>
-              {% if g.user.is_authenticated()%}
-                  <li><a href="{{ url_for('customerList') }}">Customers</a></li>
-                  <li><a href="{{ url_for('logout') }}">Logout</a></li>
+      <nav class="navbar navbar-default">
+        <div class="container-fluid">
+          <div class="navbar-header">Customer List    </div>
+           <ul class="nav navbar-nav">
+ {% if g.user.is_authenticated()%}
+                  <li class="active"> <a href="{{ url_for('customerList') }}">Customer Edit</a></li>
+                            <li>
+                   <form style="margin: 0; padding: 0; display: inline;" action="{{ url_for('search') }}" method="post" name="search">{{ g.search_form.hidden_tag() }}{{ g.search_form.search(size=20) }}</li><li><input style="display: inline;" type="submit" value="Search"></form></li>
+                            <li>
+                  <a href="{{ url_for('logout') }}">Logout</a></li>
               {% endif %}
               {% if not g.user.is_authenticated()%}
-                  <li><a href="{{ url_for('login') }}">Login</a></li>
-                  <li><a href="{{ url_for('register') }}">Register</a></li>
+                <li class="active"><a href="{{ url_for('customerList') }}">Customer View</a> </li>
+                            <li>
+                  <a href="{{ url_for('login') }}">Login</a></li>
+                            <li>
+                  <a href="{{ url_for('register') }}">Register</a></li>
               {% endif %}
-          </ul>
+</ul>
       </div>
+  </div>
+</nav>
       {% with messages = get_flashed_messages() %}
 	{% if messages %}
 	  <div class="alert">
@@ -42,9 +53,9 @@
 	{% endif %}
 	{% endwith %}
     <div id="content">{% block content %}{% endblock %}</div>
-    <div id="footer">
+    <div id="footer" align=right style="font-size:60%">
       {% block footer %}
-      &copy; Copyright 2010 by <a href="http://domain.invalid/">you</a>.
+      &copy; Copyright 2015 by Scott Harman SAM Limited
       {% endblock %}
     </div>
     <script src="/static/js/vendor/jquery.js"></script>

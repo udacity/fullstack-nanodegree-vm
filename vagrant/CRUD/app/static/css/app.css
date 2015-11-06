@@ -40,3 +40,21 @@ table {
   table tr td {
     display: table-cell;
     line-height: 0.925rem; }
+
+body {
+    background-image: -webkit-gradient(
+    	linear,
+    	right bottom,
+    	left top,
+    	color-stop(0, #787878),
+    	color-stop(1, #D4D4D4)
+    );
+    background-image: -o-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: -moz-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: -webkit-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: -ms-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: linear-gradient(to left top, #787878 0%, #D4D4D4 100%);
+    background-repeat: no-repeat;
+background-attachment: fixed;
+font-family: Hack, monospace;
+}

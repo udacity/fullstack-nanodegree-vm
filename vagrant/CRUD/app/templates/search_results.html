@@ -1,0 +1,52 @@
+<!-- extend base layout -->
+  {% extends "index.html" %}
+  {% block title %}Customer Country View{% endblock %}
+  {% block head %}
+    {{ super() }}
+    <style type="text/css">
+      .important { color: #336699; }
+    </style>
+  {% endblock %}
+  {% block content %}
+  <div align=center id="pagination">
+  <h1>Search results for "{{ query }}":</h1>
+  <h3>Customer Country View</h3>
+    {% if customers.has_prev %}
+          <a href="{{ url_for('customerList', page=customers.prev_num) }}">Back</a>
+  {% endif %}
+
+  {% if customers.has_next %}
+          <a href="{{ url_for('customerList', page=customers.next_num) }}">Next</a>
+  {% endif %}
+  </div>
+
+  <div style="clear:both;"></div>
+  <table class="table" width=98% align=center>
+      <tr>
+          <th>Account ID</th>
+          <th>Account Name</th>
+          <th>Customer Name</th>
+          <th>Customer Note</th>
+          <th>Renewal Date</th>
+                  <th>Country</th>
+                          <th>Region</th>
+                                  <th>Contract</th>
+                                          <th>CC Group</th>
+      </tr>
+  {% for customer in customers.items %}
+  <tr>
+      <td> {{ customer.account_id }} </td>
+      <td> {{ customer.account_name }} </td>
+      <td> {{ customer.customer_name }} </td>
+      <td> {{ customer.CustomerNote }} </td>
+      <td> {{ customer.renewal_date }} </td>
+
+      <td> {{ customer.COUNTRY }} </td>
+      <td> {{ customer.SupportRegion }} </td>
+      <td> {{ customer.contract_type }} </td>
+          <td> {{ customer.CCGroup }} </td>
+      </tr>
+  {% endfor %}
+  </table>
+
+  {% endblock %}
