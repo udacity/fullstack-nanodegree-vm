@@ -81,9 +81,9 @@ def registerPlayer(name):
     # validate name for '
     if '\'' in name:
         name_part = name.split('\'')
-        print name_part
+        
         name = name_part[0]+'\'\''+name_part[1]
-        print name
+        
     cur.execute("insert into players (name) values ('"+name+"')")
     
     conn.commit                
@@ -121,7 +121,7 @@ def reportMatch(winner, loser):
     # get current wins of winners
     cur.execute("select name, wins from players")
     output = cur.fetchall()
-    print output
+    #print output
     """
     cur.execute("select name from players where PlayerID = "+ str(winner))
     output=cur.fetchall()
