@@ -162,21 +162,40 @@ def swissPairings():
     """
     # check if number of players is even
     count = countPlayers()
-    offset = 0 
+    offset = 0
+    pairs =0
+    match = ()
+    c = 0
     if count %2 == 0:
-        for offset in range(0,count):
-            cur.execute("select PlayerID, name from players where PlayerID != 0 order by wins desc limit 2 offset " + str(offset))
+        while offset < count:
+            # cur.execute("select playerid, name from players order by wins limit 2 offset " + str(offset))
+            c = 0
+            cur.execute("select playerid, name from players order by wins asc limit 2 offset " + str(offset))
+            offset +=1
             output = cur.fetchall()
-            print output
-            return output
+            pair = [rows for rows in output]
+            # print pair
+            player1 = pair[0]
+            player2 = pair[1]
+            pid1 = str(player1[0])
+            name1 = str(player1[1])
+            pid2 = str(player2[0])
+            name2 = str(player2[1])
+            match = str(pid1 +',\''+ name1 +'\','+ pid2 +',\''+ name2 +'\'')
+            cur.execute("insert into matches (pid1, name1, pid2, name2) values ("+ match + ")")
+            cur.execute("select pid1, name1, pid2, name2 from matches")
+            conn.commit()
+            output = cur.fetchall()
+            # print output
+            offset += 1
+            c += 2
+            # print match
             
-        else:
-            count -= 1
-            for offset in range(0,count):
-                cur.execute("select PlayerID, name from players where PlayerID != 0 order by wins desc limit 2 offset " + str(offset))
-                output = cur.fetchall()
-                print output
-                return output
+        return output
+            
+        
+    
+                
 """
 ##############################
 # Test Code block

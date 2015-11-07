@@ -73,7 +73,7 @@ def testStandingsBeforeMatches():
         raise ValueError(
             "Newly registered players should have no matches or wins.")   
     cur.execute("select * from players")
-    print cur.fetchall()
+    # print cur.fetchall()
     if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
         raise ValueError("Registered players' names should appear in standings, "
                          "even if they have no matches played.")
