@@ -24,6 +24,7 @@ def deletePlayers():
     DB = connect()
     c = DB.cursor()
     query = "DELETE from players; --"
+    c.execute(query)
     DB.commit()
     DB.close()
 
@@ -32,9 +33,9 @@ def countPlayers():
     DB = connect()
     c = DB.cursor()
     query = "SELECT count(RID) as COUNT FROM registration GROUP BY RID"
+    c.execute(query)
     count = ({'COUNT': int(row[0])}
-                 for row in cur.fetchall())
-    DB.commit()
+                 for row in c.fetchall())
     DB.close()
     return count
 
@@ -50,6 +51,7 @@ def registerPlayer(name):
     DB = connect()
     c = DB.cursor()
     query = "INSERT INTO players(PName) VALUES ('%s')" % (name)
+    c.execute(query)
     DB.commit()
     DB.close()
 
@@ -70,7 +72,7 @@ def playerStandings():
     c = DB.cursor()
     query = ("SELECT PName, p.PID, r.Wins, r.Matches FROM players(PName)"
              " as p, registration as r WHERE p.PID = r.PID ORDER BY r.Matches"
-    DB.commit()
+    c.execute(query)
     DB.close()
 
 def reportMatch(winner, loser):
@@ -82,7 +84,22 @@ def reportMatch(winner, loser):
     """
     DB = connect()
     c = DB.cursor()
-    query = "INSERT INTO matches() VALUES ('%s')" % (name)
+    query = "INSERT INTO matches(Winner, Loser) VALUES ('%s', '%s')" % (winner, loser)
+    c.execute(query)
+    DB.commit()
+    DB.close()
+
+def reportMatchDraw(winner, loser):
+    """Records the outcome of a single match between two players.
+
+    Args:
+      winner:  the id number of the player who won
+      loser:  the id number of the player who lost
+    """
+    DB = connect()
+    c = DB.cursor()
+    query = "INSERT INTO matches(Winner, Loser, Draw) VALUES ('%s', '%s', TRUE)" % (winner, loser)
+    c.execute(query)
     DB.commit()
     DB.close()
  
@@ -101,5 +118,8 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-
-
+    DB = connect()
+    c = DB.cursor()
+    query = ""
+    c.execute(query)
+    DB.close()
