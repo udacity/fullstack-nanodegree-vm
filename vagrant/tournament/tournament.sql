@@ -13,21 +13,21 @@
 -- stated otherwise.
 -- kill connection to old database and reset
 \c vagrant
-drop database tournament;
+-- drop database tournament;
 -- begin new database
 
 create database tournament;
 
 \c tournament;
 
-create table if not exists players
+create table players
 (
     
     PlayerID serial primary key, 
 --    FirstName text not null,
 --    LastName text not null,
     name text not null,
-    Rank INTEGER,
+--    Rank INTEGER,
     Wins INTEGER default 0,
     Matches INTEGER default 0,
     OppWins INTEGER,
@@ -36,7 +36,7 @@ create table if not exists players
 );
 
 
-create table if not exists matches(
+create table matches(
     mID serial primary key,
     pid1 int,
     name1 text,
@@ -45,5 +45,3 @@ create table if not exists matches(
     );
 
 
-create view standings as 
-select PlayerID, name, Wins, Matches from players where PlayerID != 0 order by Wins asc;
