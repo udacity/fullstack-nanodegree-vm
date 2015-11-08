@@ -28,10 +28,11 @@ CREATE TABLE registration
 	PID integer FOREIGN KEY REFERENCES players(PID),
 	Wins int,
 	Draws int,
-	Losses int
+	Losses int,
+	Matches int
 );
 
-CREATE TABLE matchups
+CREATE TABLE matches
 (
 	MatchID serial NOT NULL PRIMARY KEY,
 	PlayerID integer FOREIGN KEY REFERENCES players(PID),
