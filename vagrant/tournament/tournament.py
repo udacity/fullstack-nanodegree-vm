@@ -46,6 +46,20 @@ def countPlayers():
     output = cur.fetchone()
     return output[0]
 
+def checkName(name):
+    """
+    This will eventually be able to check names to see if they have
+    any special characters. Valid characters will include Letters
+    both lowercase and capital, spaces for players who wish to have
+    their first and last name listed, and apostrophies for players
+    like "Boots O'Neal" who like to through things off.
+    """
+    # validate name for ' character
+    if '\'' in name:
+        name_part = name.split('\'')
+        name = name_part[0]+'\'\''+name_part[1]
+    return name
+
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -55,10 +69,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    # validate name for ' character
-    if '\'' in name:
-        name_part = name.split('\'')
-        name = name_part[0]+'\'\''+name_part[1]
+    name = checkName(name)
     cur.execute("insert into players (name) values ('"+name+"')")
     conn.commit()
 
@@ -151,10 +162,11 @@ def swissPairings():
             player2 = pair[1]
             pid1 = str(player1[0])
             name1 = str(player1[1])
+            name1 = checkName(name1)
             pid2 = str(player2[0])
             name2 = str(player2[1])
-            match = str(pid1 + ',\'' + name1 + '\',' + pid2 + ''',\'
-                        ''' + name2 + '\'')
+            name2 = checkName(name2)
+            match = str(pid1 + ',\'' + name1 + '\',' + pid2 + ',\'' + name2 + '\'')
             cur.execute("""insert into matches (pid1, name1, pid2, name2)
                             values (""" + match + ")")
             cur.execute("select pid1, name1, pid2, name2 from matches")
@@ -177,8 +189,10 @@ def swissPairings():
             # pull data from standings table and prepare for matches
             pid1 = str(player1[0])
             name1 = str(player1[1])
+            name1 = checkName(name1)
             pid2 = str(player2[0])
             name2 = str(player2[1])
+            name2 = checkName(name2)
             # create match and insert into table
             match = str(pid1 + ',\'' + name1 + '\',' + pid2 + ''',\'
                         ''' + name2 + '\'')

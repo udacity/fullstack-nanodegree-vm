@@ -30,8 +30,8 @@ create table players
 --    Rank INTEGER,
     Wins INTEGER default 0,
     Matches INTEGER default 0,
-    OppWins INTEGER,
-    byeWeek INTEGER
+    OppWins INTEGER default 0,
+    byeWeek INTEGER default 0
 
 );
 
@@ -42,6 +42,12 @@ create table matches(
     name1 text,
     pid2 int,
     name2 text
+    );
+    
+create table records (
+    matchid serial primary key,
+    winner int,
+    loser int
     );
 
 
