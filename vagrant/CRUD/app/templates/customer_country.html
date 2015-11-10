@@ -36,7 +36,7 @@
     <td> {{ customer.account_id }} </td>
     <td> {{ customer.account_name }} </td>
     <td> {{ customer.customer_name }} </td>
-    <td> {{ customer.CustomerNote }} </td>
+    <td> {{ customer.CustomerNote }} {% if g.user.can_i_edit()%} I CAN EDIT!!              {% endif %}</td>
     <td> {{ customer.renewal_date }} </td>
 
     <td> {{ customer.COUNTRY }} </td>

@@ -1,0 +1,44 @@
+{% extends "index.html" %}
+{% block title %}Authenticated User List{% endblock %}
+{% block head %}
+  {{ super() }}
+  <style type="text/css">
+    .important { color: #336699; }
+  </style>
+{% endblock %}
+{% block content %}
+<h3 align=center>User List</h3>
+<div style="clear:both;"></div>
+<table class="table" width=98% align=center>
+    <tr>
+        <th>User ID</th>
+        <th>User Name</th>
+        <th>Email Address</th>
+        <th>Full Name</th>
+        <th>Registered On</th>
+                <th>Can Edit</th>
+                        <th>Edit Customer Note</th>
+                                <th>Can Create Customer</th>
+                                        <th>IS Admin</th>
+    </tr>
+    {{ users }}
+
+{% for user in users %}
+
+<tr class='clickable-row' data-href="{{url_for('edit_user',user_id=user.user_id) }}">
+    <td> {{ user.user_id }} </td>
+    <td> {{ user.username }} </td>
+    <td> {{ user.email }} </td>
+    <td> {{ user.fullname }} </td>
+    <td> {{ user.registered_on }} </td>
+
+    <td> {{ user.can_edit }} </td>
+    <td> {{ user.edit_note }} </td>
+    <td> {{ user.can_create }} </td>
+        <td> {{ user.is_admin }} </td>
+    </tr>
+
+{% endfor %}
+</table>
+
+{% endblock %}

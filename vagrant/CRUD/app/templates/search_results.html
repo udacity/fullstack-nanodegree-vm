@@ -12,11 +12,11 @@
   <h1>Search results for "{{ query }}":</h1>
   <h3>Customer Country View</h3>
     {% if customers.has_prev %}
-          <a href="{{ url_for('customerList', page=customers.prev_num) }}">Back</a>
+          <a href="{{ url_for('search_results', page=customers.prev_num) }}">Back</a>
   {% endif %}
 
   {% if customers.has_next %}
-          <a href="{{ url_for('customerList', page=customers.next_num) }}">Next</a>
+          <a href="{{ url_for('search_results', page=customers.next_num) }}">Next</a>
   {% endif %}
   </div>
 
@@ -38,7 +38,7 @@
       <td> {{ customer.account_id }} </td>
       <td> {{ customer.account_name }} </td>
       <td> {{ customer.customer_name }} </td>
-      <td> {{ customer.CustomerNote }} </td>
+    <td> {{ customer.CustomerNote }} {% if g.user.can_edit()%} I CAN EDIT!!              {% endif %}</td>
       <td> {{ customer.renewal_date }} </td>
 
       <td> {{ customer.COUNTRY }} </td>

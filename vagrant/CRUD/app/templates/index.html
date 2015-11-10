@@ -14,33 +14,71 @@
     <!-- If you are using the gem version, you need this only -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
     <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="/static/js/vendor/modernizr.js"></script>
+    <script>
+    jQuery(document).ready(function($) {
+    $(".clickable-row").click(function() {
+        window.document.location = $(this).data("href");
+    });
+});
+</script>
     <title>{% block title %}{% endblock %}</title>
     {% endblock %}
   </head>
   <body>
-      <nav class="navbar navbar-default">
-        <div class="container-fluid">
-          <div class="navbar-header">Customer List    </div>
-           <ul class="nav navbar-nav">
+      <nav class="top-bar" data-topbar role="navigation">
+          <ul class="title-area">
+              <li class="name">
+                  <h1><a href="#">SAM Customer Editor</a>	</h1>
+              </li>
+              <!-- Remove the class "menu-icon" to get rid of menu icon. Take out "Menu" to just have icon alone -->
+              <li class="toggle-topbar menu-icon">
+                  <a href="#"><span>Menu</span></a>
+              </li>
+          </ul>
+          <section class="top-bar-section">
  {% if g.user.is_authenticated()%}
-                  <li class="active"> <a href="{{ url_for('customerList') }}">Customer Edit</a></li>
-                            <li>
-                   <form style="margin: 0; padding: 0; display: inline;" action="{{ url_for('search') }}" method="post" name="search">{{ g.search_form.hidden_tag() }}{{ g.search_form.search(size=20) }}</li><li><input style="display: inline;" type="submit" value="Search"></form></li>
-                            <li>
-                  <a href="{{ url_for('logout') }}">Logout</a></li>
+ <ul class="left">
+<li>
+ <a href="{{ url_for('customerList') }}">Customer Edit</a>
+</li>
+<li class="divider" />
+<li>
+ <form style="margin: 0; padding: 0; display: block;" action="{{ url_for('search') }}" method="post" name="customer_search">{{ g.search_form.hidden_tag() }}{{ g.search_form.search(size=20) }}
+ </li><li><input style="display: inline;" type="submit" value="Search"></li><li>
+ </form>
+</li>        </ul>
+ <ul class="right">
+     <li>
+      <a href="{{ url_for('users') }}">Edit Users</a>
+     </li><li class="divider" />
+<li>
+ <a href="{{ url_for('logout') }}">Logout</a>
+</li>
+</ul>
               {% endif %}
               {% if not g.user.is_authenticated()%}
-                <li class="active"><a href="{{ url_for('customerList') }}">Customer View</a> </li>
-                            <li>
-                  <a href="{{ url_for('login') }}">Login</a></li>
-                            <li>
-                  <a href="{{ url_for('register') }}">Register</a></li>
+              <!-- Right Nav Section -->
+              <ul class="right">
+                  <li class="active">
+                      <a href="{{ url_for('register') }}">Register</a>
+                  </li>
+                   <li>
+                  <a href="{{ url_for('login') }}">Login</a>
+                  </li>
+              </ul>
+
+              <!-- Left Nav Section -->
+              <ul class="left">
+                  <li>
+                  <a href="{{ url_for('customerList') }}">Customer View</a>
+                  </li>
+              </ul>
               {% endif %}
-</ul>
-      </div>
-  </div>
-</nav>
+          </section>
+
+      </nav>
       {% with messages = get_flashed_messages() %}
 	{% if messages %}
 	  <div class="alert">
