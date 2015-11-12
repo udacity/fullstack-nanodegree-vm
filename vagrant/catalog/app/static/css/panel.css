@@ -1,0 +1,56 @@
+div .left-pane{
+	float: left;
+}
+
+div .main-pane{
+	float: none;
+}
+
+div .right-pane{
+	float: right;
+}
+
+.grid-item-container{
+  padding: 2% 2% 0;
+  text-align: justify;
+  margin-bottom: 2%;
+}
+
+.grid-item-container:after{
+  content: '';
+  display: inline-block;
+  width: 100%;
+}
+
+.grid-item-container .grid-item,
+.grid-item-container .gap{
+  display: inline-block;
+  width: 49%;
+}
+
+.grid-item-container .grid-item{
+  text-align: left;
+  /*background: #03899c;*/
+  margin-bottom: 2%;
+  /*display: none; <-- uncomment this rule for use with MixItUp*/
+}
+
+.grid-item-container .grid-item:before{
+  content: '';
+  display: inline-block;
+  /*padding-top: 20px;;*/
+}
+
+@media all and (min-width: 420px){
+  .grid-item-container .grid-item,
+  .grid-item-container .gap{
+    width: 49%;
+  }
+}
+
+@media all and (min-width: 640px){
+  .grid-item-container .grid-item,
+  .grid-item-container .gap{
+    width: 32%;
+  }
+}

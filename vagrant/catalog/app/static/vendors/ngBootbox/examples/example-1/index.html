@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ngBootbox - Example 1</title>
+    <link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+    <link href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        .test-class .modal-content {
+            background-color: lightpink !important;
+        }
+    </style>
+</head>
+<body ng-app="testApp">
+<div class="jumbotron">
+    <div class="container">
+        <h1>ngBootbox</h1>
+        <p>AngularJS wrapper for <a href="http://bootboxjs.com" target="_blank">Bootbox.js</a>. Bootbox.js allowes you to easily make use of <a href="http://getbootstrap.com" target="_blank">Twitter Bootstrap</a> modals for javascript alerts, confirms and prompts. ngBootbox includes three directives, one for each of alert, confirm and prompt.</p>
+        <p>
+            <a class="btn btn-default btn-lg" role="button" href="https://github.com/eriktufvesson/ngBootbox" target="_blank">
+                <i class="fa fa-github"></i>
+                Fork me on Github
+            </a>
+        </p>
+    </div>
+</div>
+<div class="container" ng-controller="TestCtrl">
+    <div class="row">
+        <div class="col-lg-8 col-lg-offset-2">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1 style="display:inline-block;">Example 1</h1>
+                    <small>
+                        Set locale for default buttons:
+                        <select data-ng-options="locale for locale in locales" data-ng-change="switchLanguage()" data-ng-model="selectedLocale">
+                        </select>
+                    </small>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-bootbox-alert="Alert message!">
+                        Alert
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-bootbox-confirm="Are you sure you want to confirm this?"
+                            ng-bootbox-confirm-action="addAction('Confirmed', 'true')" ng-bootbox-confirm-action-cancel="addAction('Confirmed', 'false')">
+                        Confirm
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-bootbox-prompt="Please type in your name"
+                            ng-bootbox-prompt-action="addAction('Prompt returned', result)" ng-bootbox-prompt-action-cancel="addAction('Prompt', 'cancelled')">
+                        Prompt
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary"
+                            ng-bootbox-title="A cool title!"
+                            ng-bootbox-custom-dialog="Some custom text"
+                            ng-bootbox-buttons="customDialogButtons">
+                        Custom dialog
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-click="handleAlert()">Alert Svc</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-click="handleConfirm()">Confirm Svc</button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-click="handlePrompt()">Prompt Svc</button>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary" ng-click="openCustomDialogWithService()">Dialog Svc</button>
+                </div>
+            </div>
+            <div class="row" style="padding-top: 20px">
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-danger"
+                            ng-bootbox-title="Danger - Danger - Danger"
+                            ng-bootbox-custom-dialog="Are you sure about the asdf book delete?"
+                            ng-bootbox-buttons="customConfirmButtons">
+                        Custom confirm
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-primary"
+                            ng-bootbox-title="A cool title!"
+                            ng-bootbox-custom-dialog
+                            ng-bootbox-custom-dialog-template="custom-dialog.tpl.html"
+                            ng-bootbox-buttons="customDialogButtons"
+                            ng-bootbox-class-name="test-class">
+                        Custom dialog template
+                    </button>
+                </div>
+                <div class="col-md-4">
+                    <button class="btn btn-lg btn-success"
+                            ng-bootbox-custom-dialog
+                            ng-bootbox-options="customDialogOptions">
+                        Custom dialog options
+                    </button>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 20px;">
+                <div class="col-md-12">
+                    <ul class="list-group">
+                        <li class="list-group-item" ng-repeat="action in actions">{{action.msg}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>Usage</h1>
+                    <h2>ng-bootbox-alert</h2>
+                        <pre>
+&lt;button class="btn btn-default" ng-bootbox-alert="Alert message!"&gt;
+    Alert
+&lt;/button&gt;</pre>
+                    <h2>ng-bootbox-confirm</h2>
+                        <pre>
+&lt;button class="btn btn-lg btn-primary" ng-bootbox-confirm="Are you sure you want to confirm this?"
+        ng-bootbox-confirm-action="confirmCallbackMethod(attr1, attr2)" ng-bootbox-confirm-action-cancel="confirmCallbackCancel(attr1, attr2)"&gt;
+    Confirm
+&lt;/button&gt;</pre>
+                    <h2>ng-bootbox-prompt</h2>
+                        <pre>
+&lt;button class="btn btn-lg btn-primary" ng-bootbox-prompt="Please type in your name"
+        ng-bootbox-prompt-action="promptCallback(result)" ng-bootbox-prompt-action-cancel="promptCallbackCancelled(result)"&gt;
+    Prompt
+&lt;/button&gt;</pre>
+                    <h2>ng-bootbox-custom-dialog</h2>
+                        <pre>
+&lt;button class="btn btn-lg btn-primary"
+        ng-bootbox-title="A cool title!"
+        ng-bootbox-custom-dialog="Some custom text"
+        ng-bootbox-buttons="customDialogButtons"&gt;
+    Custom dialog
+&lt;/button&gt;</pre>
+                        <pre>$scope.customDialogButtons = {
+            warning: {
+                label: "Warning!",
+                className: "btn-warning",
+                callback: function() { ... }
+            },
+            success: {
+                label: "Success!",
+                className: "btn-success",
+                callback: function() { ... }
+            },
+            danger: {
+                label: "Danger!",
+                className: "btn-danger",
+                callback: function() { ... }
+            },
+            main: {
+                label: "Click ME!",
+                className: "btn-primary",
+                callback: function() { ... }
+            }
+        };</pre>
+                    <h2>Custom dialog with HTML template</h2>
+                        <pre>
+&lt;button class="btn btn-lg btn-primary"
+        ng-bootbox-title="A cool title!"
+        ng-bootbox-custom-dialog
+        ng-bootbox-custom-dialog-template="custom-dialog.tpl.html"
+        ng-bootbox-buttons="customDialogButtons"&gt;
+    Custom dialog with template
+&lt;/button&gt;
+                        </pre>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../bower_components/jquery/dist/jquery.js"></script>
+<script src="../../bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="../../bower_components/angular/angular.min.js"></script>
+<script src="../../bower_components/bootbox/bootbox.js"></script>
+<script src="app.js"></script>
+<script src="../../ngBootbox.js"></script>
+</body>
+</html>

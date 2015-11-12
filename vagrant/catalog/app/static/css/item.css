@@ -1,0 +1,80 @@
+.grid-item {
+  position:relative;
+  display: inline-block;
+  text-align: center;
+  width: 200px;
+  /*height: 350px;*/
+  /*padding: 10px;*/
+  float: left;
+  /*border: 5px solid #e5e5e5;*/
+  /*margin-bottom: 10px;*/
+  /*margin-left: 10px;*/
+  margin-right: 5px;
+  background: #fff;
+  vertical-align: top;
+}
+
+.grid-item .grid-item-title {
+  height: 30px;
+  /*margin-bottom: 10px;*/
+  padding-left: 20px;
+  padding-right: 20px;
+  margin-bottom: 20px;
+  /*float:inherit;*/
+  /*position: sticky;*/
+  padding: 1px;
+  vertical-align:top;
+  text-align: center;
+}
+
+.grid-item .grid-item-title h1 {
+  font-family: Philosopher, cursive, Arial, serif;
+  font-weight: 400;
+  font-size: 14px;
+  text-align: center;
+  background-color: #ccf;
+  padding-left: 10px;
+  padding-right: 10px;
+  /*padding-top: 5px;*/
+  padding: 5px;
+}
+
+.grid-item .grid-item-description {
+  height: 30px;
+  margin-top: 5px;
+}
+
+.grid-item .grid-item-description h3 {
+  font-family: Montserrat, cursive, Arial, serif;
+  font-weight: 400;
+  font-size: 10px;
+}
+
+.grid-item .grid-item-image {
+width: 100%;
+  height: 185px;
+  padding: 1px;
+}
+
+.grid-item .grid-item-image img {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 180px;
+  height: 100%;
+}
+
+.grid-item .grid-item-details{
+  height: 50px;
+  margin-top: 5px;
+  padding-left: 5px;
+  padding-right: 5px;
+  vertical-align: bottom;
+}
+
+.grid-item .grid-item-details button {
+  vertical-align: bottom;
+}
+
+.grid-item .grid-item-details div {
+  vertical-align: bottom;
+}
