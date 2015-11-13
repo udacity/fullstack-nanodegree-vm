@@ -22,8 +22,8 @@ def GetAllPosts():
 
     #use a generator expression perhaps?
     allposts = []
-
-    QUERY = cur.execute("SELECT content, time FROM posts ORDER BY time DESC;"))
+    QUERY = cur.execute("SELECT content, time FROM posts ORDER BY time DESC;")
+    print(QUERY)
     return allposts
     
 ## Add a post to the database.
