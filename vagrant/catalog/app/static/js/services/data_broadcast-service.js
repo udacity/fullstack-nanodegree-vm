@@ -73,9 +73,9 @@ define([], function() {
     });
 
     service.login_status = {
-      email: undefined,
+      id: undefined,
       name: undefined,
-      user_id: undefined,
+      type: undefined,
     }
     Object.defineProperties(service.login_status, {
       "get": {
@@ -85,9 +85,9 @@ define([], function() {
       },
       "set": {
         set: function(data) {
+          this.type = (data == {} || data == undefined) ? undefined : data.type;
+          this.name = (data == {} || data == undefined) ? undefined : data.fullname;
           this.id = (data == {} || data == undefined) ? undefined : data.id;
-          this.name = (data == {} || data == undefined) ? undefined : data.name;
-          this.email = (data == {} || data == undefined) ? undefined : data.email;
           service.broadcastItem('broadcastLoginStatusChange');
         }
       }

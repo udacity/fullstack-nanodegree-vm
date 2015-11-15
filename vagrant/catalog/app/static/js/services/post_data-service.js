@@ -20,38 +20,34 @@ define([], function() {
     }
 
     service.editItem = function(url, data) {
-      var request = $http({
-        method: 'put',
-        url: url,
-        data: data,
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        params: {
-          action: 'put'
-        }
-      });
-      return request.then(handleSuccess, handleError);
+      return this.post_data(url, data, 'application/json', 'put');
     }
 
     service.addNewItem = function(url, data) {
-      // var request = $http({
-      //   method: 'post',
-      //   url: url,
-      //   headers: {
-      //     'Content-Type': undefined
-      //   },
-      //   params: {
-      //     action: 'post'
-      //   }
-      // });
-      // return request.then(handleSuccess, handleError);
+      return this.post_data(url, data, 'application/json', 'post');
+    }
+
+    service.logout = function(url) {
+      return this.post(url, undefined, 'application/octet-stream; charset=utf-8', 'post', false);
     }
 
     service.login = function(url, data) {
-      // return this.post(url, data);
-      return this.post(url, data, 'application/octet-stream; charset=utf-8', 'post');
-        // return this.post(url, data, 'application/json; charset=utf-8');
+      return this.post(url, data, 'application/octet-stream; charset=utf-8', 'post', false);
+    }
+
+    service.post_data = function(url, data, content_type, method) {
+      var request = $http({
+        method: method,
+        url: url,
+        data: data,
+        headers: {
+          'Content-Type': content_type
+        },
+        params: {
+          action: method
+        }
+      });
+      return request.then(handleSuccess, handleError);
     }
 
     service.post = function(url, data, content_type, method) {
@@ -59,6 +55,7 @@ define([], function() {
         method: method,
         url: url,
         data: data,
+        processData: false,
         headers: {
           'Content-Type': content_type
         },

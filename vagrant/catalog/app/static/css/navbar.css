@@ -10,6 +10,12 @@
   font-weight: 800;
 }
 
+.g_signin {
+  display: inline-block;
+  height: 100%;
+  width: 100%;
+}
+
 .signin {
   position: relative;
   margin-top: 8px;

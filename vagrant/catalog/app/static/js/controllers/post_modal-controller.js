@@ -3,13 +3,13 @@
 define(['LoadDataService', 'PostDataService'], function(LoadDataService, PostDataService) {
   return ['$scope', '$uibModalInstance', 'item', 'data', 'LoadDataService', 'PostDataService',
     function($scope, $uibModalInstance, item, data, LoadDataService, PostDataService) {
-      $scope.image_url = "http://localhost:8000/image/json/";
+      $scope.image_url = "http://localhost:8000/images/json/";
       $scope.category_url = "http://localhost:8000/category/json";
       $scope.edit_url = "http://localhost:8000/item/edit/";
-      $scope.add_new_url = "http://localhost:8000/item/add/";
+      $scope.add_new_url = "http://localhost:8000/item/new";
       $scope.slideInterval = 0;
       $scope.noWrapSlides = true;
-      // scope.images = [];
+      $scope.prefix = "static/";
       $scope.item = item;
       $scope.data = data;
       $scope.categories = data.categories();
@@ -19,7 +19,7 @@ define(['LoadDataService', 'PostDataService'], function(LoadDataService, PostDat
 
       $scope.loadImages = function() {
         if ($scope.selectedCategory !== "") {
-          var url = [$scope.image_url, "category=", $scope.selectedCategory].join("");
+          var url = [$scope.image_url, "category_id=", $scope.selectedCategory].join("");
           LoadDataService.loadData(url)
             .then(
               function(response) {
@@ -40,8 +40,9 @@ define(['LoadDataService', 'PostDataService'], function(LoadDataService, PostDat
 
       $scope.save = function() {
         var self = this;
-        if ($scope.item === {}) {
-          PostDataService.addNewItem($scope.add_new_url, update_item({})).then(
+        if ($scope.item === {} || $scope.item.id === undefined ) {
+          var url = [$scope.add_new_url, "?_csrf_token={{ csrf_token() }}"].join("");
+          PostDataService.addNewItem(url, update_item({})).then(
             function(response) {console.log(response)}
           );
         }
@@ -61,15 +62,15 @@ define(['LoadDataService', 'PostDataService'], function(LoadDataService, PostDat
       }, true);
 
       var update_item = function(data) {
-        var item = data
-        item.category_id = $scope.selectedCategory.id;
-        item.title = $scope.data.title;
-        item.description = $scope.data.description;
-        item.image_id = $scope.images.filter(function(item) {
+        // var item = data
+        data.category_id = $scope.selectedCategory;
+        data.title = $scope.data.title;
+        data.description = $scope.data.description;
+        data.image_id = $scope.images.filter(function(item) {
           return item.active === true;
         })[0].id;
 
-        return item;
+        return data;
       }
 
 

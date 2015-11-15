@@ -16,6 +16,7 @@ define(['LoadDataService'], function(LoadDataService) {
             });
       }
 
+      $scope.prefix = "static/";
       $scope.postItem = function(_item) {
         var modalInstance = $uibModal.open({
           templateUrl: 'static/js/directives/templates/_post_item.html',

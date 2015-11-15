@@ -10,11 +10,8 @@ define([], function() {
                 init: '&',
                 isDisabled: '@',
                 login_status: '@',
-                logToGoogle: '&',
                 goggle_url: '@',
-                google_status: '@',
-                logToFacebook: '&',
-                logToTwitter: '&'
+                facebook_url: '@'
             },
             templateUrl: 'static/js/directives/templates/_signin.html',
             controller: 'SigninController',

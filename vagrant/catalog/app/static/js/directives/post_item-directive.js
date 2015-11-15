@@ -18,6 +18,7 @@ define([], function() {
               'header': '@',
               'title': '=',
               'description': '=',
+              'prefix': '@',
               footer: '=modalFooter',
               'init': '&',
               changeCategory: '&modalChangeCategory',

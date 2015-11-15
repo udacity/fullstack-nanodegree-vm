@@ -23,15 +23,13 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
 
 
       $scope.init = function() {
-        $scope.isDisabled = true;
+        $scope.isDisabled = (DataBroadcastService.login_status.get.id === undefined);
         LoadDataService.loadData($scope.url)
           .then(
             function(response) {
               $scope.categories = response.data.categories;
             });
       }
-
-      $scope.addNewItem = function() {}
 
       $scope.$on('broadcastCategoryChange', function() {
         $scope.category_id = DataBroadcastService.category_id.get;
@@ -49,13 +47,13 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
         }
       });
 
-      $scope.$on('broadcastLoggedUserChange', function() {
-        $scope.logged_user_id = DataBroadcastService.logged_user_id.get;
+      $scope.$on('broadcastLoginStatusChange', function() {
+        $scope.login_status = DataBroadcastService.login_status.get;
       });
 
-      $scope.$watch('logged_user_id', function(new_value, old_value) {
-        if (new_value != old_value) {
-          $scope.isDisabled = (new_value === undefined);
+      $scope.$watch('login_status', function(new_value, old_value) {
+        if ((new_value !== undefined) && (new_value !== {}) && (new_value !== old_value)) {
+          $scope.isDisabled = (new_value.id === undefined);
         }
       }, true);
 

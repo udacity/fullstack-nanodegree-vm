@@ -5,13 +5,14 @@
   </button>
   <ul class="dropdown-menu">
     <li>
-      <button class="btn btn-block btn-social btn-google" ng-disabled="isDisabled" ng-click="logToGoogle()"><i class="fa fa-google"></i>Sign in with Google Plus</button>
-    </li>
+    <div ng-app="directive.g+signin" class="g_signin">
+      <google-plus-signin ng-disabled="isDisabled" type="button"  class="btn btn-block" clientid="600120679756-8md2l1b36ha6qa349u2uvhl1nrejs8k9.apps.googleusercontent.com"></google-plus-signin>
+      <!-- <google-plus-signin type="button" class="btn btn-block btn-social btn-google" clientid="600120679756"><i class="fa fa-google"></i></google-plus-signin> -->
+      <!-- <button class="btn btn-block btn-social btn-google" ng-disabled="isDisabled" ng-click="logToGoogle()"><i class="fa fa-google"></i>Sign in with Google Plus</button> -->
+    </div>
+  </li>
     <li>
       <button class="btn btn-block btn-social btn-facebook" ng-disabled="isDisabled" ng-click="logToFacebook()"><i class="fa fa-facebook"></i>Sign in with Facebook</button>
-    </li>
-    <li>
-      <button class="btn btn-block btn-social btn-twitter" ng-disabled="isDisabled" ng-click="logToTwitter()"><i class="fa fa-twitter"></i>Sign in with Twitter</button>
     </li>
     </a>
     </li>

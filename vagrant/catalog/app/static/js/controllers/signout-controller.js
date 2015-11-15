@@ -1,20 +1,31 @@
 'use strict';
 
-define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, DataBroadcastService) {
-  return ['LoadDataService', 'DataBroadcastService', '$scope', function(LoadDataService, DataBroadcastService, $scope) {
+define(['PostDataService', 'DataBroadcastService'], function(PostDataService, DataBroadcastService) {
+  return ['PostDataService', 'DataBroadcastService', '$scope', function(PostDataService, DataBroadcastService, $scope) {
     $scope.isDisabled = true;
-    $scope.logout_url = "http://localhost:8000/logout";
+    $scope.log_type = undefined;
+
+    $scope.google_url = "http://localhost:8000/glogout?_csrf_token={{ csrf_token() }}";
+    $scope.facebook_url = "http://localhost:8000/flogout?_csrf_token={{ csrf_token() }}";
 
     $scope.init = function() {
       $scope.isDisabled = true;
     };
 
     $scope.logout = function() {
-      LoadDataService.loadData($scope.logout_url)
-        .then(
-          function(response) {
-            DataBroadcastService.login_status.set = response;
-          });
+      var url = undefined;
+      if ($scope.log_type == 'google') {
+        url = $scope.google_url;
+      } else if ($scope.log_type == 'facebook') {
+        url = $scope.facebook_url;
+      }
+      if (url !== undefined) {
+        PostDataService.logout(url)
+          .then(
+            function(response) {
+              DataBroadcastService.login_status.set = response;
+            });
+      }
     };
 
     $scope.$on('broadcastLoginStatusChange', function() {
@@ -22,8 +33,9 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
     });
 
     $scope.$watch('login_status', function(new_value, old_value) {
-      if (new_value != old_value) {
-        $scope.isDisabled = (new_value === undefined || new_value.id === undefined);
+      if ((new_value !== undefined) && (new_value !== {}) && (new_value !== old_value)) {
+        $scope.isDisabled = (new_value.id === undefined);
+        $scope.log_type = new_value.type;
       }
     }, true);
 

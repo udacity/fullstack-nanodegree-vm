@@ -20,7 +20,7 @@
   </div>
   <uib-carousel class="carousel-image" interval="slideInterval" no-wrap="noWrapSlides">
     <uib-slide ng-repeat="slide in images" active="slide.active">
-      <img ng-src="static/{{slide.path}}" style="margin:auto; height:200px;">
+      <img ng-src="{{prefix}}{{slide.path}}" style="margin:auto; height:200px;">
     </uib-slide>
   </uib-carousel>
 </div>

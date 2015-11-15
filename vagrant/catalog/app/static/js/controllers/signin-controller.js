@@ -4,35 +4,25 @@ define(['PostDataService', 'DataBroadcastService'], function(PostDataService, Da
   return ['PostDataService', 'DataBroadcastService', 'GooglePlus', '$scope', function(PostDataService, DataBroadcastService, GooglePlus, $scope) {
     $scope.isDisabled = false;
     $scope.login_status = undefined;
-    $scope.goggle_url = "http://localhost:8000/gconnect/?_csrf_token={{ csrf_token() }}";
-    $scope.google_status = undefined;
+    $scope.goggle_url = "http://localhost:8000/glogin?_csrf_token={{ csrf_token() }}";
+    $scope.facebook_url = "http://localhost:8000/flogin?_csrf_token={{ csrf_token() }}";
 
     $scope.init = function() {
       $scope.isDisabled = false;
     };
 
-    $scope.logToGoogle = function() {
-      //load login status from credentials
-      GooglePlus.login().then(function(authResult) {
-        // GooglePlus.getUser().then(function(user) {
-        //   console.log(user);
-        // });
-        $scope.google_status = authResult
-        console.log(authResult);
-
-        GooglePlus.getUser().then(function(user) {
-          console.log(user);
-        });
-      }, function(err) {
-        console.log(err);
-      });
-    };
+    $scope.$on('event:google-plus-signin-success', function(event, authResult) {
+      PostDataService.login($scope.goggle_url, authResult['code']).then(
+        function(response) {
+          DataBroadcastService.login_status.set = response.data;
+        }
+      );
+    });
+    $scope.$on('event:google-plus-signin-failure', function(event, authResult) {
+      console.log(authResult);
+    });
 
     $scope.logToFacebook = function() {
-      //load login status from credentials
-    };
-
-    $scope.logToTwitter = function() {
       //load login status from credentials
     };
 
@@ -41,20 +31,20 @@ define(['PostDataService', 'DataBroadcastService'], function(PostDataService, Da
     });
 
     $scope.$watch('login_status', function(new_value, old_value) {
-      if (new_value != old_value) {
-        $scope.isDisabled = (new_value !== undefined && new_value.id != undefined);
+      if ((new_value !== undefined) && (new_value !== {}) && (new_value !== old_value)) {
+        $scope.isDisabled = (new_value.id !== undefined);
       }
     }, true);
 
-    $scope.$watch('google_status', function(new_value, old_value) {
-      if ((new_value != undefined) && (new_value !== {}) && (new_value !== '') && (new_value != old_value)) {
-        PostDataService.login($scope.goggle_url, {}).then(
-          function(response) {
-            DataBroadcastService.login_status.set = response;
-          }
-        );
-      }
-    });
+    // $scope.$watch('google_status', function(new_value, old_value) {
+    //   if ((new_value != undefined) && (new_value !== {}) && (new_value !== '') && (new_value != old_value)) {
+    //     PostDataService.login($scope.goggle_url, new_value).then(
+    //       function(response) {
+    //         DataBroadcastService.login_status.set = response;
+    //       }
+    //     );
+    //   }
+    // });
 
   }];
 });

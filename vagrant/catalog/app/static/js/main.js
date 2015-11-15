@@ -14,6 +14,7 @@ requirejs.config({
     'ngModal': "vendors/ngModal/dist/ng-modal",
     'bootstrapSelect': "vendors/bootstrap-select/dist/js/bootstrap-select",
     'googleplus': "vendors/angular-google-plus/dist/angular-google-plus",
+    'googlePlusSignin': "vendors/angular-directive.g-signin/google-plus-signin",
     app: "js/app",
     SignoutController: "js/controllers/signout-controller",
     SignoutDirective: "js/directives/signout-directive",
@@ -93,6 +94,11 @@ requirejs.config({
       ]
     },
     'googleplus': {
+      deps: [
+        'angular'
+      ]
+    },
+    'googlePlusSignin': {
       deps: [
         'angular'
       ]

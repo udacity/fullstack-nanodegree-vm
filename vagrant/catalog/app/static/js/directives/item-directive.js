@@ -9,8 +9,9 @@ define([], function() {
             scope: {
                 init: '&',
                 item: '=',
-                current_url: '=',
-                isLoggedIn: '=',
+                current_url: '@',
+                isLoggedIn: '@',
+                prefix: '@',
                 image: '@'
             },
             templateUrl: 'static/js/directives/templates/_show_item.html',

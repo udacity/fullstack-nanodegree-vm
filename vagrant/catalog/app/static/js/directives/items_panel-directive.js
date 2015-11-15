@@ -14,6 +14,7 @@ define([], function() {
                 category_id: '=',
                 category: '@',
                 use_current_user: '@',
+                user_id: '@',
                 login_user: '@',
                 login_status: '@'
             },

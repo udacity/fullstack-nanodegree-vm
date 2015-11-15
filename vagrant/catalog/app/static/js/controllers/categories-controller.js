@@ -8,7 +8,7 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
       $scope.url = "http://localhost:8000/category/json";
       $scope.urls = {
         "categories": "http://localhost:8000/category/json",
-        "images": "http://localhost:8000/image/json",
+        "images": "http://localhost:8000/images/json",
         "items": "http://localhost:8000/items/json"
       }
       $scope.init = function() {
@@ -24,7 +24,7 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
         DataBroadcastService.category_name.set = category_id === undefined ? undefined : $scope.categories.filter(function(item) {
           return item.id === category_id;
         })[0].name;
-        DataBroadcastService.use_current_user.set = true;
+        DataBroadcastService.use_current_user.set = false;
       }
 
       $scope.viewMyItems = function(){

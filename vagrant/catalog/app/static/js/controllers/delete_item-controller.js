@@ -20,7 +20,7 @@ define(['PostDataService'], function(PostDataService) {
               label: "Yes",
               className: "btn-danger",
               callback: function(){
-                self.service.deleteItem([self.url, item.id].join(""))
+                self.service.deleteItem([self.url, item.id, "?_csrf_token={{ csrf_token() }}"].join(""))
                   .then(
                     function(response) {
                       // TODO Log to console

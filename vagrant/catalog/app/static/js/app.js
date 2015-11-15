@@ -9,6 +9,7 @@ define([
     'bootbox',
     'ngBootbox',
     'googleplus',
+    'googlePlusSignin',
     'LoadDataService',
     'DataBroadcastService',
     'PostDataService',
@@ -40,6 +41,7 @@ define([
     bootbox,
     ngBootbox,
     googleplus,
+    googlePlusSignin,
     LoadDataService,
     DataBroadcastService,
     PostDataService,
@@ -62,7 +64,7 @@ define([
     AddNewItemDirective) {
     'use strict';
 
-    var app = angular.module('CatalogApp', ['ui.bootstrap', 'googleplus']);
+    var app = angular.module('CatalogApp', ['ui.bootstrap', 'googleplus', 'directive.g+signin']);
 
     app.factory('LoadDataService', LoadDataService);
     app.factory('DataBroadcastService', DataBroadcastService);
@@ -88,8 +90,16 @@ define([
     app.config(['GooglePlusProvider', function(GooglePlusProvider) {
       GooglePlusProvider.init({
         clientId: '600120679756-8md2l1b36ha6qa349u2uvhl1nrejs8k9.apps.googleusercontent.com',
-        apiKey: 'Ev4gloAsQynGg0Puo3nlmY_r'
+        // apiKey: 'Ev4gloAsQynGg0Puo3nlmY_r'
+        apiKey: 'AIzaSyA3UC3p1jK-zxHUktNBlI46RU1aWXXMez8',
+        scope: 'https://www.googleapis.com/auth/plus.login https://www.googleapis.com/auth/userinfo.email',
       });
+    }]);
+
+    app.config(['$httpProvider', function($httpProvider) {
+      $httpProvider.defaults.xsrfCookieName = '_csrf_token';
+      $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
+      $httpProvider.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token()|escapejs }}';
     }]);
 
     app.init = function() {
