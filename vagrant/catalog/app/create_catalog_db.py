@@ -4,11 +4,13 @@ import json
 import re
 import uuid
 import base64
-# from datetime import date
-# from database_setup import Restaurant, Base, MenuItem
-# from database_setup import Base
-
-from models import Base, CategoryModel, ImageModel, UserModel, ItemsModel
+# from flask import current_app as app
+# import app
+# from app import models
+# from app.models import data_models
+import models
+from models.data_models import Base, CategoryModel, ImageModel, UserModel, ItemsModel
+# from data_models import Base, CategoryModel, ImageModel, UserModel, ItemsModel
 
 # engine = create_engine('postgresql:////localhost//udacity_catalog_db')
 engine = create_engine('sqlite:///udacity_catalog.db')
@@ -32,11 +34,12 @@ categories_id = {}
 
 for name in categories:
     id = re.sub(r"[+=\/]", "_", base64.b64encode(uuid.uuid4().bytes))
-    category = CategoryModel(id=id, name=name)
+    category = models.insert_to_category(id, name)
     categories_id[name] = id
-    session.add(category)
-    session.commit()
-
+    # category = CategoryModel(id=id, name=name)
+    # categories_id[name] = id
+    # session.add(category)
+    # session.commit()
 print "done with catalog!!!"
 
 with open('data_image.json') as data_file:
@@ -49,18 +52,21 @@ for name in categories:
         for id in image_data:
             file_path = image_data[id]
             category_id = categories_id[name]
-            image_model = ImageModel(
-                id=id, path=file_path, category_id=category_id)
-            session.add(image_model)
-            session.commit()
+            image_model = models.insert_image(id, file_path, category_id)
+            # image_model = ImageModel(
+            #     id=id, path=file_path, category_id=category_id)
+            # session.add(image_model)
+            # session.commit()
 print "done with image!!!"
 
-user_model = UserModel(fullname='Stanley Calixte',
-                       picture='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg',
-                       email='scalixte@gmail.com',
-                       id=re.sub(r"[+=\/]", "_", base64.b64encode(uuid.uuid4().bytes)))
-session.add(user_model)
-session.commit()
+# user_model = UserModel(fullname='Stanley Calixte',
+#                        picture='https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg',
+#                        email='scalixte@gmail.com',
+#                        id=re.sub(r"[+=\/]", "_", base64.b64encode(uuid.uuid4().bytes)))
+# session.add(user_model)
+# session.commit()
+user_model = models.insert_new_user(
+    'scalixte@gmail.com', 'https://lh3.googleusercontent.com/-XdUIqdMkCWA/AAAAAAAAAAI/AAAAAAAAAAA/4252rscbv5M/photo.jpg', 'Stanley Calixte')
 print "done with new user!!!"
 
 with open('data_items.json') as data_file:
@@ -68,15 +74,17 @@ with open('data_items.json') as data_file:
 
 for name in categories:
     for item in item_data[name]:
-        item_model = ItemsModel(
-            id=re.sub(r"[+=\/]", "_", base64.b64encode(uuid.uuid4().bytes)),
-            title=item['title'],
-            description=item['description'],
-            image_id=item['image_id'],
-            category_id=categories_id[name],
-            user_id=user_model.id
-        )
-        session.add(item_model)
-        session.commit()
+        # item_model = ItemsModel(
+        #     id=re.sub(r"[+=\/]", "_", base64.b64encode(uuid.uuid4().bytes)),
+        #     title=item['title'],
+        #     description=item['description'],
+        #     image_id=item['image_id'],
+        #     category_id=categories_id[name],
+        #     user_id=user_model.id
+        # )
+        # session.add(item_model)
+        # session.commit()
+        item_model = models.insert_new_item(user_model.id, item['title'], item[
+                                     'description'], categories_id[name], item['image_id'])
 
 print "done with items creation!!!"

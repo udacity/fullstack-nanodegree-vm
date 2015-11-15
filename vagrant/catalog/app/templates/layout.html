@@ -1,59 +1,62 @@
 <!DOCTYPE html>
-<!-- <html lang="en" ng-app="CatalogApp"> -->
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
-		<title>Catalog App</title>
-		<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap/dist/css/bootstrap-theme.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='vendors/font-awesome/css/font-awesome.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap-social/bootstrap-social.css') }}">
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='vendors/ngAnimate/css/ng-animation.css') }}"> -->
-		<!-- <link rel="stylesheet" href="{{ url_for('static', filename='vendors/angular-bootstrap/ui-bootstrap-csp.css') }}"> -->
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/panel.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/category.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/item.css') }}">
-		<link rel="stylesheet" href="{{ url_for('static', filename='css/carousel.css') }}">
-		<link rel="shortcut icon" href="{{ url_for('static', filename='img/icons/favicon.ico') }}">
-		<link href="https://fonts.googleapis.com/css?family=Kaushan+Script&subset=latin,latin-ext" rel="stylesheet" type="text/css">
-		<link href='https://fonts.googleapis.com/css?family=Philosopher' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
-		<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
-		<!-- <script src="{{ url_for('static', filename='vendors/jquery/dist/jquery.js') }}" type="text/javascript" charset="utf-8"></script>
-		<script src="{{ url_for('static', filename='vendors/bootstrap/dist/js/bootstrap.js') }}" type="text/javascript" charset="utf-8"></script> -->
-	</head>
-	<nav class="navbar navbar-default navbar-custom">
-		<div class="container-fluid">
-			<div class="navbar-header">
-				<a class="navbar-brand" href="#">
-					<span>
-						<img alt="Brand" src="{{ url_for('static', filename='img/icons/shop-cart-icon.png') }}"
-						<strong>Catalog App</<strong>
-					</span>
-				</a>
-			</div>
-			<div id="navbarCollapse" class="collapse navbar-collapse">
-				<addItem class="navbar-form navbar-left"></addItem>
-				<ul class="nav navbar-nav navbar-right">
-					<li><signout id="logout"></signout></li>
-					<li class="dropdown"><signin id="access"></signin></li>
-				</ul>
-			</div>
+
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<!-- <meta content="authenticity_token" name="csrf-param" /> -->
+	<meta content="{{ csrf_token() }}" name="_csrf_token" />
+	<title>Catalog App</title>
+	<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap/dist/css/bootstrap-theme.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='vendors/font-awesome/css/font-awesome.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap-social/bootstrap-social.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/navbar.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/panel.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/category.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/item.css') }}">
+	<link rel="stylesheet" href="{{ url_for('static', filename='css/carousel.css') }}">
+	<link rel="shortcut icon" href="{{ url_for('static', filename='img/icons/favicon.ico') }}">
+	<link href="https://fonts.googleapis.com/css?family=Kaushan+Script&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+	<link href='https://fonts.googleapis.com/css?family=Philosopher' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Montserrat:400,700' rel='stylesheet' type='text/css'>
+	<link href='https://fonts.googleapis.com/css?family=Roboto:400,100,100italic,400italic,700,700italic' rel='stylesheet' type='text/css'>
+</head>
+<nav class="navbar navbar-default navbar-custom">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="#">
+				<span>
+					<img alt="Brand" src="{{ url_for('static', filename='img/icons/shop-cart-icon.png') }}" <strong>Catalog App</<strong>
+				</span>
+			</a>
 		</div>
-	</nav>
-	<body>
-		<div class="app">
-			{% block content %}
-			{% endblock %}
+		<div id="navbarCollapse" class="collapse navbar-collapse">
+			<addItem class="navbar-form navbar-left"></addItem>
+			<ul class="nav navbar-nav navbar-right">
+				<li>
+					<signout id="logout"></signout>
+				</li>
+				<li class="dropdown">
+					<signin id="access"></signin>
+				</li>
+			</ul>
 		</div>
-		<script src="{{ url_for('static', filename='vendors/es5-shim/es5-shim.js') }}" type='text/javascript' ></script>
-		<script type="text/javascript" src="{{ url_for('static', filename='vendors/requirejs/require.js') }}" data-main="{{ url_for('static', filename='js/main.js') }}"></script>
-		<!-- // <script src="{{ url_for('static', filename='vendors/requirejs/require.js') }}" type='text/javascript' ></script> -->
-		<!-- // <script src="{{ url_for('static', filename='js/config.js') }}" type='text/javascript' ></script> -->
-		<!-- // <script src="{{ url_for('static', filename='js/app.js') }}" type='text/javascript' ></script> -->
-	</body>
+	</div>
+</nav>
+
+<body>
+	<div class="app">
+		{% block content %} {% endblock %}
+	</div>
+	<script src="{{ url_for('static', filename='vendors/es5-shim/es5-shim.js') }}" type='text/javascript'></script>
+	<script type="text/javascript" src="{{ url_for('static', filename='vendors/requirejs/require.js') }}" data-main="{{ url_for('static', filename='js/main.js') }}"></script>
+	<script type="text/javascript">
+		var csrf_token = function() {
+			return 0;
+		}
+	</script>
+</body>
+
 </html>

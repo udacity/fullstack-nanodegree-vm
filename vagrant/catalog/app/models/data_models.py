@@ -1,10 +1,15 @@
+'''
+    Introducing all data models utilized in this app:
+        Base, CategoryModel, ImageModel, UserModel, ItemsModel
+'''
 from sqlalchemy import Column, ForeignKey, Integer, String, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine, func
-from passlib.apps import custom_app_context as pwd_context
-from datetime import date
-import uuid
+from flask import Blueprint
+# from passlib.apps import custom_app_context as pwd_context
+
+data = Blueprint('data_models', __name__)
 
 # from database_setup import Base
 Base = declarative_base()
