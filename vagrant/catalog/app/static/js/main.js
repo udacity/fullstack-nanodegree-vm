@@ -15,6 +15,7 @@ requirejs.config({
     'bootstrapSelect': "vendors/bootstrap-select/dist/js/bootstrap-select",
     'googleplus': "vendors/angular-google-plus/dist/angular-google-plus",
     'googlePlusSignin': "vendors/angular-directive.g-signin/google-plus-signin",
+    'Facebook': "vendors/angular-facebook/lib/angular-facebook",
     app: "js/app",
     SignoutController: "js/controllers/signout-controller",
     SignoutDirective: "js/directives/signout-directive",
@@ -23,6 +24,7 @@ requirejs.config({
     LoadDataService: "js/services/load_data-service",
     DataBroadcastService: "js/services/data_broadcast-service",
     PostDataService: "js/services/post_data-service",
+    SessionInjector: "js/services/session_injector-service",
     AuthenticationService: "js/services/authentication-service",
     CategoriesController: "js/controllers/categories-controller",
     ItemsController: "js/controllers/items-controller",
@@ -65,6 +67,12 @@ requirejs.config({
     },
     ngModal: {
       exports: 'ngModal'
+    },
+    Facebook: {
+      deps: [
+        'angular'
+      ],
+      exports: 'facebook'
     },
     'ngBootbox': {
       deps: [
@@ -113,26 +121,7 @@ require(['app'],
   },
   function(error) {
     console.log('Custom ERROR handler', error);
-    //error.requireModules : is Array of all failed modules
     var failedId = error.requireModules && error.requireModules[0];
     console.log(failedId);
     console.log(error.message);
   });
-
-// require([
-//         'angular',
-//         'app',
-//         // 'signinCtrl',
-//         // 'signinDrtv'
-//     ],
-// function(error) {
-//     console.log('Custom ERROR handler', error);
-//     //error.requireModules : is Array of all failed modules
-//     var failedId = error.requireModules && error.requireModules[0];
-//     console.log(failedId);
-//     console.log(error.message);
-// },
-//     function(angular) {
-//         // angular.bootstrap(document, ['CatalogApp']);
-//     }
-// );

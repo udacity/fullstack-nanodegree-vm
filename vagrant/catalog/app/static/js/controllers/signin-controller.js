@@ -1,18 +1,18 @@
 'use strict';
 
-define(['PostDataService', 'DataBroadcastService'], function(PostDataService, DataBroadcastService) {
-  return ['PostDataService', 'DataBroadcastService', 'GooglePlus', '$scope', function(PostDataService, DataBroadcastService, GooglePlus, $scope) {
+define(['PostDataService', 'DataBroadcastService', 'AuthenticationService'], function(PostDataService, DataBroadcastService, AuthenticationService) {
+  return ['PostDataService', 'DataBroadcastService', 'AuthenticationService', 'GooglePlus', '$scope', 'Facebook', function(PostDataService, DataBroadcastService, AuthenticationService, GooglePlus, $scope, Facebook) {
     $scope.isDisabled = false;
     $scope.login_status = undefined;
-    $scope.goggle_url = "http://localhost:8000/glogin?_csrf_token={{ csrf_token() }}";
-    $scope.facebook_url = "http://localhost:8000/flogin?_csrf_token={{ csrf_token() }}";
+    $scope.goggle_url = "http://localhost:8000/glogin";
+    $scope.facebook_url = "http://localhost:8000/flogin";
 
     $scope.init = function() {
       $scope.isDisabled = false;
     };
 
     $scope.$on('event:google-plus-signin-success', function(event, authResult) {
-      PostDataService.login($scope.goggle_url, authResult['code']).then(
+      PostDataService.login(AuthenticationService.auth_url($scope.goggle_url), authResult['code']).then(
         function(response) {
           DataBroadcastService.login_status.set = response.data;
         }
@@ -23,7 +23,9 @@ define(['PostDataService', 'DataBroadcastService'], function(PostDataService, Da
     });
 
     $scope.logToFacebook = function() {
-      //load login status from credentials
+      Facebook.login().then(function() {
+        // console.log(authResult);
+      });
     };
 
     $scope.$on('broadcastLoginStatusChange', function() {
@@ -35,6 +37,16 @@ define(['PostDataService', 'DataBroadcastService'], function(PostDataService, Da
         $scope.isDisabled = (new_value.id !== undefined);
       }
     }, true);
+
+    $scope.$watch(
+      function() {
+        return Facebook.isReady();
+      },
+      function(newVal) {
+        if (newVal)
+          $scope.facebookReady = true;
+      }
+    );
 
     // $scope.$watch('google_status', function(new_value, old_value) {
     //   if ((new_value != undefined) && (new_value !== {}) && (new_value !== '') && (new_value != old_value)) {

@@ -1,12 +1,12 @@
 'use strict';
 
-define(['PostDataService', 'DataBroadcastService'], function(PostDataService, DataBroadcastService) {
-  return ['PostDataService', 'DataBroadcastService', '$scope', function(PostDataService, DataBroadcastService, $scope) {
+define(['PostDataService', 'DataBroadcastService', 'AuthenticationService'], function(PostDataService, DataBroadcastService, AuthenticationService) {
+  return ['PostDataService', 'DataBroadcastService', 'AuthenticationService', '$scope', function(PostDataService, DataBroadcastService,AuthenticationService, $scope) {
     $scope.isDisabled = true;
     $scope.log_type = undefined;
 
-    $scope.google_url = "http://localhost:8000/glogout?_csrf_token={{ csrf_token() }}";
-    $scope.facebook_url = "http://localhost:8000/flogout?_csrf_token={{ csrf_token() }}";
+    $scope.google_url = "http://localhost:8000/glogout";
+    $scope.facebook_url = "http://localhost:8000/flogout";
 
     $scope.init = function() {
       $scope.isDisabled = true;
@@ -20,7 +20,7 @@ define(['PostDataService', 'DataBroadcastService'], function(PostDataService, Da
         url = $scope.facebook_url;
       }
       if (url !== undefined) {
-        PostDataService.logout(url)
+        PostDataService.logout(AuthenticationService.auth_url(url))
           .then(
             function(response) {
               DataBroadcastService.login_status.set = response;

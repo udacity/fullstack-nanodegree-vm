@@ -1,8 +1,8 @@
 'use strict';
 
-define(['PostDataService'], function(PostDataService) {
-  return ['$scope', 'PostDataService',
-    function($scope, PostDataService) {
+define(['PostDataService', 'AuthenticationService'], function(PostDataService, AuthenticationService) {
+  return ['$scope', 'PostDataService', 'AuthenticationService',
+    function($scope, PostDataService, AuthenticationService) {
       $scope.service = PostDataService;
       $scope.url = "http://localhost:8000/item/delete/";
 
@@ -20,7 +20,7 @@ define(['PostDataService'], function(PostDataService) {
               label: "Yes",
               className: "btn-danger",
               callback: function(){
-                self.service.deleteItem([self.url, item.id, "?_csrf_token={{ csrf_token() }}"].join(""))
+                self.service.deleteItem(AuthenticationService.auth_url([self.url, item.id].join("")))
                   .then(
                     function(response) {
                       // TODO Log to console

@@ -10,9 +10,11 @@ define([
     'ngBootbox',
     'googleplus',
     'googlePlusSignin',
+    'Facebook',
     'LoadDataService',
     'DataBroadcastService',
     'PostDataService',
+    'SessionInjector',
     'AuthenticationService',
     'SigninController',
     'SignoutController',
@@ -42,9 +44,11 @@ define([
     ngBootbox,
     googleplus,
     googlePlusSignin,
+    Facebook,
     LoadDataService,
     DataBroadcastService,
     PostDataService,
+    SessionInjector,
     AuthenticationService,
     SigninController,
     SignoutController,
@@ -64,11 +68,12 @@ define([
     AddNewItemDirective) {
     'use strict';
 
-    var app = angular.module('CatalogApp', ['ui.bootstrap', 'googleplus', 'directive.g+signin']);
+    var app = angular.module('CatalogApp', ['ui.bootstrap', 'googleplus','directive.g+signin', 'facebook']);
 
     app.factory('LoadDataService', LoadDataService);
     app.factory('DataBroadcastService', DataBroadcastService);
     app.factory('PostDataService', PostDataService);
+    app.factory('SessionInjector', SessionInjector);
     app.factory('AuthenticationService', AuthenticationService);
     app.controller('SigninController', SigninController);
     app.controller('SignoutController', SignoutController);
@@ -97,10 +102,22 @@ define([
     }]);
 
     app.config(['$httpProvider', function($httpProvider) {
-      $httpProvider.defaults.xsrfCookieName = '_csrf_token';
-      $httpProvider.defaults.xsrfHeaderName = 'X-CSRFToken';
-      $httpProvider.defaults.headers.common['X-CSRFToken'] = '{{ csrf_token()|escapejs }}';
+      $httpProvider.interceptors.push('SessionInjector');
     }]);
+
+    app.config(['FacebookProvider', function(FacebookProvider) {
+      FacebookProvider.setAppId('521603404683305');
+      // FacebookProvider.setPermissions("email,user_likes");
+      FacebookProvider.setInitCustomOption({
+        status: true,
+        cookie: true,
+        xfbml: true,
+        version: 'v2.5',
+        permissions: 'email,user_likes'
+      });
+      FacebookProvider.init();
+    }]);
+
 
     app.init = function() {
       angular.bootstrap(document, ['CatalogApp']);

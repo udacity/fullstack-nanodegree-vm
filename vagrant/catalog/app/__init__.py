@@ -13,6 +13,8 @@ import time
 import hashlib
 import requests
 import urllib
+import webapp2
+import jinja2
 import traceback
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -36,8 +38,11 @@ app.register_blueprint(json_endpoints.module)
 from app.views import xml_endpoints
 app.register_blueprint(xml_endpoints.module)
 
-from app.views import google_auth
-app.register_blueprint(google_auth.module)
+from app.views import rss_endpoints
+app.register_blueprint(rss_endpoints.module)
+
+from app.views import provider_auth
+app.register_blueprint(provider_auth.module)
 
 from app.views import update_api
 app.register_blueprint(update_api.module)
@@ -57,20 +62,17 @@ def csrf_protect():
             Check csrf_token for every coming post request.
     '''
     if (request.method == "POST") or (request.method == "PUT"):
-        token = request.form.get('_csrf_token')
+        token = request.headers.get('X-Csrf-Token')
         if token is None:
-            token = request.args.get('_csrf_token')
-        stored_token = login_session.pop('_csrf_token', None)
+            abort(403)
         try:
-            if token != generated_csrf_token():
-                if not stored_token or stored_token != token:
-                    abort(403)
+            stored_token = login_session.get('_csrf_token')
+            if not stored_token or stored_token != token:
+                abort(403)
         except:
             print "Unexpected error:", sys.exc_info()[0]
             print "Unexpected error:", sys.exc_info()[1]
-            # abort(403)
-        # if not stored_token or stored_token != token:
-        #     abort(403)
+            abort(403)
 
 
 def generated_csrf_token():

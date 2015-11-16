@@ -38,7 +38,7 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
-module = Blueprint('google_auth', __name__)
+module = Blueprint('provider_auth', __name__)
 
 
 @module.route("/glogin", methods=['POST'])
@@ -108,11 +108,14 @@ def gdisconnect():
         return utilities.status("Current user not connected", 401, 'json')
     result = requests.get(
         'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token)
+    return disconnect(result)
 
+
+@utilities.require_login
+def disconnect(result):
     if result.status_code == requests.codes.ok:
         del login_session['access_token']
         del login_session['email']
         del login_session['message']
         del login_session['gplus_id']
-        print "finally"
     return utilities.status('Successfully disconnected', 200, 'json')

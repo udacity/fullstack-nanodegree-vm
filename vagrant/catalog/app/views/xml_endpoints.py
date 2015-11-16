@@ -10,9 +10,6 @@ import string
 import re
 
 from app import utilities
-# from app import utilities.status as status
-# from app import utilities.convert_object_to_xml as convert_object_to_xml
-# from app import utilities.convert_list_to_xml as convert_list_to_xml
 
 
 from flask import Blueprint, render_template, redirect, url_for, \
@@ -46,8 +43,8 @@ def categoryModel():
         if categories is None:
             abort(403)
         else:
-            return utilities.status(utilities.convert_list_to_xml('catalogs',
-                                                                  [utilities.convert_object_to_xml('catalog',
+            return utilities.status(utilities.convert_list_to_xml('categories',
+                                                                  [utilities.convert_object_to_xml('category',
                                                                                                    r.serialize) for r in categories]), 200, 'xml')
     except:
         print "Unexpected error:", sys.exc_info()[0]

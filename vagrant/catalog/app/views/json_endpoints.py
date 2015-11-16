@@ -1,6 +1,6 @@
 '''
 This page module simply loads the data for the app as json endpoints.
-	The module contents only respond to get requests.
+    The module contents only respond to get requests.
 '''
 import os
 import sys
@@ -56,7 +56,7 @@ def imageModel(id):
         if image is None:
             abort(403)
         else:
-			return jsonify(image.serialize)
+            return jsonify(image.serialize)
     except:
         print "Unexpected error:", sys.exc_info()[0]
         print "Unexpected error:", sys.exc_info()[1]

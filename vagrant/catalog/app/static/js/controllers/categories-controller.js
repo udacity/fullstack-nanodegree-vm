@@ -6,11 +6,7 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
       $scope.categories = [];
       $scope.items = [];
       $scope.url = "http://localhost:8000/category/json";
-      $scope.urls = {
-        "categories": "http://localhost:8000/category/json",
-        "images": "http://localhost:8000/images/json",
-        "items": "http://localhost:8000/items/json"
-      }
+      
       $scope.init = function() {
         LoadDataService.loadData($scope.url)
           .then(

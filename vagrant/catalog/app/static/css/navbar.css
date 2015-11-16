@@ -10,8 +10,8 @@
   font-weight: 800;
 }
 
-.g_signin {
-  display: inline-block;
+.google_signin {
+  display: block;
   height: 100%;
   width: 100%;
 }

@@ -1,47 +1,22 @@
 'use strict';
 
 define([], function() {
-    return ['$http', '$q', function($http, $q) {
-        var service = {}
+  return ['$http', '$q', function($http, $q) {
+    var self = this;
+    var service = {};
 
-        service.loadCategories = function() {
-            var request = $http({
-                method: 'get',
-                url: 'http://localhost:8000/category/json',
-                params: {
-                    action: 'get'
-                }
-            });
-            return request.then(handleSuccess, handleError);
-        }
+    service.auth_url = function(url) {
+      // return [url, "?_csrf_token=", csrf_token()].join("");
+      // return [url, "?_csrf_token={{ csrf_token() }}"].join("");
+      return url;
+    }
 
-        service.loadData = function(url) {
-            var request = $http({
-                method: 'get',
-                url: url,
-                params: {
-                    action: 'get'
-                }
-            });
-            return request.then(handleSuccess, handleError);
-        }
+    var csrf_token = function() {
+      return document.querySelector("meta[name='_csrf_token']").getAttribute('content');
+    }
 
-        var handleSuccess = function(response) {
-            //Creating a deferred object
-            var deferred = $q.defer();
+    var csrftoken = "{{ csrf_token() }}";
 
-            deferred.resolve(response);
-            return deferred.promise;
-        }
-
-        var handleError = function(response){
-            //Creating a deferred object
-            var deferred = $q.defer();
-
-            deferred.reject("An error occured while fetching items");
-            return deferred.promise;
-        }
-
-        return service;
-    }];
+    return service;
+  }];
 });

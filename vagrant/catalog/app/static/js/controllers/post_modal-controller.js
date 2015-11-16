@@ -1,8 +1,8 @@
 'use strict';
 
-define(['LoadDataService', 'PostDataService'], function(LoadDataService, PostDataService) {
-  return ['$scope', '$uibModalInstance', 'item', 'data', 'LoadDataService', 'PostDataService',
-    function($scope, $uibModalInstance, item, data, LoadDataService, PostDataService) {
+define(['LoadDataService', 'PostDataService', 'AuthenticationService'], function(LoadDataService, PostDataService, AuthenticationService) {
+  return ['$scope', '$uibModalInstance', 'item', 'data', 'LoadDataService', 'PostDataService', 'AuthenticationService',
+    function($scope, $uibModalInstance, item, data, LoadDataService, PostDataService, AuthenticationService) {
       $scope.image_url = "http://localhost:8000/images/json/";
       $scope.category_url = "http://localhost:8000/category/json";
       $scope.edit_url = "http://localhost:8000/item/edit/";
@@ -40,16 +40,18 @@ define(['LoadDataService', 'PostDataService'], function(LoadDataService, PostDat
 
       $scope.save = function() {
         var self = this;
-        if ($scope.item === {} || $scope.item.id === undefined ) {
-          var url = [$scope.add_new_url, "?_csrf_token={{ csrf_token() }}"].join("");
-          PostDataService.addNewItem(url, update_item({})).then(
-            function(response) {console.log(response)}
+        if ($scope.item === {} || $scope.item.id === undefined) {
+          PostDataService.addNewItem(AuthenticationService.auth_url($scope.add_new_url), update_item({})).then(
+            function(response) {
+              console.log(response)
+            }
           );
-        }
-        else{
-          var url = [$scope.edit_url, $scope.item.id,"/?_csrf_token={{ csrf_token() }}"].join("");
-          PostDataService.editItem(url , update_item($scope.item)).then(
-            function(response) {console.log(response)}
+        } else {
+          var url = [$scope.edit_url, $scope.item.id].join("");
+          PostDataService.editItem(AuthenticationService.auth_url(url), update_item($scope.item)).then(
+            function(response) {
+              console.log(response)
+            }
           );
         }
         $uibModalInstance.close();

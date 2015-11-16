@@ -49,6 +49,8 @@
     "ngModal": "~1.2.2",
     "bootstrap-select": "~1.7.5",
     "angular-bootstrap": "~0.14.3",
-    "angular-google-plus": "~0.1.3"
+    "angular-google-plus": "~0.1.3",
+    "angular-directive.g-signin": "~0.1.2",
+    "angular-facebook": "~0.2.3"
   }
 }

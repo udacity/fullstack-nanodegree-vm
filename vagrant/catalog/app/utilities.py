@@ -6,17 +6,22 @@ import json
 import random
 import string
 
+from werkzeug.contrib.atom import AtomFeed
 from flask import session as login_session
 
 
 def status(message, status_code, status_type):
     response = {'json': {'function': json.dumps, 'data_type': 'application/json'},
-                'xml': {'function': ET.tostring, 'data_type': 'application/xml'},
-                'rss': {'function': ET.tostring, 'data_type': 'application/rss+xml'}}
+                'xml': {'function': ET.tostring, 'data_type': 'application/xml'}}
+
     res = make_response(response[status_type]
                         ['function'](message), status_code)
     res.headers['Content-Type'] = response[status_type]['data_type']
     return res
+
+
+def create_feed(name, request):
+    return AtomFeed(name, feed_url=request.url, url=request.url_root)
 
 
 def convert_object_to_xml(tag, content):
