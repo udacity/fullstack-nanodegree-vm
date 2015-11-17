@@ -59,6 +59,8 @@ docs/_build/
 # PyBuilder
 target/
 *.pyc
+node_modules/
+vendors/
 vagrant/catalog/app/bin/
 vagrant/catalog/app/include/
 vagrant/catalog/app/lib/
