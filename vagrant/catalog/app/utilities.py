@@ -11,9 +11,9 @@ from flask import session as login_session
 
 
 def status(message, status_code, status_type):
-        '''
-           Returns message headers for both xml and json content type.
-        '''
+    '''
+        Returns message headers for both xml and json content type.
+    '''
     response = {'json': {'function': json.dumps, 'data_type': 'application/json'},
                 'xml': {'function': ET.tostring, 'data_type': 'application/xml'}}
 
