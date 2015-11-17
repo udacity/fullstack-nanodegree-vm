@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+    
+    <head lang="en">
+        <meta charset="UTF-8">
+        <title>ngBootbox - Example 2</title>
+        <link href="../../bower_components/font-awesome/css/font-awesome.min.css" rel="stylesheet">
+        <link href="../../bower_components/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet">
+    </head>
+    
+    <body>
+        <div class="container" ng-controller="TestCtrl">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <h1 style="display:inline-block;">Example 2 (using require.js)</h1>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button class="btn btn-lg btn-primary" ng-bootbox-alert="Alert message!">Alert</button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-lg btn-primary" ng-bootbox-confirm="Are you sure you want to confirm this?" ng-bootbox-confirm-action="addAction('Confirmed', 'true')"
+                            ng-bootbox-confirm-action-cancel="addAction('Confirmed', 'false')">Confirm</button>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-lg btn-primary" ng-bootbox-prompt="Please type in your name" ng-bootbox-prompt-action="addAction('Prompt returned', result)"
+                            ng-bootbox-prompt-action-cancel="addAction('Prompt', 'cancelled')">Prompt</button>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-md-12">
+                            <ul class="list-group">
+                                <li class="list-group-item" ng-repeat="action in actions">{{action.msg}}</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="require.js" data-main="main"></script>
+    </body>
+
+</html>

@@ -1,0 +1,31 @@
+<div class="modal-header carousel-header">
+  <h4 class="modal-title">{{data.header}}</h4>
+</div>
+<div class="modal-body row carousel-body">
+  <div>
+    <form class="carousel-form">
+      <!-- <input name=_csrf_token type=hidden value="{{ csrf_token() }}"> -->
+      <div class="form-group">
+        <select ng-model="selectedCategory" class="selectpicker carousel-picker" ng-options="category.id as category.name for category in categories.$$state.value" ng-change="changeCategory()"></select>
+      </div>
+      <div class="form-group">
+        <label class="carousel-label" for="item_title">Title</label>
+        <input type="text" class="form-control" id="item_title" ng-model="data.title" value="{{data.title}}" placeholder="Insert an item title">
+      </div>
+      <div class="form-group">
+        <label class="carousel-label" for="item_description">Item Description</label>
+        <input type="text" class="form-control" id="item_description" ng-model="data.description" value="{{data.description}}" placeholder="Insert a description">
+      </div>
+    </form>
+  </div>
+  <uib-carousel class="carousel-image" interval="slideInterval" no-wrap="noWrapSlides">
+    <uib-slide ng-repeat="slide in images" active="slide.active">
+      <img ng-src="{{prefix}}{{slide.path}}" style="margin:auto; height:200px;">
+    </uib-slide>
+  </uib-carousel>
+</div>
+<div class="modal-footer" carousel-footer>
+  <small class="text-left">{{footer}}</small>
+  <button type="button" class="btn btn-default pull-left" dismiss="modal" ng-click="cancel()">Cancel</button>
+  <button type="button" class="btn btn-success pull-right" dismiss="modal" ng-click="save(); $event.stopPropagation()">Save</button>
+</div>

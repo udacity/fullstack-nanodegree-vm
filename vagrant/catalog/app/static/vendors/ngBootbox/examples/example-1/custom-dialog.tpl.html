@@ -1,0 +1,11 @@
+<div ng-controller="CustomCtrl">
+    <h1>This is a HTML template!</h1>
+    <p>Some text...</p>
+    <h2>A list</h2>
+    <ul>
+        <li ng-repeat="item in items">
+            {{item.name}}
+        </li>
+    </ul>
+    <button class="btn btn-primary" ng-click="buttonClick()">A button</button>
+</div>

@@ -1,0 +1,31 @@
+.navbar-custom {
+  color: #FFFFFF;
+  background-color: #CC3333;
+}
+
+.navbar-custom .navbar-brand {
+  padding-top: 15px;
+  padding-bottom: 15px;
+  font-family: 'Kaushan Script', cursive, Arial, serif;
+  font-weight: 800;
+}
+
+.google_signin {
+  display: block;
+  height: 100%;
+  width: 100%;
+}
+
+.signin {
+  position: relative;
+  margin-top: 8px;
+  margin-bottom: 8px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.signout {
+  position: relative;
+  margin-left: 10px;
+
+}

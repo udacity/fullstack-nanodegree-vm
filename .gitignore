@@ -24,6 +24,7 @@ var/
 *.egg-info/
 .installed.cfg
 *.egg
+*.db
 
 # PyInstaller
 #  Usually these files are written by a python script from a template
@@ -57,4 +58,13 @@ docs/_build/
 
 # PyBuilder
 target/
+*.pyc
+node_modules/
+vendors/
+vagrant/catalog/app/bin/
+vagrant/catalog/app/include/
+vagrant/catalog/app/lib/
+vagrant/catalog/node_modules/
+vagrant/catalog/app/static/vendors/
+
 

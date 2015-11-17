@@ -1,0 +1,32 @@
+{
+  "name": "ng-table",
+  "version": "0.8.3",
+  "main": [
+    "./dist/ng-table.min.js",
+    "./dist/ng-table.min.css"
+  ],
+  "ignore": [
+    "examples",
+    "src"
+  ],
+  "dependencies": {
+    "angular": "^1.2"
+  },
+  "devDependencies": {
+    "angular-mocks": "~1.4.3",
+    "angular-digest-hud": "~0.1.9",
+    "lodash": "~3.10.0",
+    "angular-resource": "~1.4.3"
+  },
+  "homepage": "https://github.com/esvit/ng-table",
+  "_release": "0.8.3",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.8.3",
+    "commit": "44c9cd566b6010b31f7cf960d75d5a87a9058eb3"
+  },
+  "_source": "git://github.com/esvit/ng-table.git",
+  "_target": "~0.8.3",
+  "_originalSource": "ng-table",
+  "_direct": true
+}

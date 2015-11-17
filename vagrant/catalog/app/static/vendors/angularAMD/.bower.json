@@ -1,0 +1,33 @@
+{
+  "name": "angularAMD",
+  "description": "Facilitate use of RequireJS in AngularJS ",
+  "version": "0.2.1",
+  "main": "angularAMD.js",
+  "license": "MIT",
+  "keywords": [
+    "angularjs",
+    "requirejs"
+  ],
+  "authors": [
+    "Marcos Lin (https://github.com/marcoslin/)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:marcoslin/angularAMD.git"
+  },
+  "dependencies": {
+    "angular": "~1.2.0",
+    "requirejs": "~2.1.0"
+  },
+  "homepage": "https://github.com/marcoslin/bower-angularAMD",
+  "_release": "0.2.1",
+  "_resolution": {
+    "type": "version",
+    "tag": "v0.2.1",
+    "commit": "fb426d3ef7f5b761f46865039a989ffae7f393f1"
+  },
+  "_source": "git://github.com/marcoslin/bower-angularAMD.git",
+  "_target": "~0.2.1",
+  "_originalSource": "angularAMD",
+  "_direct": true
+}

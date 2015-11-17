@@ -1,0 +1,26 @@
+{
+  "name": "ngModal",
+  "version": "1.2.2",
+  "main": ["dist/ng-modal.js", "dist/ng-modal.css"],
+  "ignore": [
+    ".gitignore",
+    "bower_components",
+    "node_modules",
+    "spec",
+    "src",
+    "vendor",
+    "demo.html",
+    "Gruntfile.js",
+    "karma.conf.coffee",
+    "package.json",
+    "screenshot.png"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "angular": "~1.2.4",
+    "angular-mocks": "~1.2.4",
+    "jasmine": "~1.3.1",
+    "karma-jasmine": "~0.1.3",
+    "jquery": "~2.0"
+  }
+}

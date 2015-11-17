@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>AngularJS Google Plus Sign-in Button Directive</title>
+    <meta name="description" content="A directive for AngularJS to provide a Google Plus Sigin-in Button">
+    <link href="//netdna.bootstrapcdn.com/bootswatch/2.3.0/cerulean/bootstrap.min.css" rel="stylesheet">
+  </head>
+  <body class="container">
+
+    <h1>Angular Google Plus Sign-in Directive</h1>
+
+    <hr>
+
+    <h2>Usage</h2>
+
+    <div class="row">
+      <div class="span12">
+        <ol>
+          <li>Include <code>google-plus-signin.js</code>.</li>
+          <li>Add <code>directive.g+signin</code> as a dependency to your app.</li>
+          <li>Add <code>&lt;google-plus-signin clientid="your-client-id"&gt;</code>.</li>
+          <li>Create a listener on your <code>$scope</code> for <code>event:google-plus-signin-success</code> to detect successful authentication. <em>Sample in the <a href="https://github.com/sirkitree/angular-directive.g-signin#example">README</a>.</em></li>
+          <li><em>Optional:</em> Listen for <code>event:google-plus-signin-failure</code> to handle authentication errors and signouts.</li>
+        </ol>
+      </div>
+    </div>
+
+    <hr>
+
+    <h2>In action</h2>
+
+    <div class="row">
+      <div class="span6" ng-app="ExampleSigninApp">
+        <div ng-controller="ExampleCtrl">
+          <google-plus-signin clientid="620125449078-4jo21sf1ltlb81o5cbke4sic3ogoo3gm"></google-plus-signin>
+          <p>^ This is a Google Plus sign-in button</p>
+        </div>
+      </div>
+      <div class="span6">
+        <div class="highlight"><pre><span class="nt">&lt;div</span> <span class="na">ng-app=</span><span class="s">"directive.g+signin"</span><span class="nt">&gt;</span>
+  <span class="nt">&lt;google-plus-signin</span> <span class="na">clientid=</span><span class="s">"620125449078"</span><span class="nt">&gt;&lt;/google-plus-signin&gt;</span>
+  <span class="nt">&lt;p&gt;</span>^ This is a Google Plus sign-in button<span class="nt">&lt;/p&gt;</span>
+<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+      </div>
+    </div>
+
+    <hr>
+
+    <a href="https://github.com/sirkitree/angular-directive.g-signin"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_orange_ff7600.png" alt="Fork me on GitHub"></a>
+
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.6/angular.min.js"></script>
+    <script src="google-plus-signin.js"></script>
+
+    <script>
+    angular.module('ExampleSigninApp', ['directive.g+signin'])
+      .controller('ExampleCtrl', function ($scope) {
+        $scope.$on('event:google-plus-signin-success', function (event, authResult) {
+          // User successfully authorized the G+ App!
+          console.log('Signed in!');
+        });
+        $scope.$on('event:google-plus-signin-failure', function (event, authResult) {
+          // User has not authorized the G+ App!
+          console.log('Not signed into Google Plus.');
+        });
+      });
+    </script>
+  </body>
+</html>

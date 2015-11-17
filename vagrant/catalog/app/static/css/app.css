@@ -1,0 +1,23 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  color: #0c0c0c;
+}
+
+.app {
+  width: 1024px;
+  margin: 0 auto;
+}
+
+@media all and (min-width: 420px){
+  .app{
+    width: 640px;
+  }
+}
+
+@media all and (min-width: 640px){
+  .app{
+    width: 1024px;
+  }
+}

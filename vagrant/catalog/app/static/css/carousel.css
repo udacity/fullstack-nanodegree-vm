@@ -1,0 +1,35 @@
+.carousel-header h4{
+  font-family: 'Philosopher', Copperplate, cursive, Arial, serif;
+  font-weight: 400;
+}
+
+.carousel-form {
+  margin: 5px;
+}
+
+.carousel-form .form-group{
+  margin: 5px;
+  padding-bottom: 5px;
+  border: 1px;
+}
+
+.carousel-label{
+  font-family: Montserrat, cursive, Arial, serif;
+  font-weight: 300;
+}
+
+.carousel-image{
+  min-height: 200px;
+  margin: 5px;
+  align-content: center;
+}
+
+.carousel-image img{
+  vertical-align: middle;
+  align-content: center;
+}
+
+.carousel-picker {
+  margin: 5px;
+  min-height: 30px;
+}

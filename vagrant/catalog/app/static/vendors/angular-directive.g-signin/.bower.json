@@ -1,0 +1,20 @@
+{
+  "name": "angular-directive.g-signin",
+  "version": "0.1.2",
+  "license": "MIT",
+  "main": "./google-plus-signin.js",
+  "dependencies": {
+    "angular": "~1.2.0"
+  },
+  "homepage": "https://github.com/sirkitree/angular-directive.g-signin",
+  "_release": "0.1.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "0.1.2",
+    "commit": "a1539892c7cc86c498dc0543122fa43b39936edf"
+  },
+  "_source": "git://github.com/sirkitree/angular-directive.g-signin.git",
+  "_target": "~0.1.2",
+  "_originalSource": "angular-directive.g-signin",
+  "_direct": true
+}
