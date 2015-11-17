@@ -6,8 +6,6 @@ define([], function() {
     var service = {};
 
     service.auth_url = function(url) {
-      // return [url, "?_csrf_token=", csrf_token()].join("");
-      // return [url, "?_csrf_token={{ csrf_token() }}"].join("");
       return url;
     }
 

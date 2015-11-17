@@ -48,7 +48,6 @@ def gconnect():
     '''
     # loading code
     code = request.data
-
     try:
         oauth_flow = flow_from_clientsecrets(
             'client_secret.json', scope='')
@@ -64,12 +63,13 @@ def gconnect():
         abort(404)
 
     access_token = credentials.access_token
-    gplus_id = credentials.id_token['sub']
+    provider_id = credentials.id_token['sub']
 
     # Avoid duplicated login
     stored_access_token = login_session.get('access_token')
-    stored_gplus_id = login_session.get('gplus_id')
-    if stored_access_token is not None and gplus_id == stored_gplus_id:
+    stored_provider_id = login_session.get('provider_id')
+
+    if stored_access_token is not None and provider_id == stored_provider_id:
         return utilities.status(login_session.get('message'), 200, 'json')
 
     # Storing access token
@@ -80,19 +80,17 @@ def gconnect():
     answer = requests.get(userinfo_url, headers={
                           'Authorization': 'Bearer ' + access_token})
 
-    # Loading using information
     data = json.loads(answer.text)
-
     # Check if the user exist
     user = models.select_user_by_email(data['email'])
+
     if user is None:
         user = models.insert_new_user(data['name'], data[
-                                      'email'], data['picture'])
-
-    login_session['gplus_id'] = gplus_id
+                                      'email'], data['picture'].strip('/'))
+    login_session['provider_id'] = provider_id
     login_session['email'] = data['email']
-    login_session['message'] = {'picture': data['picture'], 'email': data[
-        'email'], 'fullname': data['name'], 'id': user.id, 'type': 'google'}
+    login_session['message'] = {'picture': data['picture'].strip('/'), 'email': data[
+        'email'], 'fullname': data['name'], 'id': user.id, 'provider': 'google'}
 
     return utilities.status(login_session.get('message'), 200, 'json')
 
@@ -108,7 +106,54 @@ def gdisconnect():
         return utilities.status("Current user not connected", 401, 'json')
     result = requests.get(
         'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token)
+
     return disconnect(result)
+
+
+@module.route("/flogin", methods=['POST'])
+def fconnect():
+    '''
+            Api for login using Facebook Authentications.
+    '''
+    # loading code
+    data = json.loads(request.data)
+    access_token = data['authResponse']['accessToken']
+    provider_id = data['id']
+
+    # Avoid duplicated login
+    stored_access_token = login_session.get('access_token')
+    stored_provider_id = login_session.get('provider_id')
+
+    if stored_access_token is not None and provider_id == stored_provider_id:
+        return utilities.status(login_session.get('message'), 200, 'json')
+
+    # Storing access token
+    login_session['access_token'] = access_token
+    # Check if the user exist
+    user = models.select_user_by_email(data['email'])
+    if user is None:
+        user = models.insert_new_user(data['name'], data[
+                                      'email'], data['picture']['data']['url'].strip('/'))
+
+    login_session['provider_id'] = provider_id
+    login_session['email'] = data['email']
+    login_session['message'] = {'picture': data['picture']['data']['url'].strip('/'), 'email': data[
+        'email'], 'fullname': data['name'], 'id': user.id, 'provider': 'facebook'}
+
+    return utilities.status(login_session.get('message'), 200, 'json')
+
+
+@module.route("/flogout", methods=['POST'])
+@utilities.require_login
+def fdisconnect():
+    '''
+            Facebook oauth server side logout api
+    '''
+
+    access_token = login_session.get('access_token')
+    if access_token is None:
+        return utilities.status("Current user not connected", 401, 'json')
+    return disconnect(requests.codes.ok)
 
 
 @utilities.require_login
@@ -117,5 +162,5 @@ def disconnect(result):
         del login_session['access_token']
         del login_session['email']
         del login_session['message']
-        del login_session['gplus_id']
+        del login_session['provider_id']
     return utilities.status('Successfully disconnected', 200, 'json')

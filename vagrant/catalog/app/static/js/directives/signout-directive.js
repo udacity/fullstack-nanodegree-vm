@@ -9,7 +9,7 @@ define([], function() {
       scope: {
         init: '&',
         logout: '&',
-        log_type: '@',
+        provider: '@',
         google_url: '@',
         facebook_url: '@',
         isDisabled: '@'

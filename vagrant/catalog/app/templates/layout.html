@@ -4,7 +4,6 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<!-- <meta content="authenticity_token" name="csrf-param" /> -->
 	<meta content="{{ csrf_token() }}" name="_csrf_token" />
 	<title>Catalog App</title>
 	<link rel="stylesheet" href="{{ url_for('static', filename='vendors/bootstrap/dist/css/bootstrap.css') }}">
@@ -50,7 +49,6 @@
 	<div class="app">
 		{% block content %} {% endblock %}
 	</div>
-	<script type="text/javascript" src="{{ url_for('static', filename='js/sdk/facebook.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='vendors/es5-shim/es5-shim.js') }}"></script>
 	<script type="text/javascript" src="{{ url_for('static', filename='vendors/requirejs/require.js') }}" data-main="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>

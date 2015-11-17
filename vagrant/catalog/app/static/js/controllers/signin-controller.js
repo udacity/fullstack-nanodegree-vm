@@ -1,7 +1,7 @@
 'use strict';
 
 define(['PostDataService', 'DataBroadcastService', 'AuthenticationService'], function(PostDataService, DataBroadcastService, AuthenticationService) {
-  return ['PostDataService', 'DataBroadcastService', 'AuthenticationService', 'GooglePlus', '$scope', 'Facebook', function(PostDataService, DataBroadcastService, AuthenticationService, GooglePlus, $scope, Facebook) {
+  return ['PostDataService', 'DataBroadcastService', 'AuthenticationService', 'GooglePlus', '$scope', 'ezfb', '$window', '$location', '$q', function(PostDataService, DataBroadcastService, AuthenticationService, GooglePlus, $scope, ezfb, $window, $location, $q) {
     $scope.isDisabled = false;
     $scope.login_status = undefined;
     $scope.goggle_url = "http://localhost:8000/glogin";
@@ -18,13 +18,16 @@ define(['PostDataService', 'DataBroadcastService', 'AuthenticationService'], fun
         }
       );
     });
-    $scope.$on('event:google-plus-signin-failure', function(event, authResult) {
-      console.log(authResult);
+
+    // Below is buggy code for later
+    ezfb.Event.subscribe('auth.statusChange', function(authResult) {
+      updateFacebook(authResult);
     });
 
+
     $scope.logToFacebook = function() {
-      Facebook.login().then(function() {
-        // console.log(authResult);
+      ezfb.login(null, {
+        scope: 'email,user_likes'
       });
     };
 
@@ -38,25 +41,24 @@ define(['PostDataService', 'DataBroadcastService', 'AuthenticationService'], fun
       }
     }, true);
 
-    $scope.$watch(
-      function() {
-        return Facebook.isReady();
-      },
-      function(newVal) {
-        if (newVal)
-          $scope.facebookReady = true;
-      }
-    );
-
-    // $scope.$watch('google_status', function(new_value, old_value) {
-    //   if ((new_value != undefined) && (new_value !== {}) && (new_value !== '') && (new_value != old_value)) {
-    //     PostDataService.login($scope.goggle_url, new_value).then(
-    //       function(response) {
-    //         DataBroadcastService.login_status.set = response;
-    //       }
-    //     );
-    //   }
-    // });
+    var updateFacebook = function(authResult) {
+      ezfb.getLoginStatus().then(function(res) {
+          return ezfb.api('/me?fields=id,name,email,picture');
+        })
+        .then(function(information) {
+          var result = $.extend(authResult, information);
+          if (result['status'] === 'connected') {
+            try {
+              FB.setAccessToken(result['authResponse']['accessToken'])
+            } catch (err) {}
+            PostDataService.login(AuthenticationService.auth_url($scope.facebook_url), result).then(
+              function(response) {
+                DataBroadcastService.login_status.set = response.data;
+              }
+            );
+          }
+        });
+    }
 
   }];
 });

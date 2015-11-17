@@ -1,4 +1,4 @@
-window.fbAsyncInit = function() {
+$window.fbAsyncInit = function() {
   FB.init({
     appId: '521603404683305',
     xfbml: true,

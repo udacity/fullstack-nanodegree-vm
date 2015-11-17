@@ -7,7 +7,6 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine, func
 from flask import Blueprint
-# from passlib.apps import custom_app_context as pwd_context
 
 data = Blueprint('data_models', __name__)
 

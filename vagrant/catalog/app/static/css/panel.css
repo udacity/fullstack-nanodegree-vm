@@ -10,6 +10,19 @@ div .right-pane{
 	float: right;
 }
 
+.profile{
+	height: 40px;
+}
+
+.profile img{
+	height: 35px;
+	width: 35px;
+	display: inline-block;
+	vertical-align: middle;
+	align-content: center;
+	border: 2px solid #cfd;
+}
+
 .grid-item-container{
   padding: 2% 2% 0;
   text-align: justify;

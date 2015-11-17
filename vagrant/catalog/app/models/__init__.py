@@ -73,7 +73,7 @@ def load_all_images_by_category(category_id):
 
 
 @commit_and_close
-def insert_new_user(email, picture, fullname):
+def insert_new_user(fullname, email, picture):
     user_model = UserModel(fullname=fullname, email=email, picture=picture,
                            id=re.sub(r"[+=\/]", "_", base64.b64encode(uuid.uuid4().bytes)))
     session.add(user_model)
@@ -86,6 +86,9 @@ def insert_new_user(email, picture, fullname):
 def select_user_by_email(email):
     return session.query(UserModel).filter_by(email=email).scalar()
 
+@commit_and_close
+def select_all_users():
+    return session.query(UserModel).all()
 
 @commit_and_close
 def insert_new_item(user_id, title, description, category_id, image_id):
@@ -142,5 +145,4 @@ def update_item(item, title, description, image_id, category_id):
     item.image_id = image_id
     item.category_id = category_id
     item.updated_time = datetime.now()
-    # session.add(item)
     session.commit()

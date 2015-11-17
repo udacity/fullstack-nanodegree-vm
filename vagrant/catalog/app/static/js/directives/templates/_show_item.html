@@ -9,10 +9,10 @@
     <h3>{{item.description}}</h3>
   </div>
   <div class="grid-item-details">
-    <button type="button" class="btn btn-warning pull-left animate-show" ng-show="isLoggedIn" ng-controller="PostItemController" ng-click="postItem(item)">
+    <button type="button" class="btn btn-warning pull-left animate-show" ng-show="showButton" ng-controller="PostItemController" ng-click="postItem(item)">
       <span class="glyphicon glyphicon-pencil"></span>
     </button>
-    <button type="button" class="btn btn-danger pull-right animate-show" ng-show="isLoggedIn" ng-controller="DeleteItemController" ng-click="deleteItem(item)">
+    <button type="button" class="btn btn-danger pull-right animate-show" ng-show="showButton" ng-controller="DeleteItemController" ng-click="deleteItem(item)">
       <span class="glyphicon glyphicon-trash"></span>
     </button>
   </div>

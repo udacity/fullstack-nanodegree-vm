@@ -27,11 +27,13 @@ define([
     'PostItemController',
     'PostModalController',
     'AddNewItemController',
+    'ProfileController',
     'CategoryPanelDirective',
     'ItemsPanelDirective',
     'ItemDirective',
     'PostItemDirective',
-    'AddNewItemDirective'
+    'AddNewItemDirective',
+    'ProfileDirective'
   ],
   function(angular,
     jquery,
@@ -61,14 +63,16 @@ define([
     PostItemController,
     PostModalController,
     AddNewItemController,
+    ProfileController,
     CategoryPanelDirective,
     ItemsPanelDirective,
     ItemDirective,
     PostItemDirective,
-    AddNewItemDirective) {
+    AddNewItemDirective,
+    ProfileDirective) {
     'use strict';
 
-    var app = angular.module('CatalogApp', ['ui.bootstrap', 'googleplus','directive.g+signin', 'facebook']);
+    var app = angular.module('CatalogApp', ['ui.bootstrap', 'googleplus','directive.g+signin', 'ezfb']);
 
     app.factory('LoadDataService', LoadDataService);
     app.factory('DataBroadcastService', DataBroadcastService);
@@ -84,6 +88,7 @@ define([
     app.controller('PostItemController', PostItemController);
     app.controller('PostModalController', PostModalController);
     app.controller('AddNewItemController', AddNewItemController);
+    app.controller('ProfileController', ProfileController);
     app.directive('signin', SigninDirective);
     app.directive('signout', SignoutDirective);
     app.directive('categorypanel', CategoryPanelDirective);
@@ -91,6 +96,7 @@ define([
     app.directive('showitem', ItemDirective);
     app.directive('postitem', PostItemDirective);
     app.directive('additem', AddNewItemDirective);
+    app.directive('profile', ProfileDirective)
 
     app.config(['GooglePlusProvider', function(GooglePlusProvider) {
       GooglePlusProvider.init({
@@ -105,17 +111,13 @@ define([
       $httpProvider.interceptors.push('SessionInjector');
     }]);
 
-    app.config(['FacebookProvider', function(FacebookProvider) {
-      FacebookProvider.setAppId('521603404683305');
-      // FacebookProvider.setPermissions("email,user_likes");
-      FacebookProvider.setInitCustomOption({
-        status: true,
-        cookie: true,
-        xfbml: true,
-        version: 'v2.5',
-        permissions: 'email,user_likes'
-      });
-      FacebookProvider.init();
+    app.config(['ezfbProvider', function(ezfbProvider) {
+      ezfbProvider.setInitParams(
+        {
+          appId: '521603404683305',
+          version: 'v2.5',
+          xfbml: true,
+        });
     }]);
 
 

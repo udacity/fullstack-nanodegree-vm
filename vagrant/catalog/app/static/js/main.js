@@ -15,7 +15,8 @@ requirejs.config({
     'bootstrapSelect': "vendors/bootstrap-select/dist/js/bootstrap-select",
     'googleplus': "vendors/angular-google-plus/dist/angular-google-plus",
     'googlePlusSignin': "vendors/angular-directive.g-signin/google-plus-signin",
-    'Facebook': "vendors/angular-facebook/lib/angular-facebook",
+    'FacebookSDK': "js/sdk/facebook",
+    'Facebook': "vendors/angular-easyfb/src/angular-easyfb",
     app: "js/app",
     SignoutController: "js/controllers/signout-controller",
     SignoutDirective: "js/directives/signout-directive",
@@ -33,11 +34,13 @@ requirejs.config({
     DeleteItemController: "js/controllers/delete_item-controller",
     PostItemController: "js/controllers/post_item-controller",
     PostModalController: "js/controllers/post_modal-controller",
+    ProfileController: "js/controllers/profile-controller",
     CategoryPanelDirective: "js/directives/category_panel-directive",
     ItemsPanelDirective: "js/directives/items_panel-directive",
     ItemDirective: "js/directives/item-directive",
     PostItemDirective: "js/directives/post_item-directive",
-    AddNewItemDirective: "js/directives/add_new_item-directive"
+    AddNewItemDirective: "js/directives/add_new_item-directive",
+    ProfileDirective: "js/directives/profile-directive"
   },
   shim: {
     jquery: {
@@ -68,11 +71,18 @@ requirejs.config({
     ngModal: {
       exports: 'ngModal'
     },
+    FacebookSDK: {
+      deps: [
+        'jquery',
+        'angular'
+      ]
+    },
     Facebook: {
       deps: [
-        'angular'
+        'angular',
+        'FacebookSDK'
       ],
-      exports: 'facebook'
+      exports: 'ezfb'
     },
     'ngBootbox': {
       deps: [

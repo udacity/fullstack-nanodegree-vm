@@ -16,7 +16,6 @@ define(['LoadDataService', 'PostDataService', 'AuthenticationService'], function
       $scope.selectedCategory = data.selectedCategory;
       $scope.footer = "All items must have a value or selection."
 
-
       $scope.loadImages = function() {
         if ($scope.selectedCategory !== "") {
           var url = [$scope.image_url, "category_id=", $scope.selectedCategory].join("");
@@ -64,7 +63,6 @@ define(['LoadDataService', 'PostDataService', 'AuthenticationService'], function
       }, true);
 
       var update_item = function(data) {
-        // var item = data
         data.category_id = $scope.selectedCategory;
         data.title = $scope.data.title;
         data.description = $scope.data.description;

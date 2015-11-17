@@ -4,14 +4,15 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
   return ['$scope', '$timeout', 'LoadDataService', 'DataBroadcastService',
     function($scope, $timeout, LoadDataService, DataBroadcastService) {
       $scope.prefix = 'static/';
-      $scope.isLoggedIn = false;
+      $scope.showButton = false;
       $scope.login_status = undefined;
       $scope.url = "http://localhost:8000/image/json/";
 
       $scope.init = function() {
         $scope.login_status = undefined;
         var url = [$scope.url, "id=", $scope.item.image_id].join("");
-        $scope.isLoggedIn = (DataBroadcastService.login_status.get.id !== undefined);
+        var current_id = DataBroadcastService.login_status.get.id
+        $scope.showButton = (current_id !== undefined && current_id === $scope.item.user_id);
         LoadDataService.loadData(url)
           .then(
             function(response) {
@@ -25,7 +26,8 @@ define(['LoadDataService', 'DataBroadcastService'], function(LoadDataService, Da
 
       $scope.$watch('login_status', function(new_value, old_value) {
         if ((new_value !== undefined) && (new_value !== {}) && (new_value !== old_value)) {
-          $scope.isLoggedIn = (new_value.id !== undefined);
+          var current_id = new_value.id
+          $scope.showButton = (current_id !== undefined && current_id === $scope.item.user_id);
         }
       }, true);
 

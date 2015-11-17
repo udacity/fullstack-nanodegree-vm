@@ -8,14 +8,11 @@ define([], function() {
             transclude: true,
             scope: {
                 init: '&',
-                item: '=',
-                current_url: '@',
-                showButton: '@',
-                prefix: '@',
-                image: '@'
+                isLoggedIn: '@',
+                picture: '@'
             },
-            templateUrl: 'static/js/directives/templates/_show_item.html',
-            controller: 'ItemController',
+            templateUrl: 'static/js/directives/templates/_profile.html',
+            controller: 'ProfileController',
             link: function postLink(scope, element, attrs) {
                 scope.init();
             }
