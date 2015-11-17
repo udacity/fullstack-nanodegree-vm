@@ -74,5 +74,5 @@ vagrant/catalog/node_modules/*
 vagrant/catalog/app/static/vendors
 vagrant/catalog/app/static/vendors/
 vagrant/catalog/app/static/vendors/*
-
-
+vagrant/catalog/app/udacity_catalog.db
+vagrant/catalog/app/udacity_catalog.db*
