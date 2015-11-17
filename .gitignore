@@ -59,12 +59,20 @@ docs/_build/
 # PyBuilder
 target/
 *.pyc
-node_modules/
-vendors/
+
+#catalogs
+vagrant/catalog/app/bin
 vagrant/catalog/app/bin/
+vagrant/catalog/app/bin/*
 vagrant/catalog/app/include/
+vagrant/catalog/app/lib
 vagrant/catalog/app/lib/
+vagrant/catalog/app/lib/*
+vagrant/catalog/node_modules
 vagrant/catalog/node_modules/
+vagrant/catalog/node_modules/*
+vagrant/catalog/app/static/vendors
 vagrant/catalog/app/static/vendors/
+vagrant/catalog/app/static/vendors/*
 
 
