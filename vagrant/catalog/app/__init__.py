@@ -62,17 +62,26 @@ def csrf_protect():
             Check csrf_token for every coming post request.
     '''
     if (request.method == "POST") or (request.method == "PUT"):
-        token = request.headers.get('X-Csrf-Token')
-        if token is None:
-            abort(403)
+        token = request.cookies.get('X-Csrf-Token')
+        poken = request.headers.get('X-Csrf-Token')
         try:
-            stored_token = login_session.get('_csrf_token')
-            if not stored_token or stored_token != token:
+            stored_token = login_session.pop('_csrf_token', None)
+            if not stored_token and not (stored_token == token or stored_token == poken):
                 abort(403)
         except:
             print "Unexpected error:", sys.exc_info()[0]
             print "Unexpected error:", sys.exc_info()[1]
             abort(403)
+
+
+@app.after_request
+def reset_token(response):
+    '''
+            Update cookie token.
+    '''
+    if (request.method == "POST") or (request.method == "PUT"):
+        response.set_cookie('X-Csrf-Token', generated_csrf_token())
+    return response
 
 
 def generated_csrf_token():
