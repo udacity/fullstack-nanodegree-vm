@@ -14,8 +14,8 @@ drop table if exists players;
 create table players(
 	player_id serial primary key,
 	name varchar(50) not null,
-	wins integer default 0, --could be a count of the matches table
-	losses integer default 0 -- same here
+	wins integer default 0,
+	losses integer default 0
 	);
 
 drop table if exists matches;
