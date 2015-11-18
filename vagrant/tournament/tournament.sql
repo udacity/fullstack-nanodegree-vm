@@ -14,8 +14,8 @@ DROP TABLE IF EXISTS players;
 CREATE TABLE players(
 	player_id SERIAL PRIMARY KEY,
 	name VARCHAR(50) NOT NULL,
-	wins INTEGER default 0,
-	losses INTEGER default 0
+	wins INTEGER DEFAULT 0,
+	losses INTEGER DEFAULT 0
 	);
 
 DROP TABLE IF EXISTS matches;
