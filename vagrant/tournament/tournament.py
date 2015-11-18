@@ -16,7 +16,7 @@ def deleteMatches():
     db = connect()
     c = db.cursor()
 
-    c.execute("delete from matches *")
+    c.execute("DELETE FROM matches *")
 
     db.commit()
     db.close()
@@ -27,7 +27,7 @@ def deletePlayers():
     db = connect()
     c = db.cursor()
 
-    c.execute("delete from players *")
+    c.execute("DELETE FROM players *")
 
     db.commit()
     db.close()
@@ -38,7 +38,7 @@ def countPlayers():
     db = connect()
     c = db.cursor()
 
-    c.execute("select count(*) from players;")
+    c.execute("SELECT COUNT(*) FROM players;")
     count = c.fetchone()
 
     db.close()
@@ -57,7 +57,7 @@ def registerPlayer(name):
     db = connect()
     c = db.cursor()
 
-    c.execute("insert into players (name) values (%s);", (name,))
+    c.execute("INSERT INTO players (name) VALUES (%s);", (name,))
 
     db.commit()
     db.close()
@@ -79,8 +79,8 @@ def playerStandings():
     db = connect()
     c = db.cursor()
 
-    c.execute("""select player_id, name, wins, (wins+losses)
-                as matches from players order by wins desc;""")
+    c.execute("""SELECT player_id, name, wins, (wins+losses)
+                AS matches FROM players ORDER BY wins DESC;""")
     standings = c.fetchall()
 
     db.close()
@@ -97,7 +97,7 @@ def reportMatch(winner, loser):
     db = connect()
     c = db.cursor()
 
-    c.execute("insert into matches (winner, loser) values (%s, %s)",
+    c.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s)",
               (winner, loser,))
     c.execute("""UPDATE players
                  SET wins=wins + 1
@@ -131,6 +131,7 @@ def swissPairings():
     idnamepairs = [(row[0], row[1]) for row in standings]
     pairs = []
 
+    
     i = 0
     while i < len(idnamepairs):
         pairs.append(idnamepairs[i] + idnamepairs[i+1])
