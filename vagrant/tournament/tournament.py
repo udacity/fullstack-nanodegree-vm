@@ -118,12 +118,6 @@ def swissPairings():
         name1: the first player's name
         id2: the second player's unique id
         name2: the second player's name
-
-
-    Pseudocode:
-    -Send a query asking for players listed by order of wins
-    -break the list of players into a list of tuples
-    -every two players down the list is a pairing
     """
     db = connect()
     c = db.cursor()
@@ -140,3 +134,4 @@ def swissPairings():
 
     db.close()
     return pairs
+
