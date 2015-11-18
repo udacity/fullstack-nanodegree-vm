@@ -124,18 +124,15 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    db = connect()
-    c = db.cursor()
 
     standings = playerStandings()
     idnamepairs = [(row[0], row[1]) for row in standings]
     pairs = []
 
-    
+    # Perhaps this could be obtained with an SQL subquery?
     i = 0
     while i < len(idnamepairs):
         pairs.append(idnamepairs[i] + idnamepairs[i+1])
         i += 2
 
-    db.close()
     return pairs
