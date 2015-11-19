@@ -7,7 +7,6 @@ sudo apt-get -qqy install python-sqlalchemy
 sudo apt-get -qqy install python-pip
 sudo apt-get -qqy install git
 pip install flask==0.10.1
-pip install Flask
 pip install sqlalchemy
 pip install requests
 pip install werkzeug==0.10.4

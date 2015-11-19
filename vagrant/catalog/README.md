@@ -64,9 +64,12 @@ A new token is issued after each request.
 2. `sudo npm install bower -g`
 3. `virtualenv app`
 4. `. app/bin/activate`
-4. `cd app`
 5. `bower install --save`
 > 	* You may need to select best version based on conflicts (always choose app).
+
+**Likely you will need to install some pip app:**
+`pip install flask==0.10.1 sqlalchemy requests werkzeug==0.10.4 watchdog==0.8.3 Flask-Login==0.1.3 httplib2 webapp2 webob oauth2client argparse`
+
 
 **Execute the App with no data:**
 
