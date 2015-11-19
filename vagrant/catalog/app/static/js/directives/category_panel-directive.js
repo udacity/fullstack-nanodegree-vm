@@ -10,7 +10,10 @@ define([], function() {
                 init: '&',
                 changeCategoryID: '&',
                 viewMyItems: '&',
-                categories: '@'
+                categories: '@',
+                all_index: '@',
+                my_index: '@',
+                selected: '='
             },
             templateUrl: 'static/js/directives/templates/_show_categories.html',
             controller: 'CategoriesController',
