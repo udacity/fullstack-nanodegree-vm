@@ -15,7 +15,6 @@ requirejs.config({
     'bootstrapSelect': "vendors/bootstrap-select/dist/js/bootstrap-select",
     'googleplus': "vendors/angular-google-plus/dist/angular-google-plus",
     'googlePlusSignin': "vendors/angular-directive.g-signin/google-plus-signin",
-    'FacebookSDK': "js/sdk/facebook",
     'Facebook': "vendors/angular-easyfb/src/angular-easyfb",
     app: "js/app",
     SignoutController: "js/controllers/signout-controller",
@@ -71,16 +70,9 @@ requirejs.config({
     ngModal: {
       exports: 'ngModal'
     },
-    FacebookSDK: {
-      deps: [
-        'jquery',
-        'angular'
-      ]
-    },
     Facebook: {
       deps: [
-        'angular',
-        'FacebookSDK'
+        'angular'
       ],
       exports: 'ezfb'
     },

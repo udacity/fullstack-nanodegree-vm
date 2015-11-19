@@ -107,7 +107,7 @@ def gdisconnect():
     result = requests.get(
         'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token)
 
-    return disconnect(result)
+    return disconnect(result.status_code)
 
 
 @module.route("/flogin", methods=['POST'])
@@ -149,8 +149,8 @@ def fdisconnect():
     '''
             Facebook oauth server side logout api
     '''
-
     access_token = login_session.get('access_token')
+
     if access_token is None:
         return utilities.status("Current user not connected", 401, 'json')
     return disconnect(requests.codes.ok)
@@ -158,9 +158,13 @@ def fdisconnect():
 
 @utilities.require_login
 def disconnect(result):
-    if result.status_code == requests.codes.ok:
+    '''
+            Single method remove all related information to disconnect.
+    '''
+    if result == requests.codes.ok:
         del login_session['access_token']
         del login_session['email']
         del login_session['message']
         del login_session['provider_id']
+
     return utilities.status('Successfully disconnected', 200, 'json')

@@ -4,9 +4,9 @@
 	</div>
 	<div class="panel-body ">
 		<div class="category-box list-group ">
-			<button type="button " class="list-group-item category-item" ng-click="changeCategoryID()">All Items</button>
-			<button type="button " class="list-group-item category-item" ng-click="viewMyItems()">My Items</button>
-			<button ng-repeat="category in categories" type="button" class="list-group-item category-item" ng-click="changeCategoryID(category.id)">
+			<button type="button " class="list-group-item category-item" ng-click="changeCategoryID()" ng-class="{active: all_index == selected}">All Items</button>
+			<button type="button " class="list-group-item category-item" ng-click="viewMyItems()" ng-class="{active: my_index == selected}">My Items</button>
+			<button ng-repeat="category in categories" type="button" class="list-group-item category-item" ng-click="changeCategoryID(category.id, $index)" ng-class="{active: $index == selected}">
 				{{category.name}}
 			</button>
 		</div>

@@ -26,21 +26,21 @@ The app provides several endpoints as:
 
 * **RSS feeds using Atom feed library**
 
-`http://localhost:8000/category/rss`
-`http://localhost:8000/images/rss`
-`http://localhost:8000/items/rss`
+* `http://localhost:8000/category/rss`
+* `http://localhost:8000/images/rss`
+* `http://localhost:8000/items/rss`
 
 * **XML endpoints**
 
-`http://localhost:8000/category/xml`
-`http://localhost:8000/images/xml`
-`http://localhost:8000/items/xml`
+* `http://localhost:8000/category/xml`
+* `http://localhost:8000/images/xml`
+* `http://localhost:8000/items/xml`
 
 * **JSON endpoints**
 
-`http://localhost:8000/category/json  `
-`http://localhost:8000/images/json`
-`http://localhost:8000/items/json`
+* `http://localhost:8000/category/json `
+* `http://localhost:8000/images/json`
+* `http://localhost:8000/items/json`
 
 Only Items, Categories, and Images are provided via endpoints, users information are not provided via endpoints.
 
@@ -52,16 +52,36 @@ A new token is issued after each request.
 
 **Clone the app.**
 
-**go to vagrant/catalog:**
-`Execute bash file: pg_config.sh`
+* Sprint up vagrant
+	* 	*vagrant up*
+* Log into the vagrant box
+	* 	*vagrant ssh*
+	* 	*cd /vagrant/catalog*
+
+**Setup the environment:**
+
+1. `pg_config.sh`
+2. `sudo npm install bower -g`
+3. `virtualenv app`
+4. `. app/bin/activate`
+5. `bower install --save`
+> 	* You may need to select best version based on conflicts (always choose app).
+
+**Likely you will need to install some pip app:**
+`pip install flask==0.10.1 sqlalchemy requests werkzeug==0.10.4 watchdog==0.8.3 Flask-Login==0.1.3 httplib2 webapp2 webob oauth2client argparse`
+
 
 **Execute the App with no data:**
-`python app/create_catalog_no_items_db.py`
-`python application.py`
 
-Execute the App with data:
-`python app/create_catalog_with_tems_db.py`
-`python application.py`
+1. `python application.py --clean`
+2. `python application.py --with-no-data`
+3. `python application.py`
+
+**Execute the App with data:**
+
+1. `python application.py --clean`
+2. `python application.py --with-data`
+3. `python application.py`
 
 
 

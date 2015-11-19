@@ -44,6 +44,7 @@ define(['PostDataService', 'DataBroadcastService', 'AuthenticationService'], fun
           //   // window.location.replace(href);
           // }
         } catch (err) {
+          console.log(err);
           // any errors just logout
           // window.location.replace(href);
         }

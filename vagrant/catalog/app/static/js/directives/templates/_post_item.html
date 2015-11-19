@@ -4,7 +4,6 @@
 <div class="modal-body row carousel-body">
   <div>
     <form class="carousel-form">
-      <!-- <input name=_csrf_token type=hidden value="{{ csrf_token() }}"> -->
       <div class="form-group">
         <select ng-model="selectedCategory" class="selectpicker carousel-picker" ng-options="category.id as category.name for category in categories.$$state.value" ng-change="changeCategory()"></select>
       </div>

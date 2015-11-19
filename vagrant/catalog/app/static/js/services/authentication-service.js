@@ -7,13 +7,11 @@ define([], function() {
 
     service.auth_url = function(url) {
       return url;
-    }
+    };
 
     var csrf_token = function() {
       return document.querySelector("meta[name='_csrf_token']").getAttribute('content');
-    }
-
-    var csrftoken = "{{ csrf_token() }}";
+    };
 
     return service;
   }];

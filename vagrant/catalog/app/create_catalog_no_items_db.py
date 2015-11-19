@@ -45,6 +45,5 @@ for name in categories:
         for id in image_data:
             file_path = image_data[id]
             category_id = categories_id[name]
-            image_model = models.insert_image(id, file_path
-, category_id)
+            image_model = models.insert_image(id, file_path, category_id)
 print "done with image!!!"
