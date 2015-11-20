@@ -116,12 +116,17 @@ def users():
         return render_template('userlist.html', users=users)
     return redirect(url_for('customerList'))
 
-@app.route('/edit/user/<user_id>')
+@app.route('/edit/user/', methods=['POST', 'GET'])
 @login_required
 def edit_user(user_id):
     if g.user.am_i_admin():
-        #user = getUser(user_id)
-        return render_template('edit_user.html', user=user)
+        user = models.User.query.get(user_id)
+        form = forms.EditUser(obj=user)
+        print user.username
+        #form.populate_obj(user)
+        #print form.user.username
+        #user.save
+        return render_template('edit_user.html', form=form)
     return redirect(url_for('customerList'))
 
 @login_manager.user_loader

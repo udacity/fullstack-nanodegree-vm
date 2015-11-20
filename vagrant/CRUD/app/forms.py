@@ -25,12 +25,12 @@ class ProfileForm(Form):
 class EditUser(Form):
     username     = StringField('Username', [validators.Length(min=4, max=25)])
     email        = StringField('Email Address', [validators.Length(min=6, max=35)])
-    fullName    = StringField('Full Name', [validators.Length(min=4, max=50)])
+    fullname    = StringField('Full Name', [validators.Length(min=4, max=50)])
     password = PasswordField('Password')
     can_edit = BooleanField('Can Edit Customers')
-    edit_note = BooleanField('Can Edit Customers')
-    can_create = BooleanField('Can Edit Customers')
-    is_admin = BooleanField('Can Edit Customers')
+    edit_note = BooleanField('Can Edit Customer Note')
+    can_create = BooleanField('Can Create Customers')
+    is_admin = BooleanField('Can Edit Everything')
 
 class LoginForm(Form):
     username = TextField('Username', [validators.Required()])

@@ -6,76 +6,19 @@
   </style>
 {% endblock %}
 {% block content %}
-  <form action="" method=post class="form-horizontal">
-    <h2>Edit User </h2>
-    <div class="control-group">
-        <div class="controls">
-          <input type="text" id="username" name="username" class="input-xlarge"
-            placeholder="Enter Username" value="{{ request.form.username }}"
-            required>
-        </div>
-    </div>
+{% from "_formhelpers.html" import render_field %}
+<form action="{{ url_for('edit_user',user_id=form.user_id) }}" method="POST">
+Username: {{ form.username }}
+Fullname: {{ form.fullname }}
+Email: {{ form.email }}
+Password: {{ form.password }}
+Can Edit: {{ form.can_edit }}
+Edit Customer Note: {{ form.edit_note}}
+Can Create Customer: {{form.can_create}}
+Is User: {{form.is_admin}}
 
-    <div class="control-group">
-        <div class="controls">
-          <input type="password" id="password" name="password" class="input-xlarge"
-            placeholder="Enter Password" value="{{ request.form.password }}"
-            required>
-        </div>
-    </div>
 
-    <div class="control-group">
-        <div class="controls">
-          <input type="text" id="fullname" name="fullname" class="input-large"
-            placeholder="Name" value="{{ request.form.fullname }}"
-            required>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <input type="email" id="email" name="email" class="input-xlarge"
-            placeholder="Enter Email" value="{{ request.form.email }}"
-            required>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <input type="boolean" id="can_edit" name="can_edit" class="input-checkbox"
-            placeholder="Enter Email" value="{{ request.form.username }}"
-            required>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <input type="email" id="email" name="email" class="input-xlarge"
-            placeholder="Enter Email" value="{{ request.form.username }}"
-            required>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <input type="email" id="email" name="email" class="input-xlarge"
-            placeholder="Enter Email" value="{{ request.form.username }}"
-            required>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <input type="email" id="email" name="email" class="input-xlarge"
-            placeholder="Enter Email" value="{{ request.form.username }}"
-            required>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <div class="controls">
-          <button type="submit" class="btn btn-success">Edit</button>
-        </div>
-    </div>
-  </form>
+    {{ form.csrf_token }}
+<input type=submit value=Update>
+</form>
 {% endblock %}

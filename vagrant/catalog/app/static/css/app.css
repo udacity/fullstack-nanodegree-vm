@@ -1,0 +1,60 @@
+table {
+  background: #FFFFFF;
+  margin-bottom: 1.25rem;
+  border: solid 1px #DDDDDD;
+  table-layout: auto; }
+  table caption {
+    background: transparent;
+    color: #222222;
+    font-size: 1rem;
+    font-weight: bold; }
+  table thead {
+    background: #F5F5F5; }
+    table thead tr th,
+    table thead tr td {
+      padding: 0.5rem 0.625rem 0.625rem;
+      font-size: 0.875rem;
+      font-weight: bold;
+      color: #222222; }
+  table tfoot {
+    background: #F5F5F5; }
+    table tfoot tr th,
+    table tfoot tr td {
+      padding: 0.5rem 0.625rem 0.625rem;
+      font-size: 0.875rem;
+      font-weight: bold;
+      color: #222222; }
+  table tr th,
+  table tr td {
+    padding: 0.5625rem 0.625rem;
+    font-size: 0.675rem;
+    color: #222222;
+    text-align: left; }
+  table tr.even, table tr.alt, table tr:nth-of-type(even) {
+    background: #F9F9F9; }
+  table thead tr th,
+  table tfoot tr th,
+  table tfoot tr td,
+  table tbody tr th,
+  table tbody tr td,
+  table tr td {
+    display: table-cell;
+    line-height: 0.925rem; }
+
+body {
+    background-image: -webkit-gradient(
+    	linear,
+    	right bottom,
+    	left top,
+    	color-stop(0, #787878),
+    	color-stop(1, #D4D4D4)
+    );
+    background-image: -o-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: -moz-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: -webkit-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: -ms-linear-gradient(left top, #787878 0%, #D4D4D4 100%);
+    background-image: linear-gradient(to left top, #787878 0%, #D4D4D4 100%);
+    background-repeat: no-repeat;
+background-attachment: fixed;
+font-family: Hack, monospace;
+}
