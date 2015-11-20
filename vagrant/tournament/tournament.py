@@ -33,12 +33,11 @@ def countPlayers():
     """Returns the number of players currently registered."""
     DB = connect()
     c = DB.cursor()
-    query = "SELECT count(RID) as COUNT FROM registration GROUP BY RID"
+    query = "SELECT COUNT(*) AS count FROM registration"
     c.execute(query)
-    count = ({'COUNT': int(row[0])}
-                 for row in c.fetchall())
+    result = c.fetchone()
     DB.close()
-    return count
+    return result[0]
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -52,6 +51,7 @@ def registerPlayer(name):
     DB = connect()
     c = DB.cursor()
     query = "INSERT INTO players(PName) VALUES ('%s')" % (name)
+    #NEED TO ALSO REGISTER PLAYER TO TOURNAMENT via REGISTRATION table
     c.execute(query)
     DB.commit()
     DB.close()
