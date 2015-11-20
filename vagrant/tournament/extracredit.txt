@@ -1,6 +1,7 @@
 Extra credit:
 
 Prevent rematches between players.
+ - use the winner loser columns in the matches table as a composite primary key
 
 Don’t assume an even number of players. If there is an odd number of players, assign one player a “bye” (skipped round). A bye counts as a free win. A player should not receive more than one bye in a tournament.
 
