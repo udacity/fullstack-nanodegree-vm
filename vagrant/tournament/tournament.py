@@ -15,7 +15,8 @@ def deleteMatches():
     """Remove all the match records from the database."""
     DB = connect()
     c = DB.cursor()
-    query = "DELETE from matches; --"
+    query = "DELETE FROM matches;"
+    c.execute(query)
     DB.commit()
     DB.close()
 
@@ -23,7 +24,7 @@ def deletePlayers():
     """Remove all the player records from the database."""
     DB = connect()
     c = DB.cursor()
-    query = "DELETE from players; --"
+    query = "DELETE FROM players;"
     c.execute(query)
     DB.commit()
     DB.close()
@@ -70,8 +71,8 @@ def playerStandings():
     """
     DB = connect()
     c = DB.cursor()
-    query = ("SELECT PName, p.PID, r.Wins, r.Matches FROM players(PName)"
-             " as p, registration as r WHERE p.PID = r.PID ORDER BY r.Matches"
+    query = ("SELECT PName, p.PID, r.Wins, r.Matches FROM players(PName)", 
+             " as p, registration as r WHERE p.PID = r.PID ORDER BY r.Matches")
     c.execute(query)
     DB.close()
 

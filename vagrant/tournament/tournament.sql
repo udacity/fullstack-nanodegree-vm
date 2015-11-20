@@ -9,7 +9,7 @@
 CREATE TABLE tournaments
 (
 	TID serial NOT NULL PRIMARY KEY,
-	TDate date DEFAULT GETDATE(),
+	TDate date DEFAULT now(),
 	TName varchar(30) NOT NULL,
 	Enroll bool DEFAULT TRUE,
 	Rounds int
@@ -24,21 +24,28 @@ CREATE TABLE players
 CREATE TABLE registration
 (
 	RID serial NOT NULL PRIMARY KEY,
-	TID integer FOREIGN KEY REFERENCES tournaments(TID),
-	PID integer FOREIGN KEY REFERENCES players(PID),
+	TID integer,
+	PID integer,
 	Wins int,
 	Draws int,
 	Losses int,
 	Matches int
 );
 
+ALTER TABLE registration ADD CONSTRAINT FK_Registration_TID FOREIGN KEY (TID)
+REFERENCES tournaments(TID);
+ALTER TABLE registration ADD CONSTRAINT FK_Registration_PID FOREIGN KEY (PID)
+REFERENCES players(PID);
+
 CREATE TABLE matches
 (
 	MatchID serial NOT NULL PRIMARY KEY,
-	PlayerID integer FOREIGN KEY REFERENCES players(PID),
-	OpponentID integer FOREIGN KEY REFERENCES players(PID),
-	Wins int,
-	Draws int,
-	Losses int,
-	Rount int
+	PlayerID integer,
+	OpponentID integer,
+	Draw bool DEFAULT FALSE
 );
+
+ALTER TABLE matches ADD CONSTRAINT FK_MatchPlayer FOREIGN KEY (PlayerID) 
+REFERENCES players(PID);
+ALTER TABLE matches ADD CONSTRAINT FK_MatchOpponent FOREIGN KEY (OpponentID) 
+REFERENCES players(PID);
