@@ -33,7 +33,7 @@ def countPlayers():
     """Returns the number of players currently registered."""
     DB = connect()
     c = DB.cursor()
-    query = "SELECT COUNT(*) AS count FROM registration"
+    query = "SELECT COUNT(*) AS count FROM players"
     c.execute(query)
     result = c.fetchone()
     DB.close()
@@ -74,6 +74,7 @@ def playerStandings():
     query = ("SELECT PName, p.PID, r.Wins, r.Matches FROM players(PName)", 
              " as p, registration as r WHERE p.PID = r.PID ORDER BY r.Matches")
     c.execute(query)
+    # NEEDS A RETURN!!!!!
     DB.close()
 
 def reportMatch(winner, loser):
