@@ -116,6 +116,7 @@ def swissPairings():
     standings = playerStandings()
     idnamepairs = [(row[0], row[1]) for row in standings]
     pairs = []
+    
     # Perhaps this could be obtained with an SQL subquery?
     i = 0
     while i < len(idnamepairs):
