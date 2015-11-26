@@ -9,7 +9,7 @@
 DROP DATABASE IF EXISTS tournament;
 create DATABASE tournament;
 
-\C tournament;
+\c tournament;
 DROP TABLE IF EXISTS players;
 CREATE TABLE players(
 	player_id SERIAL PRIMARY KEY,
