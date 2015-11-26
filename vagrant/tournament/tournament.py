@@ -80,7 +80,7 @@ def playerStandings():
     c = db.cursor()
 
     c.execute("""SELECT player_id, name, wins, (wins+losses)
-                AS matches FROM players ORDER BY wins DESC;""")
+                 AS matches FROM players ORDER BY wins DESC;""")
     standings = c.fetchall()
 
     db.close()
@@ -125,14 +125,28 @@ def swissPairings():
         name2: the second player's name
     """
 
-    standings = playerStandings()
+    standings = playerStandings() 
     idnamepairs = [(row[0], row[1]) for row in standings]
     pairs = []
 
-    # Perhaps this could be obtained with an SQL subquery?
+    #Perhaps this could be obtained with an SQL subquery?
     i = 0
     while i < len(idnamepairs):
-        pairs.append(idnamepairs[i] + idnamepairs[i+1])
+        pair = idnamepairs[i] + idnamepairs[i+1]
+        revpair = idnamepairs[i+1] + idnamepairs[i]
+        if revpair not in pairs:
+            if pair not in pairs:
+                pairs.append(pair)
+        else:
+            pass
         i += 2
+
+    # db = connect()
+    # c = db.cursor()
+
+    # c.execute("SELECT player_id, name FROM players WHERE ")
+
+    # db.commit()
+    # db.close()
 
     return pairs
