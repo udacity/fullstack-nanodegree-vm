@@ -26,10 +26,10 @@ CREATE TABLE registration
 	RID serial NOT NULL PRIMARY KEY,
 	TID integer,
 	PID integer,
-	Wins int,
-	Draws int,
-	Losses int,
-	Matches int
+	Wins int DEFAULT 0,
+	Draws int DEFAULT 0,
+	Losses int DEFAULT 0,
+	Matches int DEFAULT 0
 );
 
 ALTER TABLE registration ADD CONSTRAINT FK_Registration_TID FOREIGN KEY (TID)

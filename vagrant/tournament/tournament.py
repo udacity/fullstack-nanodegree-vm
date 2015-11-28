@@ -24,10 +24,11 @@ def deletePlayers():
     """Remove all the player records from the database."""
     DB = connect()
     c = DB.cursor()
-    query = "DELETE FROM players;"
+    query = "DELETE FROM registration; DELETE FROM players;"
     c.execute(query)
     DB.commit()
     DB.close()
+
 
 def countPlayers():
     """Returns the number of players currently registered."""
@@ -50,8 +51,12 @@ def registerPlayer(name):
     """
     DB = connect()
     c = DB.cursor()
-    query = "INSERT INTO players(PName) VALUES ('%s')" % (name)
+    cleaned = bleach.clean(name, strip = True)
+    cleaned = cleaned.replace("'", "''")
+    query = "INSERT INTO players (PName) VALUES ('%s')" % (cleaned,)
+    c.execute(query)
     #NEED TO ALSO REGISTER PLAYER TO TOURNAMENT via REGISTRATION table
+    query = "INSERT INTO registration (PID) SELECT PID FROM players WHERE PName='%s'" % (cleaned,)
     c.execute(query)
     DB.commit()
     DB.close()
@@ -71,11 +76,13 @@ def playerStandings():
     """
     DB = connect()
     c = DB.cursor()
-    query = ("SELECT PName, p.PID, r.Wins, r.Matches FROM players(PName)", 
-             " as p, registration as r WHERE p.PID = r.PID ORDER BY r.Matches")
+    query = """SELECT p.PID, p.PName, r.Wins, r.Matches FROM players as p,
+     registration as r WHERE p.PID = r.PID ORDER BY r.Matches"""
     c.execute(query)
+    result = c.fetchall()
     # NEEDS A RETURN!!!!!
     DB.close()
+    return result
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -86,6 +93,7 @@ def reportMatch(winner, loser):
     """
     DB = connect()
     c = DB.cursor()
+    #TODO SQL does not match code or _test
     query = "INSERT INTO matches(Winner, Loser) VALUES ('%s', '%s')" % (winner, loser)
     c.execute(query)
     DB.commit()
