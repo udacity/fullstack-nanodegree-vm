@@ -38,17 +38,16 @@ create table players
 
 create table matches(
     mID serial primary key,
-    pid1 int,
+    pid1 int references players (playerid),
     name1 text,
-    pid2 int,
+    pid2 int references players (playerid),
     name2 text
     );
     
 create table records (
     matchid serial primary key,
-    winner int,
-    loser int
+    winner int references players (playerid),
+    loser int references players (playerid)
     );
 
 create view standings as select players.playerid, name, wins from players order by wins ASC;
-

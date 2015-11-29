@@ -317,6 +317,7 @@ def devops():
     1. Insert n players, players will have random names and be assigned no matches
     2. Test run a round
     3. Test run and display final results of tournament
+    sql open an SQL Query prompt
     main  Return to main screen
     """
     opt = raw_input("Make a selection:  ")
@@ -331,6 +332,9 @@ def devops():
         elif opt == "3":
             # run a complete tournament using all players and display the results
             testTournament()
+        elif opt == "sql":
+            # open the sql prompt
+            sql_cmd()
         elif opt == "main":
             # return to main screen
             main()
@@ -338,5 +342,12 @@ def devops():
         print "There was an error.. Press <ENTER> to return to main screen..."
         raw_input("")
         main()
+def sql_cmd():
+    query = raw_input("""Please enter yout SQL command here:
+    >>    """)
+    if len(query) == 0:
+        print("you didn't enter anything")
 
+    cur.execute(query)
+    cur.commit
 main()
