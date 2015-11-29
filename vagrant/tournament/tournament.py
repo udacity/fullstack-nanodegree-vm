@@ -184,24 +184,31 @@ def swissPairings():
         # odd number of players
         while offset < count:
             # get players from standings and create matches
-            cur.execute("""# select playerid, name from players
-                            # order by wins asc limit 2 offset """ + str(offset))
+            cur.execute("""select playerid, name from players
+                            order by wins asc limit 2 offset """ + str(offset))
             offset += 1
             output = cur.fetchall()
             pair = [rows for rows in output]
             player1 = pair[0]
             player2 = pair[1]
+            # pull data from standings table and prepare for matches
             pid1 = str(player1[0])
             name1 = str(player1[1])
             name1 = checkName(name1)
             pid2 = str(player2[0])
             name2 = str(player2[1])
             name2 = checkName(name2)
-            match = str(pid1 + ',\'' + name1 + '\',' + pid2 + ',\'' + name2 + '\'')
+            # create match and insert into table
+            match = str(pid1 + ',\'' + name1 + '\',' + pid2 + ''',\'
+                        ''' + name2 + '\'')
             cur.execute("""insert into matches (pid1, name1, pid2, name2)
-                            values (""" + match + ")")
+                            values (" + match + ")""")
             cur.execute("select pid1, name1, pid2, name2 from matches")
             conn.commit()
             output = cur.fetchall()
             offset += 1
+
+            # print match
+        # call byeWeek function, will be defined later
+
         return output
