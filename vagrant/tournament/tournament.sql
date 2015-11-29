@@ -13,7 +13,7 @@
 -- stated otherwise.
 -- kill connection to old database and reset
 \c vagrant
--- drop database tournament;
+drop database tournament;
 -- begin new database
 
 create database tournament;
@@ -50,4 +50,5 @@ create table records (
     loser int
     );
 
+create view standings as select players.playerid, name, wins from players order by wins ASC;
 

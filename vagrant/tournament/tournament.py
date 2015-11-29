@@ -145,6 +145,10 @@ def swissPairings():
 
         pull standings, limit to two results at a time
     """
+    """Start REAL code for swisspairings"""
+    
+    
+    
     # check if number of players is even
     count = countPlayers()
     offset = 0
@@ -154,7 +158,7 @@ def swissPairings():
         while offset < count:
             # get players from standings and create matches
             cur.execute("""select playerid, name from players
-                            order by wins asc limit 2 offset """ + str(offset))
+                           order by wins asc limit 2 offset """ + str(offset))
             offset += 1
             output = cur.fetchall()
             pair = [rows for rows in output]
@@ -180,8 +184,8 @@ def swissPairings():
         # odd number of players
         while offset < count:
             # get players from standings and create matches
-            cur.execute("""select playerid, name from players
-                            order by wins asc limit 2 offset """ + str(offset))
+            cur.execute("""# select playerid, name from players
+                            # order by wins asc limit 2 offset """ + str(offset))
             offset += 1
             output = cur.fetchall()
             pair = [rows for rows in output]
@@ -201,4 +205,3 @@ def swissPairings():
             output = cur.fetchall()
             offset += 1
         return output
-
