@@ -22,8 +22,8 @@ $ vagrant SSH
 once this has been completed you will be logged into the vagrant virtual machine. to access the tournament files type 
 $ cd /vagrant/tournament
 $ psql
-> \i tournament
-> \q
+ \i tournament 
+ \q
 $ python tournament_test.py
 
 At this time the tournament will run through the test and make sure that the basic functions all work.
