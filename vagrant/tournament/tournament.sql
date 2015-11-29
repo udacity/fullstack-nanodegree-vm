@@ -13,7 +13,7 @@
 -- stated otherwise.
 -- kill connection to old database and reset
 \c vagrant
-drop database tournament;
+drop database if exists tournament;
 -- begin new database
 
 create database tournament;
