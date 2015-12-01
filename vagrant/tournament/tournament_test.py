@@ -4,6 +4,7 @@
 
 from tournament import *
 
+
 def testDeleteMatches():
     deleteMatches()
     print "1. Old matches can be deleted."
@@ -123,6 +124,7 @@ def testPairings():
         raise ValueError(
             "After one match, players with one win should be paired.")
     print "8. After one match, players with one win are paired."
+
 
 
 if __name__ == '__main__':
