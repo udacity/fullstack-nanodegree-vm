@@ -126,21 +126,6 @@ def testPairings():
     print "8. After one match, players with one win are paired."
 
 
-def testPreventRematches():
-    deleteMatches()
-    deletePlayers()
-    players = ["Soundly Sorrows", "Fortunate Drapes", "Unbearable Cardboard", "Pinkie Pie",
-               "Blue Bottle", "Some Attendee", "Ridiculous Artichoke", "Found Overhang"]
-    for player in players:
-        registerPlayer(player)
-    standings = playerStandings()
-    ids = [row[0] for row in standings]
-    reportMatch(id[0], id[1])
-    reportMatch(id[2], id[3])
-    reportMatch(id[4], id[5])
-    reportMatch(id[6], id[7])
-    pairings = swissPairings()
-    print (pairings)
 
 if __name__ == '__main__':
     testDeleteMatches()
@@ -151,7 +136,6 @@ if __name__ == '__main__':
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
-    testPreventRematches()
     print "Success!  All tests pass!"
 
 

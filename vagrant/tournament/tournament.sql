@@ -41,7 +41,8 @@ DROP TABLE IF EXISTS matches;
 CREATE TABLE matches(
 	match_id SERIAL PRIMARY KEY,
 	winner INTEGER REFERENCES players (player_id),
-	loser INTEGER REFERENCES players (player_id)
+	loser INTEGER REFERENCES players (player_id),
+	UNIQUE (winner, loser)
 );
 
 CREATE VIEW standings AS

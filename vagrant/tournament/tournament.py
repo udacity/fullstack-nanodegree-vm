@@ -71,6 +71,7 @@ def playerStandings():
     db = connect()
     c = db.cursor()
     c.execute("""SELECT * FROM standings""")
+    standings = c.fetchall()
     db.close()
     return standings
 
@@ -111,38 +112,19 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-<<<<<<< HEAD
 
     standings = playerStandings() 
-||||||| merged common ancestors
 
-    standings = playerStandings()
-=======
-    standings = playerStandings()
->>>>>>> 4acfc085e28999fd7295969f0cc2a3a1d171d492
     idnamepairs = [(row[0], row[1]) for row in standings]
     pairs = []
-<<<<<<< HEAD
 
     #Perhaps this could be obtained with an SQL subquery?
-||||||| merged common ancestors
-
-    # Perhaps this could be obtained with an SQL subquery?
-=======
-    
-    # Perhaps this could be obtained with an SQL subquery?
->>>>>>> 4acfc085e28999fd7295969f0cc2a3a1d171d492
     i = 0
     while i < len(idnamepairs):
         pair = idnamepairs[i] + idnamepairs[i+1]
-        revpair = idnamepairs[i+1] + idnamepairs[i]
-        if revpair not in pairs:
-            if pair not in pairs:
-                pairs.append(pair)
-        else:
-            pass
+        pairs.append(pair)
         i += 2
-<<<<<<< HEAD
+
 
     # db = connect()
     # c = db.cursor()
@@ -152,8 +134,4 @@ def swissPairings():
     # db.commit()
     # db.close()
 
-||||||| merged common ancestors
-
-=======
->>>>>>> 4acfc085e28999fd7295969f0cc2a3a1d171d492
     return pairs
