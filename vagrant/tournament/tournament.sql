@@ -40,12 +40,12 @@ REFERENCES players(PID);
 CREATE TABLE matches
 (
 	MatchID serial NOT NULL PRIMARY KEY,
-	PlayerID integer,
-	OpponentID integer,
+	Winner integer,
+	Loser integer,
 	Draw bool DEFAULT FALSE
 );
 
-ALTER TABLE matches ADD CONSTRAINT FK_MatchPlayer FOREIGN KEY (PlayerID) 
+ALTER TABLE matches ADD CONSTRAINT FK_MatchPlayer FOREIGN KEY (Winner) 
 REFERENCES players(PID);
-ALTER TABLE matches ADD CONSTRAINT FK_MatchOpponent FOREIGN KEY (OpponentID) 
+ALTER TABLE matches ADD CONSTRAINT FK_MatchOpponent FOREIGN KEY (Loser) 
 REFERENCES players(PID);

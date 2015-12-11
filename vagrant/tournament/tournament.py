@@ -78,9 +78,31 @@ def playerStandings():
     c = DB.cursor()
     query = """SELECT p.PID, p.PName, r.Wins, r.Matches FROM players as p,
      registration as r WHERE p.PID = r.PID ORDER BY r.Matches"""
+    # IS THIS SORTED PROPERLY?
     c.execute(query)
     result = c.fetchall()
-    # NEEDS A RETURN!!!!!
+    DB.close()
+    return result
+
+def playerStanding(id):
+    """Returns a list of the players and their win records, sorted by wins.
+
+    The first entry in the list should be the player in first place, or a player
+    tied for first place if there is currently a tie.
+
+    Returns:
+      A list of tuples, each of which contains (id, name, wins, matches):
+        id: the player's unique id (assigned by the database)
+        name: the player's full name (as registered)
+        wins: the number of matches the player has won
+        matches: the number of matches the player has played
+    """
+    DB = connect()
+    c = DB.cursor()
+    query = """SELECT r.Wins, r.Draws, r.Losses, r.Matches FROM players as p,
+     registration as r WHERE r.PID = '%s' AND p.PID = r.PID""" % (id)
+    c.execute(query)
+    result = c.fetchall()
     DB.close()
     return result
 
@@ -91,10 +113,28 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    winner_stats = playerStanding(winner)
+    loser_stats = playerStanding(loser)
+    winner_wins = winner_stats[0][0]
+    winner_matches = winner_stats[0][3]
+    winner_wins += 1
+    winner_matches += 1
+    loser_losses = loser_stats[0][2]
+    loser_matches = loser_stats[0][3]
+    loser_losses += 1
+    loser_matches += 1
     DB = connect()
     c = DB.cursor()
     #TODO SQL does not match code or _test
     query = "INSERT INTO matches(Winner, Loser) VALUES ('%s', '%s')" % (winner, loser)
+    c.execute(query)
+    #WIN
+    query = """UPDATE registration SET Wins='%d', Matches='%d'
+    WHERE PID='%s'""" % (winner_wins, winner_matches, winner)
+    c.execute(query)
+    # LOSE
+    query = """UPDATE registration SET Losses='%d', Matches='%d'
+    WHERE PID='%s'""" % (loser_losses, loser_matches, loser)
     c.execute(query)
     DB.commit()
     DB.close()
@@ -108,6 +148,7 @@ def reportMatchDraw(winner, loser):
     """
     DB = connect()
     c = DB.cursor()
+    #GONNA NEED TO FIX THIS TOO
     query = "INSERT INTO matches(Winner, Loser, Draw) VALUES ('%s', '%s', TRUE)" % (winner, loser)
     c.execute(query)
     DB.commit()
@@ -130,6 +171,7 @@ def swissPairings():
     """
     DB = connect()
     c = DB.cursor()
+    # Lots needed here
     query = ""
     c.execute(query)
     DB.close()
