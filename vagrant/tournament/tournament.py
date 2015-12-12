@@ -189,7 +189,10 @@ def swissPairings():
     """
     DB = connect()
     c = DB.cursor()
-    # Lots needed here
-    query = ""
+    # SELF JOIN?
+    query = """SELECT p.PID, p.PName, r.Wins, r.Draws, R.Losses, r.Matches
+    FROM players as p, registration as r WHERE p.PID = r.PID ORDER BY r.Wins"""
     c.execute(query)
+    result = c.fetchall()
+    # DO SOMETHING WITH RESULTS TO SORT PAIRINGS, CREATE NEW TUPLE
     DB.close()
