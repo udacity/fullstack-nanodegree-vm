@@ -146,10 +146,28 @@ def reportMatchDraw(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    winner_stats = playerStanding(winner)
+    loser_stats = playerStanding(loser)
+    winner_draws = winner_stats[0][1]
+    winner_matches = winner_stats[0][3]
+    winner_draws += 1
+    winner_matches += 1
+    loser_draws = loser_stats[0][1]
+    loser_matches = loser_stats[0][3]
+    loser_draws += 1
+    loser_matches += 1
     DB = connect()
     c = DB.cursor()
     #GONNA NEED TO FIX THIS TOO
-    query = "INSERT INTO matches(Winner, Loser, Draw) VALUES ('%s', '%s', TRUE)" % (winner, loser)
+    query = "INSERT INTO matches(Winner, Loser, Draw) VALUES ('%s', '%s', 'TRUE')" % (winner, loser)
+    c.execute(query)
+    #WIN
+    query = """UPDATE registration SET Draws='%d', Matches='%d'
+    WHERE PID='%s'""" % (winner_draws, winner_matches, winner)
+    c.execute(query)
+    # LOSE
+    query = """UPDATE registration SET Draws='%d', Matches='%d'
+    WHERE PID='%s'""" % (loser_draws, loser_matches, loser)
     c.execute(query)
     DB.commit()
     DB.close()
