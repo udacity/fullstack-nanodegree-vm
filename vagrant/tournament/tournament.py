@@ -191,6 +191,7 @@ def swissPairings():
     DB = connect()
     c = DB.cursor()
     a = []
+    output = []
     # SELF JOIN?
     query = """SELECT p.PID, p.PName, r.Wins, r.Draws, R.Losses, r.Matches
     FROM players as p, registration as r WHERE p.PID = r.PID ORDER BY r.Wins"""
@@ -200,6 +201,14 @@ def swissPairings():
         p = Player(j[0], j[1], j[2], j[3], j[4], j[5])
         a.append(p)
     # DO SOMETHING WITH RESULTS TO SORT PAIRINGS, CREATE NEW TUPLE
-    print sorted(a, key=lambda player: player.record)
-    return result
+    players_sorted = sorted(a, key=lambda player: player.record)
+    for x in range (0, (len(a) - 1), 2):
+        mytup = (players_sorted[x].id,)
+        mytup += (players_sorted[x].name,)
+        mytup += (players_sorted[x+1].id,)
+        mytup += (players_sorted[x+1].name,)
+        output += [mytup]
+        mytup = ()
+    print output
+    return output
     DB.close()
