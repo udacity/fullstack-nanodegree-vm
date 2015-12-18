@@ -54,10 +54,10 @@ def registerPlayer(name):
     c = DB.cursor()
     cleaned = bleach.clean(name, strip = True)
     cleaned = cleaned.replace("'", "''")
-    query = "INSERT INTO players (PName) VALUES ('%s')" % (cleaned,)
+    query = "INSERT INTO players (PName) VALUES ('{0}')".format(cleaned)
     c.execute(query)
     #NEED TO ALSO REGISTER PLAYER TO TOURNAMENT via REGISTRATION table
-    query = "INSERT INTO registration (PID) SELECT PID FROM players WHERE PName='%s'" % (cleaned,)
+    query = "INSERT INTO registration (PID) SELECT PID FROM players WHERE PName='{0}'".format(cleaned)
     c.execute(query)
     DB.commit()
     DB.close()
@@ -101,7 +101,7 @@ def playerStanding(id):
     DB = connect()
     c = DB.cursor()
     query = """SELECT r.Wins, r.Draws, r.Losses, r.Matches FROM players as p,
-     registration as r WHERE r.PID = '%s' AND p.PID = r.PID""" % (id)
+     registration as r WHERE r.PID = '{0}' AND p.PID = r.PID""".format(id)
     c.execute(query)
     result = c.fetchall()
     DB.close()
@@ -127,15 +127,15 @@ def reportMatch(winner, loser):
     DB = connect()
     c = DB.cursor()
     #TODO SQL does not match code or _test
-    query = "INSERT INTO matches(Winner, Loser) VALUES ('%s', '%s')" % (winner, loser)
+    query = "INSERT INTO matches(Winner, Loser) VALUES ('{0}', '{1}')".format(winner, loser)
     c.execute(query)
     #WIN
-    query = """UPDATE registration SET Wins='%d', Matches='%d'
-    WHERE PID='%s'""" % (winner_wins, winner_matches, winner)
+    query = """UPDATE registration SET Wins='{0}', Matches='{1}'
+    WHERE PID='{2}'""".format(winner_wins, winner_matches, winner)
     c.execute(query)
     # LOSE
-    query = """UPDATE registration SET Losses='%d', Matches='%d'
-    WHERE PID='%s'""" % (loser_losses, loser_matches, loser)
+    query = """UPDATE registration SET Losses='{0}', Matches='{1}'
+    WHERE PID='{2}'""".format(loser_losses, loser_matches, loser)
     c.execute(query)
     DB.commit()
     DB.close()
@@ -160,15 +160,16 @@ def reportMatchDraw(winner, loser):
     DB = connect()
     c = DB.cursor()
     #GONNA NEED TO FIX THIS TOO
-    query = "INSERT INTO matches(Winner, Loser, Draw) VALUES ('%s', '%s', 'TRUE')" % (winner, loser)
+    query = """INSERT INTO matches(Winner, Loser, Draw)
+    VALUES ('{0}', '{1}', 'TRUE')""".format(winner, loser)
     c.execute(query)
     #WIN
-    query = """UPDATE registration SET Draws='%d', Matches='%d'
-    WHERE PID='%s'""" % (winner_draws, winner_matches, winner)
+    query = """UPDATE registration SET Draws='{0}', Matches='{1}'
+    WHERE PID='{2}'""".format(winner_draws, winner_matches, winner)
     c.execute(query)
     # LOSE
-    query = """UPDATE registration SET Draws='%d', Matches='%d'
-    WHERE PID='%s'""" % (loser_draws, loser_matches, loser)
+    query = """UPDATE registration SET Draws='{0}', Matches='{1}'
+    WHERE PID='{2}'""".format(loser_draws, loser_matches, loser)
     c.execute(query)
     DB.commit()
     DB.close()
@@ -209,6 +210,5 @@ def swissPairings():
         mytup += (players_sorted[x+1].name,)
         output += [mytup]
         mytup = ()
-    print output
     return output
     DB.close()
