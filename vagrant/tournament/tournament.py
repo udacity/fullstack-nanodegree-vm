@@ -210,5 +210,6 @@ def swissPairings():
         mytup += (players_sorted[x+1].name,)
         output += [mytup]
         mytup = ()
-    return output
     DB.close()
+    return output
+
