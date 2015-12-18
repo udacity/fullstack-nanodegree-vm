@@ -5,6 +5,7 @@
 
 import psycopg2
 import bleach
+from player import Player
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
@@ -189,10 +190,25 @@ def swissPairings():
     """
     DB = connect()
     c = DB.cursor()
+    pid_list = []
+    name_list = []
+    record_list = []
+    a = []
     # SELF JOIN?
     query = """SELECT p.PID, p.PName, r.Wins, r.Draws, R.Losses, r.Matches
     FROM players as p, registration as r WHERE p.PID = r.PID ORDER BY r.Wins"""
     c.execute(query)
     result = c.fetchall()
+    for i, j in enumerate(result):
+        pid_list.append(j[0])
+        name_list.append(j[1])
+        record = j[2] + j[3] / j[5]
+        p = Player(j[0], j[1], j[2], j[3], j[4], j[5], record)
+        a.append(p)
+        record_list.append(record)
+    #for i, j, k in zip(pid_list, name_list, record_list):
+        #print i, j, k
     # DO SOMETHING WITH RESULTS TO SORT PAIRINGS, CREATE NEW TUPLE
+    print a
+    return result
     DB.close()
