@@ -3,7 +3,7 @@
 # tournament.py -- implementation of a Swiss-system tournament
 #
 
-class Player:
+class Player(object):
     def __init__(self, id, name, wins, draws, losses, matches):
         self.id = id
         self.name = name
