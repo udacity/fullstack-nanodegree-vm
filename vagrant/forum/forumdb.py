@@ -47,4 +47,4 @@ def AddPost(content):
     except psycopg2.DatabaseError, e:
         if DB:
             DB.rollback()
-	print "Error '%s'" % e
+	print "Error '{0!s}'".format(e)
