@@ -1,0 +1,31 @@
+#create
+migrate create my_repository "Example project"
+#start version_control
+python ./manage.py version_control sqlite:///puppyshelter2.db ./
+
+#get version number
+python manage.py db_version sqlite:///puppyshelter2.db ./
+
+#simplifying the paths
+migrate manage manage.py --repository=./ --url=sqlite:///puppyshelter2.db
+python manage.py db_version
+
+#latest version available 
+python my_repository/manage.py version my_repository
+
+#new script
+python manage.py script "Add PuppyPage table"
+
+#testing
+
+
+from manager.models import Account
+
+def upgrade(migrate_engine):
+metadata.bind = migrate_engine
+Account.__table__.create()
+
+def downgrade(migrate_engine):
+metadata.bind = migrate_engine
+Account.__table__.drop()
+
