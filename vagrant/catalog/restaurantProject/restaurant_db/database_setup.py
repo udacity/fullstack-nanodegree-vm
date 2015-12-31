@@ -13,6 +13,26 @@ class Restaurant(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
 
+    def find(self, session):
+        item = session.query(Restaurant).filter_by(Restaurant.name == self.name).first()
+        #TODO - remove this print, only for testing
+        print "Restaurant: " + item.name + " id:" + item.id + "\n"
+
+    def listAll(self, session):
+        items = session.query(MenuItem).all()
+        #TODO - delete this one, it prints all the items, for testing
+        for item in items:
+            print item.name
+        return items
+
+    def add (self, session):
+        session.add(self)
+        session.commit()
+
+    def remove(self, session):
+        session.delete(self)
+        session.commit()
+
 
 class MenuItem(Base):
     __tablename__ = 'menu_item'
@@ -26,7 +46,7 @@ class MenuItem(Base):
     restaurant = relationship(Restaurant)
 
 
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///restaurant_db.db')
 
 
 Base.metadata.create_all(engine)
