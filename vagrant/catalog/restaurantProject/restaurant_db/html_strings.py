@@ -16,7 +16,7 @@ RESTAURANT_LAYOUT ='''
         <div class="jumbotron">
             <h1>Lista de Restaurantes</h1>
         <p class="lead"></p>
-        <p><a class="btn btn-lg btn-success" href="#" role="button">Em breve!</a></p>
+        <p><a class="btn btn-lg btn-success" href="restaurantOrdered" role="button">Em breve!</a></p>
         </div>
 
         <div class="row">

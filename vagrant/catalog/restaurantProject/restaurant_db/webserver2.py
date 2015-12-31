@@ -37,7 +37,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                 self.print_restaurants(order)
                 return
 
-"""            if self.path.endswith(".css"):
+            """if self.path.endswith(".css"):
                 f = open(curdir+sep+self.path)
                 print "\n\n\n"+ curdir + "  " + sep + "  " + self.path
                 self.send_response(200)
@@ -46,7 +46,8 @@ class webServerHandler(BaseHTTPRequestHandler):
                 self.wfile.write(f.read())
                 f.close()
                 return
-"""
+            """
+
             if self.path.endswith("/hola"):
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
