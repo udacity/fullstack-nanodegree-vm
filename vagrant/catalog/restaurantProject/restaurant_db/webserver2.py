@@ -17,11 +17,20 @@ class webServerHandler(BaseHTTPRequestHandler):
                 restaurant_list= Restaurant_list()
                 for item in restaurant_list:
                     output += "<tr><td>  " + str(item.id) + '''  </td><td class="acc-name"> ''' + item.name + "</td></td>"
-
                 #closes html and prints
                 output += RESTAURNANT_TABLE_F + RESTAURANT_LAYTOUT_E +PAGE_CLOSER
                 self.wfile.write(output)
                 print output
+                return
+
+            if self.path.endswith(".css"):
+                f = open(curdir+sep+self.path)
+                print "\n\n\n"+ curdir + "  " + sep + "  " + self.path               
+                self.send_response(200)
+                self.send_header('Content-type', 'text/css')
+                self.end_headers()
+                self.wfile.write(f.read())
+                f.close()
                 return
 
             if self.path.endswith("/hola"):

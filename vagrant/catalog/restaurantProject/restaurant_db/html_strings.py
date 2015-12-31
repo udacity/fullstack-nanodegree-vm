@@ -4,7 +4,7 @@
 HTML_HEADER = '''
 <!DOCTYPE html>
 <html lang='pt'>
-    <head> <title>Easy-Accounting</title>
+    <head> <title>Lista de Restaurantes</title>
     <link href="css/bootstrap.css' rel='stylesheet'>
 </head>
 '''
