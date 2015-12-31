@@ -3,36 +3,50 @@ import cgi
 from database_connect import *
 from html_strings import *
 
+
 class webServerHandler(BaseHTTPRequestHandler):
+
+    def print_restaurants(self, order):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+        #opens html
+        output=HTML_HEADER + RESTAURANT_LAYOUT + RESTAURANT_TABLE
+        #inputs content
+        restaurant_list= Restaurant_list(order)
+        for item in restaurant_list:
+            output += "<tr><td>  " + str(item.id) + '''  </td><td class="restaurant-name"> ''' + item.name + "</td>"
+            output += '''<td><a class="" role="button" href="/'''+ str(item.id) + '''/edit">Edit</a></td>'''
+            output += '''<td><a class="" role="button" href="/'''+ str(item.id) + '''/delete">Delete</a></td></tr>'''
+        #closes html and prints
+        output += RESTAURNANT_TABLE_F + RESTAURANT_LAYTOUT_E +PAGE_CLOSER
+        self.wfile.write(output)
+        print output
+        return
+
 
     def do_GET(self):
         try:
-            if self.path.endswith("/restaurant"):
-                self.send_response(200)
-                self.send_header('Content-type', 'text/html')
-                self.end_headers()
-                #opens html
-                output=HTML_HEADER + RESTAURANT_LAYOUT + RESTAURANT_TABLE
-                #inputs content
-                restaurant_list= Restaurant_list()
-                for item in restaurant_list:
-                    output += "<tr><td>  " + str(item.id) + '''  </td><td class="acc-name"> ''' + item.name + "</td></td>"
-                #closes html and prints
-                output += RESTAURNANT_TABLE_F + RESTAURANT_LAYTOUT_E +PAGE_CLOSER
-                self.wfile.write(output)
-                print output
+            if self.path.endswith("/restaurantOrdered"):
+                order = True
+                self.print_restaurants(order)
                 return
 
-            if self.path.endswith(".css"):
+            if self.path.endswith("/restaurant"):
+                order = False
+                self.print_restaurants(order)
+                return
+
+"""            if self.path.endswith(".css"):
                 f = open(curdir+sep+self.path)
-                print "\n\n\n"+ curdir + "  " + sep + "  " + self.path               
+                print "\n\n\n"+ curdir + "  " + sep + "  " + self.path
                 self.send_response(200)
                 self.send_header('Content-type', 'text/css')
                 self.end_headers()
                 self.wfile.write(f.read())
                 f.close()
                 return
-
+"""
             if self.path.endswith("/hola"):
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')

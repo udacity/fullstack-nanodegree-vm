@@ -28,6 +28,8 @@ RESTAURANT_TABLE ='''
                            <th>id</th>
 
                            <th class="acc-name">Restaurant name</th>
+                           <th> Edit</th>
+                           <th> Delete</th>
                     </thead>
                     <tbody>
 '''

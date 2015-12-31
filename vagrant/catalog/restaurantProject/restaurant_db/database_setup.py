@@ -18,11 +18,11 @@ class Restaurant(Base):
         #TODO - remove this print, only for testing
         print "Restaurant: " + item.name + " id:" + item.id + "\n"
 
-    def listAll(self, session):
-        items = session.query(MenuItem).all()
-        #TODO - delete this one, it prints all the items, for testing
-        for item in items:
-            print item.name
+    def listAll(self, session, name_order):
+        if name_order ==False:
+            items = session.query(Restaurant).all()
+        else:
+            items = session.query(Restaurant).order_by(Restaurant.name).all()
         return items
 
     def add (self, session):
