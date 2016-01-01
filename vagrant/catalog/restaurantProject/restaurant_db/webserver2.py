@@ -78,6 +78,22 @@ class webServerHandler(BaseHTTPRequestHandler):
                 print output
                 return
 
+            if self.path.endswith("/delete"):
+                get_id = self.path[ self.path.find("/") + 1 : self.path.find("/", self.path.find("/") + 1 ) ]
+                print get_id+"\n\n"
+                session = dbConnect()
+                isaRestaurant = session.query(Restaurant).filter_by(id = int(get_id) ).first()
+                if isaRestaurant is not None:
+                    self.send_response(301)
+                    isaRestaurant.remove(session)
+                    self.send_header('Location','/restaurant')
+                    self.end_headers()
+                    print "Restaurante " + isaRestaurant.name + " deletado da base."
+
+                else:
+                    print "Restaurante Inexistente."
+                return
+
         except IOError:
             self.send_error(404, 'File Not Found: %s' % self.path)
 
