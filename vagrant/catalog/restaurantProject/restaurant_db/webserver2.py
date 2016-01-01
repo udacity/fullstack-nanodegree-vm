@@ -21,7 +21,7 @@ class webServerHandler(BaseHTTPRequestHandler):
         #closes html and prints
         output += RESTAURNANT_TABLE_F + RESTAURANT_LAYTOUT_E +PAGE_CLOSER
         self.wfile.write(output)
-        print output
+        print "Restaurant table printed."
         return
 
 
@@ -30,11 +30,13 @@ class webServerHandler(BaseHTTPRequestHandler):
             if self.path.endswith("/restaurantOrdered"):
                 order = True
                 self.print_restaurants(order)
+                print "Lista ordenada enviada"
                 return
 
             if self.path.endswith("/restaurant"):
                 order = False
                 self.print_restaurants(order)
+                print "Lista não ordenada enviada"
                 return
 
             """if self.path.endswith(".css"):
@@ -56,7 +58,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += RESTAURANT_NEW
                 output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
                 self.wfile.write(output)
-                print output
+                print "Criação de novo restaurante"
                 return
 
             if self.path.endswith("/edit"):
@@ -75,7 +77,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                     output += RESTAURANT_EDIT_FORM
                     output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
                     self.wfile.write(output)
-                print output
+                print "Edição do restaurante"
                 return
 
             if self.path.endswith("/delete"):
@@ -120,6 +122,7 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += "<h2>Restaurant id is" + str(new_restaurant.find(session).id)
                 output += "</h2>"
                 output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
+                print "Restaurante criado."
 
             elif form_edit_name is not None:
                 get_id = self.path[ self.path.find("/") + 1 : self.path.find("/", self.path.find("/") + 1 ) ]
@@ -131,8 +134,8 @@ class webServerHandler(BaseHTTPRequestHandler):
                 output += "<h2>Restaurant id is " + str(this_restaurant.id)
                 output += "</h2>"
                 output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
+                print "Restaurante atualizado."
             self.wfile.write(output)
-            print output
         except:
             pass
 
