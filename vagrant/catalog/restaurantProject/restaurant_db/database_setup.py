@@ -14,9 +14,8 @@ class Restaurant(Base):
     name = Column(String(250), nullable=False)
 
     def find(self, session):
-        item = session.query(Restaurant).filter_by(Restaurant.name == self.name).first()
-        #TODO - remove this print, only for testing
-        print "Restaurant: " + item.name + " id:" + item.id + "\n"
+        item = session.query(Restaurant).filter_by(name = self.name).first()
+        return item
 
     def listAll(self, session, name_order):
         if name_order ==False:
@@ -32,6 +31,12 @@ class Restaurant(Base):
     def remove(self, session):
         session.delete(self)
         session.commit()
+
+    def update(self, session, new_name):
+        self.name = new_name
+        session.add(self)
+        session.commit()
+
 
 
 class MenuItem(Base):

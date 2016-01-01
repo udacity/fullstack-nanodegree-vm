@@ -23,3 +23,10 @@ def Restaurant_list( order):
     else:
         allRestaurants = dummy.listAll(session, False)
     return allRestaurants
+def dbConnect():
+    #connecting db
+    engine = create_engine('sqlite:///restaurant_db.db')
+    Base.metadata.bind=engine
+    DBSession = sessionmaker(bind = engine)
+    session = DBSession()
+    return session

@@ -48,24 +48,42 @@ class webServerHandler(BaseHTTPRequestHandler):
                 return
             """
 
-            if self.path.endswith("/hola"):
+            if self.path.endswith("/new"):
                 self.send_response(200)
                 self.send_header('Content-type', 'text/html')
                 self.end_headers()
-                output = ""
-                output += "<html><body>"
-                output += "<h1>&#161 Hola !</h1>"
-                output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-                output += "</body></html>"
+                output = HTML_HEADER + RESTAURANT_LAYOUT
+                output += RESTAURANT_NEW
+                output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
                 self.wfile.write(output)
+                print output
+                return
+
+            if self.path.endswith("/edit"):
+                get_id = self.path[ self.path.find("/") + 1 : self.path.find("/", self.path.find("/") + 1 ) ]
+                print get_id+"\n\n"
+                session = dbConnect()
+                isaRestaurant = session.query(Restaurant).filter_by(id = int(get_id) ).first()
+                if isaRestaurant is not None:
+                    self.send_response(200)
+                    self.send_header('Content-type', 'text/html')
+                    self.end_headers()
+                    output = HTML_HEADER + RESTAURANT_LAYOUT
+                    output += RESTAURANT_EDIT
+                    output +="<h2>Modificando restaurante" + isaRestaurant.name
+                    output += " (" + str(isaRestaurant.id) +"). </h2>"
+                    output += RESTAURANT_EDIT_FORM
+                    output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
+                    self.wfile.write(output)
                 print output
                 return
 
         except IOError:
             self.send_error(404, 'File Not Found: %s' % self.path)
 
-"""    def do_POST(self):
+    def do_POST(self):
         try:
+            # Code for new restaurant
             self.send_response(301)
             self.send_header('Content-type', 'text/html')
             self.end_headers()
@@ -73,18 +91,34 @@ class webServerHandler(BaseHTTPRequestHandler):
                 self.headers.getheader('content-type'))
             if ctype == 'multipart/form-data':
                 fields = cgi.parse_multipart(self.rfile, pdict)
-                messagecontent = fields.get('message')
-            output = ""
-            output += "<html><body>"
-            output += " <h2> Okay, how about this: </h2>"
-            output += "<h1> %s </h1>" % messagecontent[0]
-            output += '''<form method='POST' enctype='multipart/form-data' action='/hello'><h2>What would you like me to say?</h2><input name="message" type="text" ><input type="submit" value="Submit"> </form>'''
-            output += "</body></html>"
+                form_new_name = fields.get('restaurant-new')
+                form_edit_name = fields.get('restaurant-edit')
+            session= dbConnect()
+
+            if form_new_name is not None:
+                new_restaurant = Restaurant(name = form_new_name[0] )
+                new_restaurant.add(session)
+                aux = new_restaurant.find(session)
+                output = HTML_HEADER + RESTAURANT_LAYOUT
+                output += "<h1> Restaurant " + new_restaurant.find(session).name + " added</h1>"
+                output += "<h2>Restaurant id is" + str(new_restaurant.find(session).id)
+                output += "</h2>"
+                output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
+
+            elif form_edit_name is not None:
+                get_id = self.path[ self.path.find("/") + 1 : self.path.find("/", self.path.find("/") + 1 ) ]
+                this_restaurant = session.query(Restaurant).filter_by(id = int(get_id) ).one()
+                output = HTML_HEADER + RESTAURANT_LAYOUT
+                output += "<h1> Changed Restaurant name from " + this_restaurant.name +"</h1>"
+                this_restaurant.update(session, form_edit_name[0])
+                output += "<h1>to  "+ this_restaurant.name + " </h1>"
+                output += "<h2>Restaurant id is " + str(this_restaurant.id)
+                output += "</h2>"
+                output += RESTAURANT_LAYTOUT_E + PAGE_CLOSER
             self.wfile.write(output)
             print output
         except:
             pass
-"""
 
 def main():
     try:
