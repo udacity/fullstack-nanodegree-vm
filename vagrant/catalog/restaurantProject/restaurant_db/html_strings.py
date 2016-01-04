@@ -30,7 +30,13 @@ RESTAURANT_NEW ='''
                     <h2>What's the name of the restaurant?</h2>
                     <input name="restaurant-new" type="text" ><input type="submit" value="Submit"></form>
         '''
-
+RESTAURANT_NEW_MENU_FORM ='''
+        <div class="col-sm-12 col-md-9">
+            <h1>Adi&ccedil&atildeo de Menu</h1>
+                <form method='POST' enctype='multipart/form-data' action='/new'>
+                    <h2>What's the name of the new menu item?</h2>
+                    <input name="new_menu_item" type="text" ><input type="submit" value="Submit"></form>
+        '''
 RESTAURANT_EDIT ='''
         <div class="col-sm-12 col-md-9">
             <h1>Edi&ccedil&atildeo de restaurante</h1>
