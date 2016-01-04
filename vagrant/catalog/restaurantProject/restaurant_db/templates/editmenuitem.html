@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang='pt'>
+    <head> <title>Lista de Restaurantes</title>
+    <link href="css/bootstrap.css" rel='stylesheet'>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Edição de Plato</h1>
+            <h2> Restaurante {{restaurant.name}}</h2>
+        <p class="lead"></p>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12 col-md-9">
+                  <h1>Edi&ccedil&atildeo de Menu</h1>
+                  <form method='POST' enctype='multipart/form-data'>
+                      <h2>What's the new data for of the menu?</h2>
+                      <input name="edit-menu-name" type="text" placeholder="{{item.name}}">
+                      <input name="edit-menu-description" type="text" placeholder="{{item.description}}">
+                      <input name="edit-menu-price" type="number" placeholder="{{item.price}}">
+                      <input type="submit" value="Submit">
+                      <a href="{{url_for('restaurantMenu', restaurant_id =restaurant.id)}}">Cancel</a>
+                  </form>
+          </div>
+      </div>
+</body>
+</html>

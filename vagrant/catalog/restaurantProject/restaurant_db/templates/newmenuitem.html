@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang='pt'>
+    <head> <title>Adicionar menu</title>
+    <link href="css/bootstrap.css" rel='stylesheet'>
+</head>
+<body>
+    <div class="container">
+        <div class="jumbotron">
+            <h1>Menu do restaurante {{restaurant.name}}</h1>
+        <p class="lead"></p>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-12 col-md-9">
+                    <h1>Adi&ccedil&atildeo de Menu</h1>
+                        <form method='POST' enctype='multipart/form-data' action='{{url_for('newMenuItem', restaurant_id=restaurant.id)}}'>
+                            <h2>What's the name of the new menu item?</h2>
+                            Dish Name: <input name="new_menu_item" type="text" ><br>
+                            Description: <input name="new_menu_description" type="text" ><br>
+                            Price: <input name="new_menu_price" type="number" >
+                            <input type="submit" value="Submit">
+                            <a href="{{url_for('restaurantMenu', restaurant_id =restaurant.id)}}">Cancel</a>
+
+
+                          </form>
+                          </div>
+                      </div>
+</body>
+</html>
