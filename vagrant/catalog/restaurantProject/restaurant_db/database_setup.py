@@ -50,6 +50,29 @@ class MenuItem(Base):
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
 
+    def find(self, session):
+        item = session.query(MenuItem).filter_by(name = self.name).first()
+        return item
+
+    def listAll(self, session, name_order):
+        if name_order ==False:
+            items = session.query(MenuItem).all()
+        else:
+            items = session.query(MenuItem).order_by(MenuItem.name).all()
+        return items
+
+    def listRestaurant(self, session, search_Rid):
+        items = session.query(MenuItem).filter_by(restaurant_id=search_Rid).order_by(MenuItem.name).all()
+        return items
+
+    def add (self, session):
+        session.add(self)
+        session.commit()
+
+    def remove(self, session):
+        session.delete(self)
+        session.commit()
+
 
 engine = create_engine('sqlite:///restaurant_db.db')
 
