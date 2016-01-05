@@ -153,10 +153,10 @@ def killplayer():
             current database
             """
     except:
-        print "Error 69, user pressed enter and left a dead string"
+        """ print "Error 69, user pressed enter and left a dead string"
         print "Press <ENTER> to return to main screen..."
         raw_input("")
-        main()
+        main() """
 
     deletePlayer(playerid)
 
@@ -177,9 +177,27 @@ def deletePlayer(playerid):
     """
     inp = raw_input("")
     if inp[0] == "y":
-        # playerid = input("""What is the playerid you would like to delete?""")
-        cur.execute("delete from players where playerid = " + playerid)
+        #playerid = raw_input("""What is the playerid you would like to delete?""")
+        query = "delete from records where winner = %s or loser = %s;"
+        data = (playerid, playerid)
+        print "Test point 1"
+        cur.execute(query, data)
         conn.commit()
+        print "Test point 2"
+        query = "delete from matches where pid1 = %s or pid2 = %s"
+        data = (playerid, playerid)
+        print "Test point 3"
+        cur.execute(query, data)
+        conn.commit()
+        query = "delete from players where playerid = %s;"
+        data = str(playerid)
+        print "Test point 4"
+        cur.execute(query, data)
+        conn.commit()
+        print "Test point 5"
+        # cur.execute("delete from players where playerid = " + playerid)
+        #conn.commit()
+        main()
     else:
         clear()
         print """
@@ -188,7 +206,7 @@ def deletePlayer(playerid):
         Please press <ENTER> to return to the main screen...
         """
         raw_input("")
-    main()
+        main()
 
 
 def searchPlayers():
@@ -296,7 +314,8 @@ def deleteMatch():
         # Function does not exist ... yet
         cur.execute("select * from records order by matchid")
         output = cur.fetchall()
-        for rows in output:
+        # print output
+        for row in output:
             print row
         print """ Select the match id from the first column of the
         game that you would like to delete."""
@@ -338,10 +357,12 @@ def devops():
         elif opt == "main":
             # return to main screen
             main()
+        
     except:
-        print "There was an error.. Press <ENTER> to return to main screen..."
-        raw_input("")
+        # print "There was an error.. Press <ENTER> to return to main screen..."
+        # raw_input("")
         main()
+        
 def sql_cmd():
     query = raw_input("""Please enter yout SQL command here:
     >>    """)
@@ -349,5 +370,8 @@ def sql_cmd():
         print("you didn't enter anything")
 
     cur.execute(query)
+    output = cur.fetchall()
+    print output
+    raw_input(" ")
     cur.commit
 main()

@@ -52,7 +52,7 @@ def checkName(name):
     any special characters. Valid characters will include Letters
     both lowercase and capital, spaces for players who wish to have
     their first and last name listed, and apostrophies for players
-    like "Boots O'Neal" who like to through things off.
+    like "Boots O'Neal" who like to throw things off.
     """
     # validate name for ' character
     if '\'' in name:
@@ -69,8 +69,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    name = checkName(name)
-    cur.execute("insert into players (name) values ('"+name+"')")
+    # name = checkName(name)
+    # cur.execute("insert into players (name) values ('"+name+"')")
+    query = "insert into players (name) values (%s);"
+    name = (name,)
+    cur.execute(query, name)
     conn.commit()
 
 
@@ -107,24 +110,38 @@ def reportMatch(winner, loser):
     """
     # add new match to all players after match
     matches = 0
-    cur.execute("""select matches from players
-                    where PlayerID = """ + str(winner) + """
-                    or PlayerID = """ + str(loser))
+    # cur.execute("""select matches from players
+    #             where PlayerID = """ + str(winner) + """
+    #                 or PlayerID = """ + str(loser))
+    data = (winner, loser)
+    query = "select matches from players where playerid = %s or playerid = %s"
+    cur.execute(query, data)
     output = cur.fetchone()
     matches = int(output[0]) + 1
-    cur.execute("update players set matches = " + str(matches) + """
-                 where PlayerID = """ + str(winner) + """
-                 or PlayerID = """ + str(loser))
+    # cur.execute("update players set matches = " + str(matches) + """
+    #              where PlayerID = """ + str(winner) + """
+    #              or PlayerID = """ + str(loser))
+    query = "update players set matches = %s where playerid = %s or playerid = %s"
+    data = (matches, winner, loser)
+    cur.execute(query, data)
     conn.commit()
     # get current wins of winners and add new wins
-    cur.execute("select wins from players where PlayerID = "+str(winner))
+    # cur.execute("select wins from players where PlayerID = "+str(winner))
+    query = "select wins from players where playerid = %s;"
+    winner = (str(winner),)
+    cur.execute(query, winner)
     output = cur.fetchall()
     wins = output[0]
     cur_wins = int(wins[0]) + 1
-    cur.execute("update players set wins = " + str(cur_wins) + """
-                where PlayerID =""" + str(winner))
+    # cur.execute("update players set wins = " + str(cur_wins) + """
+    #             where PlayerID =""" + str(winner))
+    query = "update players set wins = %s where playerid = %s;"
+    data = (cur_wins, winner)
+    cur.execute(query, data)
     conn.commit()
-    cur.execute("select name, wins, matches from players")
+    # cur.execute("select name, wins, matches from players")
+    query = "select name, wins matches from players;"
+    cur.execute(query)
     output = cur.fetchall()
 
 
@@ -157,8 +174,12 @@ def swissPairings():
         # even number of players
         while offset < count:
             # get players from standings and create matches
-            cur.execute("""select playerid, name from players
-                           order by wins asc limit 2 offset """ + str(offset))
+            # cur.execute("""select playerid, name from players
+            #                order by wins asc limit 2 offset """ + str(offset))
+            query = """select playerid, name from standings order by wins asc
+                    limit 2 offset %s;"""
+            c = (str(offset),)
+            cur.execute(query, c)
             offset += 1
             output = cur.fetchall()
             pair = [rows for rows in output]
@@ -172,7 +193,11 @@ def swissPairings():
             name2 = checkName(name2)
             match = str(pid1 + ',\'' + name1 + '\',' + pid2 + ',\'' + name2 + '\'')
             cur.execute("""insert into matches (pid1, name1, pid2, name2)
-                            values (""" + match + ")")
+                         values (""" + match + ")")
+            # match = (pid1, name1, pid2, name2)
+            # query = "insert into matches (pid1, name1, pid2, name2) values (%s)"
+            # data = (match,)
+            # cur.execute(query, match)
             cur.execute("select pid1, name1, pid2, name2 from matches")
             conn.commit()
             output = cur.fetchall()
@@ -184,9 +209,12 @@ def swissPairings():
         # odd number of players
         while offset < count:
             # get players from standings and create matches
-            cur.execute("""select playerid, name from players
-                            order by wins asc limit 2 offset """ + str(offset))
+            # cur.execute("""select playerid, name from players
+            #                 order by wins asc limit 2 offset """ + str(offset))
             offset += 1
+            data = (str(offset),)
+            query = "select playerid, name from standings order by wins asc limit 2 offset %s"
+            cur.execute(query, data)
             output = cur.fetchall()
             pair = [rows for rows in output]
             player1 = pair[0]

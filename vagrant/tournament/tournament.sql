@@ -37,7 +37,7 @@ create table players
 
 
 create table matches(
-    mID serial primary key,
+    mID serial primary key not null,
     pid1 int references players (playerid),
     name1 text,
     pid2 int references players (playerid),
