@@ -70,7 +70,7 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     name = checkName(name)
-    cur.execute("insert into players (name) values ('"+name+"')")
+    cur.execute("insert into players (name) values %s", name)
     conn.commit()
 
 
