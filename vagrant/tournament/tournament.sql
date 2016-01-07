@@ -29,7 +29,7 @@ create table players
     name text not null,
 --    Rank INTEGER,
     Wins INTEGER default 0,
---     Matches INTEGER default 0,
+    Matches INTEGER default 0   
 --     OppWins INTEGER default 0,
 --     byeWeek INTEGER default 0
 
@@ -44,10 +44,10 @@ create table matches(
     name2 text
     );
     
-create table records (
-    matchid serial primary key,
-    winner int references players (playerid),
-    loser int references players (playerid)
-    );
+-- create table records (
+--     matchid serial primary key,
+--     winner int references players (playerid),
+--     loser int references players (playerid)
+--     );
 
 create view standings as select players.playerid, name, wins from players order by wins ASC;

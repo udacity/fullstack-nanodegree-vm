@@ -71,6 +71,7 @@ def registerPlayer(name):
     """
     # name = checkName(name)
     # cur.execute("insert into players (name) values ('"+name+"')")
+    name = checkName(name)
     query = "insert into players (name) values (%s);"
     name = (name,)
     cur.execute(query, name)
@@ -92,9 +93,12 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    cur.execute("select PlayerID, name, Wins, Matches from players")
+    cur.execute("select PlayerID, name, Wins, Matches from players order by Wins desc")
     output = cur.fetchall()
+    for row in output:
+        print row
     return output
+
 
 
 def reportMatch(winner, loser):
