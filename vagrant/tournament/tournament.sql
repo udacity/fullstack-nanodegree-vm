@@ -29,9 +29,9 @@ create table players
     name text not null,
 --    Rank INTEGER,
     Wins INTEGER default 0,
-    Matches INTEGER default 0,
-    OppWins INTEGER default 0,
-    byeWeek INTEGER default 0
+--     Matches INTEGER default 0,
+--     OppWins INTEGER default 0,
+--     byeWeek INTEGER default 0
 
 );
 
