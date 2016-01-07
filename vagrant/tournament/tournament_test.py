@@ -20,8 +20,7 @@ def testCount():
     deletePlayers()
     c = countPlayers()
     if c == '0':
-        raise TypeError(
-            "countPlayers() should return numeric zero, not string '0'.")
+        raise TypeError("countPlayers() should return numeric zero, not string '0'.")
     if c != 0:
         raise ValueError("After deleting, countPlayers should return zero.")
     print "3. After deleting, countPlayers() returns zero."
@@ -72,7 +71,9 @@ def testStandingsBeforeMatches():
     [(id1, name1, wins1, matches1), (id2, name2, wins2, matches2)] = standings
     if matches1 != 0 or matches2 != 0 or wins1 != 0 or wins2 != 0:
         raise ValueError(
-            "Newly registered players should have no matches or wins.")
+            "Newly registered players should have no matches or wins.")   
+    cur.execute("select * from players")
+    # print cur.fetchall()
     if set([name1, name2]) != set(["Melpomene Murray", "Randy Schwartz"]):
         raise ValueError("Registered players' names should appear in standings, "
                          "even if they have no matches played.")

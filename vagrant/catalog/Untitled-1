@@ -1,0 +1,16 @@
+"""
+
+
+"""
+
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from database_setup import Base, Restaurant, MenuItem
+engine = creat_engine('sqlite:///restaurantmenu.db')
+Base.metadata.bind = engine
+DBSession = sessionmaker(bind = engine)
+
+# end imports and initial setup 
+
+### Start Code Below This Line ###
+
