@@ -39,9 +39,6 @@ def user_move(current_positions, current_player):
     return current_positions, current_player
 
 def is_game_over(current_positions):
-"""
-TODO: finish winning situations
-"""
     # Only 8 ways to win and only 1 possible winner!!
     winners = [["t l","t c", "t r"],
                 ["c l","c c", "c r"],
@@ -54,9 +51,36 @@ TODO: finish winning situations
     for win in winners:
         first_required_pos = current_positions[win[0]]
         if first_required_pos != " ":
+            possibly_won = True 
             for value in win:
                 if current_positions[value] != first_required_pos:
-                return 
-            return first_required_pos
-  
+                    possibly_won = False
+                    break
+            if possibly_won:
+                return first_required_pos + " Wins!"
+    is_draw = True
+    for pos in current_positions:
+        if current_positions[pos] == " ":
+            is_draw = False
+            return False
+    if is_draw:
+        return "Draw!"
+
+def play_game():
+    current_positions = {"t l" : " ", "t c" : " ", "t r" : " ",
+    "c l" : " ", "c c" : " ", "c r" : " ",
+    "b l" : " ", "b c" : " ", "b r" : " "}
+    current_player = "X"
+    result = False
+    while not result:
+        dis_board(current_positions)
+        current_positions, current_player = user_move(current_positions, current_player)
+        result = is_game_over(current_positions)
+        if result:
+            print "GAME OVER"
+            print "Result: ", result
+
+
+play_game()
+
     
