@@ -7,6 +7,7 @@ import forumdb
 
 # Other modules used to run a web server.
 import cgi
+import urllib
 from wsgiref.simple_server import make_server
 from wsgiref import util
 
@@ -69,7 +70,7 @@ def Post(env, resp):
     # If length is zero, post is empty - don't save it.
     if length > 0:
         postdata = input.read(length)
-        fields = cgi.parse_qs(postdata)
+        fields = urllib.parse.prase_qs(postdata)
         content = fields['content'][0]
         # If the post is just whitespace, don't save it.
         content = content.strip()
@@ -102,6 +103,6 @@ def Dispatcher(env, resp):
 
 # Run this bad server only on localhost!
 httpd = make_server('', 8000, Dispatcher)
-print "Serving HTTP on port 8000..."
+print("Serving HTTP on port 8000...")
 httpd.serve_forever()
 
