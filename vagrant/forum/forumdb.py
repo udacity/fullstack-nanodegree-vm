@@ -42,8 +42,9 @@ def AddPost(content):
     Args:
       content: The text content of the new post.
     """
-    t = time.strftime('%c', time.localtime())
-    DB.append((t, content))
+    insert_format = 'INSERT INTO posts VALUE {}'
+    cur.execute(insert_format.format(content))
+    cur.commit()
 
 
 print('Calling function')
