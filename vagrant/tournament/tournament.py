@@ -13,14 +13,18 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-
+    create_tournament()
 
 def deletePlayers():
     """Remove all the player records from the database."""
-
+    query = '''UPDATE players SET deleted = true;'''
+    count = run_query(query)
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    query = '''SELECT count FROM player_count;'''
+    count = run_query(query)
+    return count[0][0]
 
 
 def registerPlayer(name):
@@ -32,6 +36,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    tournament_id = get_tournament_id()
+    query = '''INSERT INTO players (player_name, tournament_id) VALUES (%s, %s);'''
+    run_query(query, (name, tournament_id))
+    print(name + " registered.")
+
 
 
 def playerStandings():
@@ -47,6 +56,8 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    query = '''SELECT * FROM standings;'''
+    return run_query(query)
 
 
 def reportMatch(winner, loser):
@@ -56,7 +67,9 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
- 
+    tournament_id = get_tournament_id()
+    query = '''INSERT INTO matches (tournament_id, first_player_id, second_player_id, winner_id ) VALUES (%s, %s, %s, %s);'''
+    run_query(query, (tournament_id, winner, loser, winner))
  
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -73,5 +86,64 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    standings = playerStandings()
+    matches = []
+    match = ()
+    match_count = 1;
+    last_player = ''
+    for player in standings:
+        last_player = player
+        if match_count == 2:
+            match = match + (player[0], player[1])
+            matches.append(match)
+            match_count = 1
+        else:
+            match = (player[0], player[1])
+            match_count += 1
+            
+    # if we end with player this player gets a free win to the next round       
+    '''if match_count == 1:
+        reportMatch(standings[:-1][0], 0)'''
+
+    return matches
+
+        
+
+def run_query(query, query_data = "()"):
+    """Records the outcome of a single match between two players.
+
+    Args:
+      query:  the query to execute
+      data_query:  any tuple params to make sure sql is escaped
+    """
+    conn = connect()
+    c = conn.cursor()
+    c.execute(query, query_data)
+    return_data = ""
+
+    if query.find("SELECT") < 0:
+        conn.commit()
+    else:
+        return_data = c.fetchall()
+
+    conn.close()
+    return return_data
+
+def get_tournament_id():
+    """Records the outcome of a single match between two players.
+
+    Return:
+      The data from the excuted query
+    """
+    query = '''SELECT current_tournament_id FROM tournament;'''
+    count = run_query(query)
+    return count[0][0]
 
 
+def create_tournament():
+    """Creates a new tournament."""
+    query = '''INSERT INTO tournaments (tournament_name) VALUES ('The Big thing!');'''
+    count = run_query(query)
+
+#Start off a tourment the first time the script is ran
+create_tournament()
