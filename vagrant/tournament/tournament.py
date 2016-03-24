@@ -109,7 +109,7 @@ def swissPairings():
     """
     # For this was particularly helpful the concept of pairingsiterator from the Python Standard Library and
     # the Pythons intertools docs at https://docs.python.org/2/library/itertools.html.
-    #Iterate through the list and build the pairings.
+    # Iterate through the list and build the pairings.
     standings = playerStandings
     pairingsiterator = itertools.izip(*[iter(standings)] * 2)
     results = []
