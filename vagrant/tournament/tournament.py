@@ -13,30 +13,30 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    db = connect()
-    cur = db.cursor()
-    cur.execute("DELETE FROM matches")
-    db.commit()
-    db.close()
+    conn = connect()
+    c = conn.cursor()
+    c.execute("DELETE FROM matches")
+    conn.commit()
+    conn.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    db = connect()
-    cur = db.cursor()
-    cur.execute("DELETE FROM players")
-    db.commit()
-    db.close()
+    conn = connect()
+    c = conn.cursor()
+    c.execute("DELETE FROM players")
+    conn.commit()
+    conn.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    db = connect()
-    cur = db.cursor()
-    cur.execute("SELECT count(*) FROM players")
-    count = fetchone()
-    db.commit()
-    db.close()
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT count(*) AS total FROM players")
+    count = cursor.fetchone()
+    conn.commit()
+    conn.close()
     return count
 
 
@@ -49,11 +49,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    db.connect()
-    db = cursor()
-    cur.execute("INSERT INTO players (name) VALUES (%s):")
-    db.commit()
-    db.close()
+    conn.connect()
+    c = conn.cursor()
+    c.execute("INSERT INTO players (name) VALUES (%s);")
+    conn.commit()
+    conn.close()
 
 
 def playerStandings():
@@ -69,12 +69,12 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    db = connect()
-    db = cursor()
-    cur.execute("SELECT * FROM standings ORDER BY wins DESC;")
-    standings = cur.fetchall()
-    db.commit()
-    db.close()
+    conn = connect()
+    c = conn.cursor()
+    c.execute("SELECT * FROM standings ORDER BY wins DESC;")
+    standings = cursor.fetchall()
+    conn.commit()
+    conn.close()
     return standings
 
 
@@ -85,11 +85,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    db = connect()
-    db = cursor()
-    cur.execute("INSERT INTO matches (winner, loser) VALUES (%s, &s);")
-    db.commit()
-    db.close()
+    conn = connect()
+    c = conn.cursor()
+    c.execute("INSERT INTO matches (winner, loser) VALUES (%s, %s);")
+    conn.commit()
+    conn.close()
 
  
 def swissPairings():
@@ -107,20 +107,33 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    # For this was particularly helpful the concept of pairingsiterator from the Python Standard Library and
-    # the Pythons intertools docs at https://docs.python.org/2/library/itertools.html.
+    # For itertools and pairingsiterator consulted the Python Standard Library 9.7
+    # and the Pythons intertools docs at:
+    # https://docs.python.org/2/library/itertools.html.
     # Iterate through the list and build the pairings.
+    
     standings = playerStandings
+    
     pairingsiterator = itertools.izip(*[iter(standings)] * 2)
+    
     results = []
+    
     pairings = list(pairingsiterator)
+    
     for pair in pairings:
+        
         id1 = pair[0][0]
+        
         name1 = pair[0][1]
+        
         id2 = pair[1][0]
+        
         name2 = pair[1][1]
+        
         match = [id1, name1, id2, name2]
+        
         results.append(match)
+        
     return results
     
     
