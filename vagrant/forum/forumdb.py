@@ -39,8 +39,8 @@ def AddPost(content):
 
     cursor = DB.cursor()
 
-    exstring = "insert into posts values (\'%s\')" % (content)
-    cursor.execute(exstring)
+    exstring = "insert into posts values (%s)", (content,)
+    cursor.execute("insert into posts values (%s)", (content,))
 
     DB.commit()
     DB.close()
