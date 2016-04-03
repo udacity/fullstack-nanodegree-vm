@@ -11,7 +11,7 @@ parser.add_argument(
 parser.add_argument(
     '--with-no-data', help='Use this to create database tables for the app with no items data.', action="store_true")
 parser.add_argument(
-    '-p', '--port', help='Provide a port to launch the app.', type=int, default=8000)
+    '-p', '--port', help='Provide a port to launch the app.', type=int, default=80)
 
 args = parser.parse_args()
 

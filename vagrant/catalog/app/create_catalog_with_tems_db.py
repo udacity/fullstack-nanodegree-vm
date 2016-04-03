@@ -8,8 +8,9 @@ import base64
 import models
 from models.data_models import Base, CategoryModel, ImageModel, UserModel, ItemsModel
 
-# engine = create_engine('postgresql:////localhost//udacity_catalog_db')
-engine = create_engine('sqlite:///udacity_catalog.db')
+engine = create_engine('postgresql://catalog:passDB@localhost/CatalogDb')
+
+
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine

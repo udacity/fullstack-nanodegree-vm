@@ -112,6 +112,6 @@ class ItemsModel(Base):
         }
 
 
-engine = create_engine('sqlite:///udacity_catalog.db')
+engine = create_engine('postgresql://catalog:passDB@localhost/CatalogDb')
 
 Base.metadata.create_all(engine)

@@ -77,3 +77,8 @@ vagrant/catalog/app/static/vendors/*
 vagrant/catalog/app/udacity_catalog.db
 vagrant/catalog/app/udacity_catalog.db*
 vagrant/catalog/udacity_catalog.db-journal
+
+*/venv
+*/venv/
+venv
+venv/

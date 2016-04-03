@@ -18,7 +18,9 @@ from sqlalchemy import create_engine, desc, func
 from sqlalchemy.orm import sessionmaker, outerjoin
 from flask import current_app as app
 
-engine = create_engine('sqlite:///udacity_catalog.db')
+engine = create_engine('postgresql://catalog:passDB@localhost/CatalogDb')
+
+
 Base.metadata.bind = engine
 DBsession = sessionmaker(bind=engine)
 session = DBsession()

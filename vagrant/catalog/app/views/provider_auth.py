@@ -32,7 +32,7 @@ import app.models as models
 from app.models import data_models as data_models
 from app.models.data_models import Base, CategoryModel, ImageModel, UserModel, ItemsModel
 
-engine = create_engine('sqlite:///udacity_catalog.db')
+engine = create_engine('postgresql://catalog:passDB@localhost/CatalogDb')
 Base.metadata.bind = engine
 
 DBSession = sessionmaker(bind=engine)
