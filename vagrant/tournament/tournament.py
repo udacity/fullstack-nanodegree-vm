@@ -17,6 +17,7 @@ def deleteMatches():
 
     conn.cursor().execute("DELETE from matches *")
 
+    conn.commit()
     conn.close()
 
 
@@ -26,11 +27,23 @@ def deletePlayers():
 
     conn.cursor().execute("DELETE from players *")
 
+    conn.commit()
     conn.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    conn = connect()
+
+    cursor = conn.cursor()
+
+    cursor.execute("select count(*) num from players")
+
+    total = cursor.fetchall()
+
+    conn.close()
+
+    return total
 
 
 def registerPlayer(name):
