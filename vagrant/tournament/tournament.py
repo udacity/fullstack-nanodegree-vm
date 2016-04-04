@@ -34,7 +34,6 @@ def deletePlayers():
 def countPlayers():
     """Returns the number of players currently registered."""
     conn = connect()
-
     cur = conn.cursor()
 
     cur.execute("select count(*) num from players")
@@ -55,6 +54,14 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+
+    conn = connect()
+    cur = conn.cursor()
+
+    cur.execute("insert into players values('%s')" %(name,))
+
+    conn.commit()
+    conn.close()
 
 
 def playerStandings():
