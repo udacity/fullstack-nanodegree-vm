@@ -6,32 +6,51 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 --
--- Clean out any previous tournament databases.
+-- Clear out any previous tournament databases.
+
 DROP DATABASE IF EXISTS tournament;
---
+
 -- Create database.
+
 CREATE DATABASE tournament;
---
+
 -- Connect to the DB before creating tables.
+
 \c tournament;
---
--- Create table for payers.
-CREATE TABLE players(id serial primary key, name text);
---
+
+-- Create table for players.
+
+CREATE TABLE players (
+id serial primary key, 
+name text
+);
+
 -- Create table for games.
+
 CREATE TABLE matches(
 game_id serial primary key, 
-winner integer references players(id), 
-loser integer references players(id), 
-PRIMARY KEY (winner, loser)
+winner integer REFERENCES players(id), 
+loser integer REFERENCES players(id), 
 );
---
--- Create a view to count total matches per player.
-CREATE VIEW standings AS
-SELECT players.id; players.name,
 
-COUNT(matches.*)AS games
-FROM players LEFT JOIN games
+-- Create view to show standings. 
+
+CREATE VIEW standings AS
+SELECT players.id, 
+players.name,
+COUNT(matches.winner = players.id) AS wins,
+COUNT(matches.*) AS games
+FROM players LEFT JOIN matches
 ON players.id = matches.winner OR 
 players.id = matches.loser
+GROUP BY players.id;
+
+--Create a view for number of byes per player
+
+CREATE VIEW byes AS
+SELECT players.id,
+players.name,
+COUNT (matches.winner) AS bye_count
+FROM players LEFT JOIN matches
+ON playes.id = matches.winner AND matches.loser = NULL
 GROUP BY players.id;
