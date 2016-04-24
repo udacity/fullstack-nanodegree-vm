@@ -44,13 +44,3 @@ FROM players LEFT JOIN matches
 ON players.id = matches.winner OR 
 players.id = matches.loser
 GROUP BY players.id;
-
---Create a view for number of byes per player
-
-CREATE VIEW byes AS
-SELECT players.id,
-players.name,
-COUNT (matches.winner) AS bye_count
-FROM players LEFT JOIN matches
-ON playes.id = matches.winner AND matches.loser = NULL
-GROUP BY players.id;
