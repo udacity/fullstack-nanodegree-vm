@@ -5,7 +5,6 @@
 --
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
---
 -- Clear out any previous tournament databases.
 
 DROP DATABASE IF EXISTS tournament;
@@ -16,13 +15,14 @@ CREATE DATABASE tournament;
 
 -- Connect to the DB before creating tables.
 
-\c tournament;
+\c
+ tournament;
 
 -- Create table for players.
 
 CREATE TABLE players (
-id serial primary key, 
-name text
+id serial PRIMARY KEY, 
+name text[]
 );
 
 -- Create table for games.
@@ -43,4 +43,5 @@ COUNT(matches.*) AS games
 FROM players LEFT JOIN matches
 ON players.id = matches.winner OR 
 players.id = matches.loser
-GROUP BY players.id;
+GROUP BY players.id, players.name
+ORDER BY wins DESC;
