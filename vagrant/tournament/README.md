@@ -1,4 +1,3 @@
-﻿README
 To run Swiss Tournament Project you have to do the following.
 1. Copy templates tournament.py, tournament.sql, and tournament_test.py into the folder vagrant/tournament folder.
 2. SSH into the virtual machine using Vagrant SSH
@@ -33,4 +32,3 @@ If all runs well you receive the following message:
 Success!  All tests pass!
 
 '''
-
