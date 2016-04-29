@@ -1,9 +1,9 @@
 # To run Swiss Tournament Project you have to do the following.
-# 1. Copy templates tournament.py, tournament.sql, and # tournament_test.py into the folder vagrant/tournament folder.
+# 1. Copy templates tournament.py, tournament.sql, and tournament_test.py into the folder vagrant/tournament folder.
 # 2. SSH into the virtual machine using Vagrant SSH
-# 3. From the vagrant/tournament folder in the shell, run psql -f # tournament.sql to build the tables and view
-# 4. From the same folder, run python tournament_test.py to test the # schema.
-# To run the test suite (exercising all of the Python functions for # the tournament database):
+# 3. From the vagrant/tournament folder in the shell, run psql -f tournament.sql to build the tables and view
+# 4. From the same folder, run python tournament_test.py to test the schema.
+# To run the test suite (exercising all of the Python functions for the tournament database):
 # From a GitHub shell: 
 # cd fullstack/vagrant
 # 1.	vagrant up (you can turn off the VM with 'vagrant halt')
