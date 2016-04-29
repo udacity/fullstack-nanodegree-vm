@@ -22,15 +22,15 @@ CREATE DATABASE tournament;
 
 CREATE TABLE players (
 id serial PRIMARY KEY, 
-name text[]
+name text NOT NULL
 );
 
 -- Create table for games.
 
 CREATE TABLE matches(
 game_id serial primary key, 
-winner integer REFERENCES players(id), 
-loser integer REFERENCES players(id), 
+winner INT REFERENCES players(id) ON DELETE CASCADE, 
+loser INT REFERENCES players(id) ON DELETE CASCADE
 );
 
 -- Create view to show standings. 
