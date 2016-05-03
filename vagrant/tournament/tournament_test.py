@@ -8,14 +8,7 @@
 
 from tournament import *
 
-def testDeleteMatches():
-    deleteMatches()
-    print "Old matches can be deleted."
 
-def testDelete():
-    deleteMatches()
-    deletePlayers()
-    print "Old player records can be deleted."
 
 def testCount():
     """

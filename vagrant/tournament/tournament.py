@@ -3,96 +3,51 @@
 # tournament.py -- implementation of a Swiss-system tournament
 #
 import psycopg2
+from psycopg2._psycopg import Error, Warning, DataError, DatabaseError, ProgrammingError
 import psycopg2.extensions
-from psycopg2.extensions import b
-# we have to import the Psycopg2 extras library!
-import psycopg2.extras
-import sys
-import collections
 import itertools
-from random import sample, choice, randrange
-from operator import itemgetter, mul
-from itertools import starmap, repeat, chain, cycle, tee, \
-    groupby, count, combinations, starmap, islice
-try:
-    from itertools import imap as map, izip as zip, ifilter as filter, \
-        izip_longest as zip_longest, ifilterfalse as filterfalse
-except ImportError as err:
-    from itertools import zip_longest, filterfalse
-
-
-
-def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-
-def main():
-	#Define the connection string
-	conn_string = 'host="localhost" dbname="tournament" user="postgres" password="secret"'
-	# print the connection string to be used to connect
-	print "Connecting to database\n	->%s" % (conn_string)
-	# get a connection, if a connect cannot be made an exception will be raised here
-	conn = psycopg2.connect(conn_string)
-	# We refactor our connect() method
-	# to deal not only with the database connection
-	# but also with the cursor
-	# since we can assign and return
-	# multiple variables simultaneously.
-	try:
-		db = psycopg2.connect("dbname={}".format(database_name))
-		cursor = db.cursor()
-		return db, cursor
-	except:
-		print("Error when connecting the server")
-
-	# By specifying a name for the cursor
-	# psycopg2 creates a server-side cursor, which prevents all of the
-	# records from being downloaded at once from the server.
-	cursor = conn.cursor('cursor_unique_name', cursor_factory=psycopg2.extras.DictCursor)
-	cursor.execute('SELECT * FROM table LIMIT 1000')
-	# Because cursor objects are iterable we can just call 'for - in' on
-	# the cursor object and the cursor will automatically advance itself
-	# each iteration.
-	# This loop should run 1000 times, assuming there are at least 1000
-	# records in 'my_table'
-	row_count = 0
-	for row in cursor:
-		row_count += 1
-	print "row: %s    %s\n" % (row_count, row)
-	# conn.cursor will return a cursor object; this cursor will
-	# be used to perform queries
-	print "Connected!\n"
- 
-if __name__ == "__main__":
-	(main)
     
 
+def connect(database_name="tournament"):
+    """Connect to the PostgreSQL database.  Returns a database connection."""
+    # We make use of the connect() method so that we could avoid the code repetition.
+    # We can refactor our connect() method to deal not only with the database connection
+    # but also with the cursor since we can assign and return multiple variables simultaneously.
+    # In the stage of setting up the connection with the DB, sometimes we may encounter different exceptions.
+    # In practice, we handle this crucial stage carefully by using try/except block.
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        cursor = db.cursor()
+        return db, cursor
+    except:
+        raise IOError("Connected!\n")
+    
 def deleteMatches():
     """Remove all the match records from the database."""
-    db = psycopg2.connect("dbname=tournament")
-    c = db.cursor()
+    db, cursor = connect()
+    cursor = db.cursor()
+    
     query = "TRUNCATE matches;"
     cursor.execute(query)
+
     db.commit()
     db.close()
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    cursor = conn.cursor()
     query = "DELETE FROM players;"
     cursor.execute(query)
-    conn.commit()
-    conn.close()
+
+    db.commit()
+    db.close()
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn = connect()
-    cursor = conn.cursor()
     query = "SELECT count(*) AS num FROM players;"
     cursor.execute(query)
-    players_count = cur.fetchone()[0]
-    conn.commit()
-    conn.close()
+    count = cursor.fetchone()[0]
+
+    db.close()
     return count
 
 def registerPlayer(name):
@@ -104,14 +59,13 @@ def registerPlayer(name):
     Args:
     name: the player's full name (need not be unique).
     """
-    conn = connect()
-    cursor = conn.cursor()
     query = "INSERT INTO players (name) VALUES (%s);"
     parameter = (name,)
-    cursor.execute = (query, parameter)
-    conn.commit()
-    conn.close()
+    cursor.execute(query, parameter)
 
+    db.commit()
+    db.close()
+    
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
     The first entry in the list should be the player in first place, or a player
@@ -124,28 +78,11 @@ def playerStandings():
     wins: the number of matches the player has won
     matches: the number of matches the player has played
     """
-    conn = connect()
-    cursor = conn.cursor()
-    query = ("SELECT players.id, players.name, COUNT(matches.winner = players.id) AS wins, "
-             "Count(matches.*) AS games"
-             "FROM players LEFT JOIN matches "
-             "ON players.id = matches.winner OR players.id = matches.loser,"
-             "GROUP BY players.id, players.name "
-             "ORDER BY wins DESC")
-    # Because cursor objects are iterable we can just call 'for - in' on
-    # the cursor object and the cursor will automatically advance itself
-    # each iteration.
-    # This loop should run as many times as there are
-    # records in the table.
-    parameter = (wins,)
-    cursor.execute(query, parameter)
-    row_count = 0
-    for row in cursor:
-        row_count += 1
-        print "row: %s    %s\n" % (row_count, row)
-    playerStandings = cur.fetchall() #Fetches all remaining rows of a query result, returning a list.
-    conn.close()
-    return playerStandings
+    cursor.execute("SELECT * FROM standings ORDER BY wins DESC;")
+    playerslist = cursor.fetchall() # Fetches all remaining rows of a query result, returning a list.
+
+    db.close()
+    return playerslist
 
 def reportMatch(winner, loser):
     """Records the outcome of a single match between two players.
@@ -153,13 +90,12 @@ def reportMatch(winner, loser):
     winner: the id number of the player who won
     loser: the id number of the player who lost
     """
-    conn = connect()
-    cursor = conn.cursor()
-    query = "INSERT INTO matches (winner_id, loser_id) VALUES (%s, %s);"
+    query = "INSERT INTO matches (winner, loser) VALUES (%s, %s);"
     parameter = (winner, loser)
     cursor.execute(query, parameter)
-    conn.commit()
-    conn.close()
+
+    db.commit()
+    db.close()
 
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
@@ -182,14 +118,6 @@ def swissPairings():
     # and the Python Standard Library.
 
     # Iterate through the list and build the pairings to return results
-    db = psycopg2.connect("dbname=tournament")
-    cursor = conn.cursor()
-    query = ("SELECT players.id, players.name, COUNT(matches.winner = players.id) AS wins, FROM players LEFT JOIN matches, GROUP BY players.id, players.name ORDER BY Wins;")
-    parameter = (id, name, matcheup, wins)
-    cursor.execute(query, parameter)
-    ids   = [ x[0] for x in c.fetchall () ] # unpack tuples
-    names = [ x[0] for x in c.fetchall () ] # unpack tuples
-    pairs = zip ([ x for x, in ids], [x for x, in names])
     results = []
     pair = []
     standings = playerStandings()
