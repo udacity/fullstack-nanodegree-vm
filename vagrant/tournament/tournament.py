@@ -8,24 +8,45 @@ import psycopg2.extensions
 import itertools
     
 
+<<<<<<< HEAD
 def connect(database_name="tournament"):
     """Connect to the PostgreSQL database.  Returns a database connection."""
     # We make use of the connect() method so that we could avoid the code repetition.
     # We can refactor our connect() method to deal not only with the database connection
     # but also with the cursor since we can assign and return multiple variables simultaneously.
     # In the stage of setting up the connection with the DB, sometimes we may encounter different exceptions.
+=======
+def connect(database_name="tournamrnt"):
+    """Connect to the PostgreSQL database.  Returns a database connection."""
+    # The connection parameters can be specified either as a string,
+    # or using a set of keyword arguments:
+    # conn = psycopg2.connect(database="test", user="postgres", password="secret")
+    # We make use of the connect() method so that we could avoid the code repetition.
+    # We can refactor our connect() method to deal not only with the database connection
+    # but also with the cursor since we can assign and return multiple variables simultaneously.
+    # In the stage of setting up the connection with the DB,
+    # sometimes we may encounter different exceptions.
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     # In practice, we handle this crucial stage carefully by using try/except block.
     try:
         db = psycopg2.connect("dbname={}".format(database_name))
         cursor = db.cursor()
         return db, cursor
     except:
+<<<<<<< HEAD
         raise IOError("Connected!\n")
+=======
+        raise IOError("Error connecting the database") # Raises IOError on failure.
+    pass
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     
 def deleteMatches():
     """Remove all the match records from the database."""
     db, cursor = connect()
+<<<<<<< HEAD
     cursor = db.cursor()
+=======
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     
     query = "TRUNCATE matches;"
     cursor.execute(query)
@@ -35,6 +56,11 @@ def deleteMatches():
 
 def deletePlayers():
     """Remove all the player records from the database."""
+<<<<<<< HEAD
+=======
+    db.cursor = connect()
+    
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     query = "DELETE FROM players;"
     cursor.execute(query)
 
@@ -43,12 +69,23 @@ def deletePlayers():
 
 def countPlayers():
     """Returns the number of players currently registered."""
+<<<<<<< HEAD
     query = "SELECT count(*) AS num FROM players;"
     cursor.execute(query)
     count = cursor.fetchone()[0]
 
     db.close()
     return count
+=======
+    db, cursor = connect()
+    
+    query = "SELECT count(*) AS total FROM players;"
+    cursor.execute(query)
+    count = cursor.fetchone()
+
+    db.close()
+    return total[0]
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
@@ -59,12 +96,21 @@ def registerPlayer(name):
     Args:
     name: the player's full name (need not be unique).
     """
+<<<<<<< HEAD
+=======
+    db, cursor = connect()
+    
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     query = "INSERT INTO players (name) VALUES (%s);"
     parameter = (name,)
     cursor.execute(query, parameter)
 
     db.commit()
     db.close()
+<<<<<<< HEAD
+=======
+    return countPlayers()
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
@@ -78,6 +124,11 @@ def playerStandings():
     wins: the number of matches the player has won
     matches: the number of matches the player has played
     """
+<<<<<<< HEAD
+=======
+    db, cursor = connect()
+    
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     cursor.execute("SELECT * FROM standings ORDER BY wins DESC;")
     playerslist = cursor.fetchall() # Fetches all remaining rows of a query result, returning a list.
 
@@ -90,6 +141,11 @@ def reportMatch(winner, loser):
     winner: the id number of the player who won
     loser: the id number of the player who lost
     """
+<<<<<<< HEAD
+=======
+    db, cursor = connect()
+    
+>>>>>>> 041db3716ad1bb23da59a7db3fc99ad352c229a3
     query = "INSERT INTO matches (winner, loser) VALUES (%s, %s);"
     parameter = (winner, loser)
     cursor.execute(query, parameter)
@@ -121,8 +177,6 @@ def swissPairings():
     results = []
     pair = []
     standings = playerStandings()
-    # standings = [(id1, name1, wins1, matches1), (id2, name2, wins2, matches2)]
-    # [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
     # pairings = swissPairings()
     pairingsiterator = itertools.izip(*[iter(standings)]*2)
     pairings = list(pairingsiterator)
