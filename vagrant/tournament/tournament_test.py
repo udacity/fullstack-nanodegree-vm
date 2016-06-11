@@ -123,6 +123,8 @@ def testReportMatches_8players():
     registerPlayer("Dr. Yu")
     standings = playerStandings()
     [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
+
+    # Round #1
     reportMatch(id1, id2)
     reportMatch(id3, id4)
     reportMatch(id5, id6)
@@ -138,6 +140,8 @@ def testReportMatches_8players():
         elif i in (id2, id4, id6, id8) and w != 0:
             raise ValueError("Each match loser should have zero wins recorded.")
     print "10. After round-one of eight-player tournament, players have updated standings."
+
+    # Round #2
     reportMatch(id3, id1)
     reportMatch(id7, id5)
     reportMatch(id4, id2)
@@ -155,6 +159,8 @@ def testReportMatches_8players():
         if i in (id2, id8) and w != 0:
             raise ValueError("Player(s) with zero wins not recorded.")
     print "11. After round-two of eight-player tournament, players have updated standings."
+
+    # Round #3
     reportMatch(id7, id3)
     reportMatch(id5, id1)
     reportMatch(id4, id6)
@@ -230,10 +236,98 @@ def testPairings():
     print "15. After one match, players with one win are properly paired."
 
 
+def testPairings_8players_3rounds():
+    """
+    Test that pairings are generated properly both before and after match reporting.
+    """
+    deleteMatches()
+    deletePlayers()
+    registerPlayer("Twilight Sparkle")
+    registerPlayer("Fluttershy")
+    registerPlayer("Applejack")
+    registerPlayer("Pinkie Pie")
+    registerPlayer("Rarity")
+    registerPlayer("Rainbow Dash")
+    registerPlayer("Princess Celestia")
+    registerPlayer("Princess Luna")
+    standings = playerStandings()
+    [id1, id2, id3, id4, id5, id6, id7, id8] = [row[0] for row in standings]
+    pairings = swissPairings()
+    if len(pairings) != 4:
+        raise ValueError(
+            "For eight players, swissPairings should return 4 pairs. Got {pairs}".format(pairs=len(pairings)))
+    # playerStandings() has been tested in testReportMatches_8players() for 3 rounds,
+    # use those results to test pairings
+    standings = playerStandings()
+    # Turn the result into lookup dictionary of this kind =>  {playerid: Number_of_victories}
+    player_victories = dict([ (standing[0],standing[2]) for standing in standings])
+    for pair in pairings:
+        player_a_victories = player_victories[pair[0]]
+        player_b_victories = player_victories[pair[2]]
+        if player_a_victories != player_b_victories:
+            raise ValueError("These two players round#1 are paired incorrectly for round #2"\
+                             "{id_a}(victories=player_a_victories) and "\
+                             "{id_b}(victories=player_b_victories)".format(\
+                             id_a=pair[0], player_a_victories=player_a_victories,
+                             id_b=pair[2], player_b_victories=player_b_victories))
+    print "16. All players paired correctly for round#1"
+
+    # Run Round #1
+    reportMatch(id1, id2)
+    reportMatch(id3, id4)
+    reportMatch(id5, id6)
+    reportMatch(id7, id8)
+    pairings = swissPairings()
+    if len(pairings) != 4:
+        raise ValueError(
+            "For eight players, swissPairings should return 4 pairs. Got {pairs}".format(pairs=len(pairings)))
+    # playerStandings() has been tested in testReportMatches_8players() for 3 rounds,
+    # use those results to test pairings
+    standings = playerStandings()
+    # Turn the result into lookup dictionary of this kind =>  {playerid: Number_of_victories}
+    player_victories = dict([ (standing[0],standing[2]) for standing in standings])
+    for pair in pairings:
+        player_a_victories = player_victories[pair[0]]
+        player_b_victories = player_victories[pair[2]]
+        if player_a_victories != player_b_victories:
+            raise ValueError("These two players for round#2 (after round#1) are paired incorrectly "\
+                             "{id_a}(victories=player_a_victories) and "\
+                             "{id_b}(victories=player_b_victories)".format(\
+                             id_a=pair[0], player_a_victories=player_a_victories,
+                             id_b=pair[2], player_b_victories=player_b_victories))
+    print "17. All players paired correctly for round #2 (after round#1)"
+
+    # Run Round #2
+    reportMatch(id3, id1)
+    reportMatch(id7, id5)
+    reportMatch(id4, id2)
+    reportMatch(id6, id8)
+    pairings = swissPairings()
+    if len(pairings) != 4:
+        raise ValueError(
+            "For eight players, swissPairings should return 4 pairs. Got {pairs}".format(pairs=len(pairings)))
+    # playerStandings() has been tested in testReportMatches_8players() for 3 rounds,
+    # use those results to test pairings
+    standings = playerStandings()
+    # Turn the result into lookup dictionary of this kind =>  {playerid: Number_of_victories}
+    player_victories = dict([ (standing[0],standing[2]) for standing in standings])
+    for pair in pairings:
+        player_a_victories = player_victories[pair[0]]
+        player_b_victories = player_victories[pair[2]]
+        if player_a_victories != player_b_victories:
+            raise ValueError("These two players for round #3 (after round#2) are paired incorrectly "\
+                             "{id_a}(victories=player_a_victories) and "\
+                             "{id_b}(victories=player_b_victories)".format(\
+                             id_a=pair[0], player_a_victories=player_a_victories,
+                             id_b=pair[2], player_b_victories=player_b_victories))
+    print "18. All players paired correctly for round #3 (after round#2)"
+
+
 if __name__ == '__main__':
     testCount()
     testStandingsBeforeMatches()
     testReportMatches()
     testReportMatches_8players()
     testPairings()
+    testPairings_8players_3rounds()
     print "Success!  All tests pass!"
