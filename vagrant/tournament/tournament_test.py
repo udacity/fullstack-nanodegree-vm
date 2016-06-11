@@ -266,8 +266,8 @@ def testPairings_8players_3rounds():
         player_b_victories = player_victories[pair[2]]
         if player_a_victories != player_b_victories:
             raise ValueError("These two players round#1 are paired incorrectly for round #2"\
-                             "{id_a}(victories=player_a_victories) and "\
-                             "{id_b}(victories=player_b_victories)".format(\
+                             "{id_a}(victories={player_a_victories}) and "\
+                             "{id_b}(victories={player_b_victories})".format(\
                              id_a=pair[0], player_a_victories=player_a_victories,
                              id_b=pair[2], player_b_victories=player_b_victories))
     print "16. All players paired correctly for round#1"
@@ -291,8 +291,8 @@ def testPairings_8players_3rounds():
         player_b_victories = player_victories[pair[2]]
         if player_a_victories != player_b_victories:
             raise ValueError("These two players for round#2 (after round#1) are paired incorrectly "\
-                             "{id_a}(victories=player_a_victories) and "\
-                             "{id_b}(victories=player_b_victories)".format(\
+                             "{id_a}(victories={player_a_victories}) and "\
+                             "{id_b}(victories={player_b_victories})".format(\
                              id_a=pair[0], player_a_victories=player_a_victories,
                              id_b=pair[2], player_b_victories=player_b_victories))
     print "17. All players paired correctly for round #2 (after round#1)"
@@ -316,8 +316,8 @@ def testPairings_8players_3rounds():
         player_b_victories = player_victories[pair[2]]
         if player_a_victories != player_b_victories:
             raise ValueError("These two players for round #3 (after round#2) are paired incorrectly "\
-                             "{id_a}(victories=player_a_victories) and "\
-                             "{id_b}(victories=player_b_victories)".format(\
+                             "{id_a}(victories={player_a_victories}) and "\
+                             "{id_b}(victories={player_b_victories})".format(\
                              id_a=pair[0], player_a_victories=player_a_victories,
                              id_b=pair[2], player_b_victories=player_b_victories))
     print "18. All players paired correctly for round #3 (after round#2)"
