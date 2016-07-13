@@ -1,1 +1,1 @@
-{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/Users/Dvd/Documents/udacity/fullstack/vagrant","disabled":false,"__vagrantfile":true}}}
+{"virtualbox":{"/vagrant":{"guestpath":"/vagrant","hostpath":"/home/david/Documents/udacity/fullstack-nanodegree-vm/vagrant","disabled":false,"__vagrantfile":true}}}
