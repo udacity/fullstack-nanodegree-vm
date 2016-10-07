@@ -7,3 +7,7 @@
 -- these lines here.
 
 
+create database tournament;
+\c tournament;
+create table players (id serial, name text, rank int, matches int);
+create table matches (winner int, loser int);

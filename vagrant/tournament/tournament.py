@@ -4,7 +4,7 @@
 #
 
 import psycopg2
-
+import bleach
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
@@ -13,14 +13,18 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    commit('delete from matches;')
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    commit('delete from players;')
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    count = select('select count(*) as num from players;')[0][0]
+    return count
 
 
 def registerPlayer(name):
@@ -32,6 +36,9 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    sql = "insert into players (name, rank, matches) values ('" + bleach.clean(name) + "', 0, 0)"
+    #print sql
+    commit(sql)
 
 
 def playerStandings():
@@ -47,6 +54,8 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    query = select('select * from players order by rank')
+    return query
 
 
 def reportMatch(winner, loser):
@@ -56,6 +65,17 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    #get winners rank, add 1, then store back
+    sql = "select rank from players where id = " + winner
+    rank = select(sql)[0][0] + 1
+    sql = "insert into players where id = " + winner + " (rank) values (" + rank + ")"
+    commit(sql)
+
+    #get loser rank, sub 1, then store back
+    sql = "select rank from players where id = " + loser
+    rank = select(sql)[0][0] - 1
+    sql = "insert into players where id = " + loser + " (rank) values (" + rank + ")"
+    commit(sql)
  
  
 def swissPairings():
@@ -74,4 +94,17 @@ def swissPairings():
         name2: the second player's name
     """
 
+def commit(sql):
+    conn = connect()
+    c = conn.cursor()
+    c.execute(sql)
+    conn.commit() 
+    conn.close()
 
+def select(sql):
+    conn = connect()
+    c = conn.cursor()
+    c.execute(sql)
+    val = c.fetchall() 
+    conn.close()
+    return val
