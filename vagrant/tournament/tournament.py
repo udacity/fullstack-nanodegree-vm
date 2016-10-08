@@ -13,7 +13,7 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    commit('delete from matches;')
+    commit('update players set matches = 0, rank = 0;')
 
 
 def deletePlayers():
@@ -36,9 +36,15 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    sql = "insert into players (name, rank, matches) values ('" + bleach.clean(name) + "', 0, 0)"
+    #sql = "insert into players (name, rank, matches) values (%s, 0, 0)", (name,)
     #print sql
-    commit(sql)
+    #commit(sql)
+
+    conn = connect()
+    c = conn.cursor()
+    c.execute("insert into players (name, rank, matches) values (%s, 0, 0)", (name,))
+    conn.commit() 
+    conn.close()
 
 
 def playerStandings():
@@ -66,16 +72,18 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     #get winners rank, add 1, then store back
-    sql = "select rank from players where id = " + winner
-    rank = select(sql)[0][0] + 1
-    sql = "insert into players where id = " + winner + " (rank) values (" + rank + ")"
-    commit(sql)
+    conn = connect()
+    c = conn.cursor()
+    c.execute("update players set matches = matches + 1, rank = rank + 1 where id = %s", (winner,))
+    conn.commit()
+    conn.close()
 
-    #get loser rank, sub 1, then store back
-    sql = "select rank from players where id = " + loser
-    rank = select(sql)[0][0] - 1
-    sql = "insert into players where id = " + loser + " (rank) values (" + rank + ")"
-    commit(sql)
+    #increment losers matches but not wins(rank)
+    conn = connect()
+    c = conn.cursor()
+    c.execute("update players set matches = matches + 1 where id = %s", (loser,))
+    conn.commit()
+    conn.close()
  
  
 def swissPairings():
@@ -93,6 +101,13 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+
+    lineup = []
+    players = select("select id, name from players order by rank desc")
+    for x in range(0, countPlayers(), 2):
+        lineup.append((players[x][0], players[x][1], players[x+1][0], players[x+1][1]))
+    #print lineup
+    return lineup
 
 def commit(sql):
     conn = connect()
