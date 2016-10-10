@@ -36,9 +36,6 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    #sql = "insert into players (name, rank, matches) values (%s, 0, 0)", (name,)
-    #print sql
-    #commit(sql)
 
     conn = connect()
     c = conn.cursor()
@@ -106,9 +103,10 @@ def swissPairings():
     players = select("select id, name from players order by rank desc")
     for x in range(0, countPlayers(), 2):
         lineup.append((players[x][0], players[x][1], players[x+1][0], players[x+1][1]))
-    #print lineup
+    #print lineup #debugging
     return lineup
 
+#used for simplifying code for simple executions to the database
 def commit(sql):
     conn = connect()
     c = conn.cursor()
@@ -116,6 +114,7 @@ def commit(sql):
     conn.commit() 
     conn.close()
 
+#used for simplifying code for simple select queries 
 def select(sql):
     conn = connect()
     c = conn.cursor()
