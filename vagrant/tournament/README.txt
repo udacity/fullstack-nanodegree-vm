@@ -12,4 +12,7 @@ INSTRUCTIONS:
 2. Boot up Vagrant with terminal command “vagrant up”
 3. Navigate to the tournament project folder
 4. Run the tournament.sql file through the terminal to create the database and tables
+	$ psql
+	> \i tournament.sql
 5. Run the tournament_test.py file through the terminal to test the function calls in the tournament.py file
+	> python tournament_test.py

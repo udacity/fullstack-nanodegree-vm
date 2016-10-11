@@ -9,7 +9,5 @@
 DROP DATABASE IF EXISTS tournament;
 CREATE DATABASE tournament;
 \c tournament
-DROP table IF EXISTS players;
-DROP table IF EXISTS matches;
 create table players (id serial PRIMARY KEY, name text);
 create table matches (match serial PRIMARY KEY, winner int references players(id), loser int references players(id));

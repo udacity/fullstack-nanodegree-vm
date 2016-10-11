@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # 
 # tournament.py -- implementation of a Swiss-system tournament
-#
 
 import psycopg2
 import bleach
@@ -29,10 +28,10 @@ def countPlayers():
 
 def registerPlayer(name):
     """Adds a player to the tournament database.
-  
+
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
-  
+
     Args:
       name: the player's full name (need not be unique).
     """
@@ -40,15 +39,15 @@ def registerPlayer(name):
     conn = connect()
     c = conn.cursor()
     c.execute("insert into players (name) values (%s)", (name,))
-    conn.commit() 
+    conn.commit()
     conn.close()
 
 
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place,
+    or a player tied for first place if there is currently a tie.
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -57,18 +56,15 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn = connect()
-    c = conn.cursor()
-    c.execute('''select players.id, name, 
-        count(case players.id when winner then 1 else null end) as wins, 
+
+    #join tables by all the matches played, then find the wins from there
+    val = select('''select players.id, name,
+        count(case players.id when winner then 1 else null end) as wins,
         count(matches.match) as rounds
-        from players 
-        left join matches on players.id in (winner, loser) 
+        from players
+        left join matches on players.id in (winner, loser)
         group by  players.id, name
         order by wins desc;''')
-    val = c.fetchall() 
-    conn.close()
-    #print val
     return val
 
 
@@ -81,25 +77,13 @@ def reportMatch(winner, loser):
     """
     conn = connect()
     c = conn.cursor()
-    c.execute("insert into matches (winner, loser) values (%s, %s)", ((winner,), (loser,)))
+    #create new match listing
+    c.execute("insert into matches (winner, loser) values (%s, %s)",
+                ((winner,), (loser,)))
     conn.commit()
     conn.close()
 
-    #get winners rank, add 1, then store back
-    #conn = connect()
-    #c = conn.cursor()
-    #c.execute("update players set matches = matches + 1, rank = rank + 1 where id = %s", (winner,))
-    #conn.commit()
-    #conn.close()
 
-    ##increment losers matches but not wins(rank)
-    #conn = connect()
-    #c = conn.cursor()
-    #c.execute("update players set matches = matches + 1 where id = %s", (loser,))
-    #conn.commit()
-    #conn.close()
- 
- 
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
   
@@ -107,7 +91,7 @@ def swissPairings():
     appears exactly once in the pairings.  Each player is paired with another
     player with an equal or nearly-equal win record, that is, a player adjacent
     to him or her in the standings.
-  
+
     Returns:
       A list of tuples, each of which contains (id1, name1, id2, name2)
         id1: the first player's unique id
@@ -117,30 +101,28 @@ def swissPairings():
     """
 
     lineup = []
-    players = select('''select id, name, 
-        count(case players.id when winner then 1 else null end) as wins 
-        from players
-        left join matches on players.id in (winner, loser) 
-        group by  players.id, name
-        order by wins desc''')
+    players = playerStandings()
     for x in range(0, countPlayers(), 2):
-        lineup.append((players[x][0], players[x][1], players[x+1][0], players[x+1][1]))
+        lineup.append((players[x][0], players[x][1],
+                        players[x+1][0], players[x+1][1]))
     #print lineup #debugging
     return lineup
 
 #used for simplifying code for simple executions to the database
 def commit(sql):
+
     conn = connect()
     c = conn.cursor()
     c.execute(sql)
-    conn.commit() 
+    conn.commit()
     conn.close()
 
-#used for simplifying code for simple select queries 
+#used for simplifying code for simple select queries
 def select(sql):
+
     conn = connect()
     c = conn.cursor()
     c.execute(sql)
-    val = c.fetchall() 
+    val = c.fetchall()
     conn.close()
     return val
