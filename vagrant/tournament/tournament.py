@@ -13,7 +13,7 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    commit('update players set matches = 0, rank = 0;')
+    commit('delete from matches')
 
 
 def deletePlayers():
@@ -39,7 +39,7 @@ def registerPlayer(name):
 
     conn = connect()
     c = conn.cursor()
-    c.execute("insert into players (name, rank, matches) values (%s, 0, 0)", (name,))
+    c.execute("insert into players (name) values (%s)", (name,))
     conn.commit() 
     conn.close()
 
@@ -57,8 +57,19 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    query = select('select * from players order by rank')
-    return query
+    conn = connect()
+    c = conn.cursor()
+    c.execute('''select players.id, name, 
+        count(case players.id when winner then 1 else null end) as wins, 
+        count(matches.match) as rounds
+        from players 
+        left join matches on players.id in (winner, loser) 
+        group by  players.id, name
+        order by wins desc;''')
+    val = c.fetchall() 
+    conn.close()
+    #print val
+    return val
 
 
 def reportMatch(winner, loser):
@@ -68,19 +79,25 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    #get winners rank, add 1, then store back
     conn = connect()
     c = conn.cursor()
-    c.execute("update players set matches = matches + 1, rank = rank + 1 where id = %s", (winner,))
+    c.execute("insert into matches (winner, loser) values (%s, %s)", ((winner,), (loser,)))
     conn.commit()
     conn.close()
 
-    #increment losers matches but not wins(rank)
-    conn = connect()
-    c = conn.cursor()
-    c.execute("update players set matches = matches + 1 where id = %s", (loser,))
-    conn.commit()
-    conn.close()
+    #get winners rank, add 1, then store back
+    #conn = connect()
+    #c = conn.cursor()
+    #c.execute("update players set matches = matches + 1, rank = rank + 1 where id = %s", (winner,))
+    #conn.commit()
+    #conn.close()
+
+    ##increment losers matches but not wins(rank)
+    #conn = connect()
+    #c = conn.cursor()
+    #c.execute("update players set matches = matches + 1 where id = %s", (loser,))
+    #conn.commit()
+    #conn.close()
  
  
 def swissPairings():
@@ -100,7 +117,12 @@ def swissPairings():
     """
 
     lineup = []
-    players = select("select id, name from players order by rank desc")
+    players = select('''select id, name, 
+        count(case players.id when winner then 1 else null end) as wins 
+        from players
+        left join matches on players.id in (winner, loser) 
+        group by  players.id, name
+        order by wins desc''')
     for x in range(0, countPlayers(), 2):
         lineup.append((players[x][0], players[x][1], players[x+1][0], players[x+1][1]))
     #print lineup #debugging

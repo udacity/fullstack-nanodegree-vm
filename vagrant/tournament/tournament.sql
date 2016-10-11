@@ -6,9 +6,10 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
-#start with clean database each time
 DROP DATABASE IF EXISTS tournament;
 CREATE DATABASE tournament;
 \c tournament
-create table players (id int serial PRIMARY KEY, name text, rank int, matches int);
-create table matches (match int serial PRIMARY KEY, winner int references players(id), loser int references players(id));
+DROP table IF EXISTS players;
+DROP table IF EXISTS matches;
+create table players (id serial PRIMARY KEY, name text);
+create table matches (match serial PRIMARY KEY, winner int references players(id), loser int references players(id));
