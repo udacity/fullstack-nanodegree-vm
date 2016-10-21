@@ -1,0 +1,97 @@
+.wrapper {
+	max-width: 1000px;
+}
+
+.head-title {
+	font-size: 1em;
+	text-decoration: none;
+	color: gray;
+	text-align: center;
+	display: inline;
+}
+
+.comment, .post .post-body{
+	border-top: 1px solid gray;
+}
+
+.actions {
+	display: inline;
+}
+
+p {
+    white-space: pre-wrap;
+}
+
+.flex-container {
+	list-style-type: none;
+    display: -webkit-flex;
+    display: flex;
+    bottom: 0px;
+}
+
+.flex-item {
+    margin: 10px;
+}
+
+
+@media screen and (min-width: 999px){
+	.wrapper {
+		margin-right: auto;
+		margin-left: auto;
+	}
+
+	.head-title{
+		font-size: 4em;
+	}
+}
+
+/* New Post Page */
+.newpost label, .editpost label {
+	display: block;
+	width: 100%;
+}
+.newpost #body, #title, .editpost #body, #title{
+	display: block;
+	width: 100%;
+}
+.newpost #body, .editpost #body {
+	height: 300px;
+}
+
+/* Blog Page */
+.post {
+	margin-bottom: 35px;
+}
+.post a, h2 {
+	color: gray;
+}
+
+.post p {
+    font-family: monospace;
+    padding: 9.5px;
+    margin: 0 0 10px;
+    font-size: 13px;
+    line-height: 1.42857143;
+    color: #333;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+/* Login and Signup Pages */
+.user-input .input-field {
+	max-width: 300px;
+	margin-left: auto;
+	margin-right: auto;
+}
+.user table {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+/* Comment Section */
+.comment-section {
+	max-width: 750px;
+	margin-left: auto;
+	margin-right: auto;
+	border-top: 1px solid gray
+}
