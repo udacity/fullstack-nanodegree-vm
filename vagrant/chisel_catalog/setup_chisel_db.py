@@ -1,7 +1,7 @@
 #configuration
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Text
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
@@ -29,6 +29,7 @@ class Parks(Base):
     lon = Column(Integer)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship(User)
+    description = Column(Text)
 
     @property 
     def serialize(self):
@@ -37,7 +38,8 @@ class Parks(Base):
             'id' : self.id,
             'name' : self.name,
             'lat' : self.lat,
-            'lon' : self.lon
+            'lon' : self.lon,
+            'description' : self.description
         }
 
 
@@ -54,6 +56,7 @@ class Trails(Base):
     park = relationship(Parks)
     user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
     user = relationship(User)
+    description = Column(Text)
 
     @property
     def serialize(self):
@@ -61,7 +64,8 @@ class Trails(Base):
         return {
             'id' : self.id,
             'name' : self.name,
-            'park' : self.park_id
+            'park' : self.park_id,
+            'description' : self.description
         }
 
 

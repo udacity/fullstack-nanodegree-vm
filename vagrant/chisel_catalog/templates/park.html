@@ -14,6 +14,8 @@
             </ul>
         {% endif %}
     {% endwith %}
+
+    <p>{{ park.description }}</p>
     
     {% if user.user_id %}
         <a href="{{ url_for('deletePark', park_id=park.id) }}">Delete</a>

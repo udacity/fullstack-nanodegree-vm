@@ -28,10 +28,6 @@ app = Flask(__name__)
 def inject_user():
     return dict(user=login_session)
 
-# Test search page
-@app.route('/search')
-def search():
-    return routes.search()
 
 @app.route('/parksJSON')
 def parksJSON():

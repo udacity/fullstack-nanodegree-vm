@@ -13,9 +13,6 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-def search():
-    parks = session.query(Parks).all()
-    return render_template('search.html', parks=parks)
 
 def parksJSON():
     parks = session.query(Parks).all()
@@ -39,7 +36,8 @@ def addPark():
             user_id = uid_cookie.split('|')[0]
             newPark = Parks(
                 name=request.form['name'], lat=request.form['lat'], 
-                lon=request.form['lon'], user_id=user_id)
+                lon=request.form['lon'], user_id=user_id, 
+                description=request.form['description'])
             session.add(newPark)
             session.commit()
             #notify user
@@ -87,15 +85,20 @@ def editPark(park_id):
                 and cookies.check_secure_val(uid_cookie):
             #Enforce Authorization
             if uid_cookie.split('|')[0] == str(park.user_id):
-                if request.form['name']:
+                if request.form['name'] and request.form['lon'] \
+                        and request.form['lat'] and request.form['description']:
                     park.name = request.form['name']
                     park.lon = request.form['lon']
                     park.lat = request.form['lat']
-                session.add(park)
-                session.commit()
-                #notify user
-                flash('%s edited' % park.name)
-                return redirect(url_for('parks'))
+                    park.description = request.form['description']
+                    session.add(park)
+                    session.commit()
+                    #notify user
+                    flash('%s edited' % park.name)
+                    return redirect(url_for('parks'))
+                else:
+                    flash('Must enter values into each input field')
+                    return redirect(url_for('park', park_id=park_id))
             else:
                 flash('You must be the author of this park to delete it')
                 return redirect(url_for('park', park_id=park_id))
@@ -125,7 +128,8 @@ def addTrail(park_id):
                 and cookies.check_secure_val(uid_cookie):
             user_id = uid_cookie.split('|')[0]
             newTrail = Trails(name=request.form['name'],
-                            park_id=park_id, user_id=user_id)
+                            park_id=park_id, user_id=user_id,
+                            description=request.form['description'])
             session.add(newTrail)
             session.commit()
             #notify user
@@ -147,14 +151,18 @@ def editTrail(park_id, trail_id):
                 and cookies.check_secure_val(uid_cookie):
             #Enforce Authorization
             if uid_cookie.split('|')[0] == str(trail.user_id):
-                name = request.form['name']
-                if name:
-                    trail.name = name
-                session.add(trail)
-                session.commit()
-                #notify user
-                flash('%s edited' % trail.name)
-                return redirect(url_for('park', park_id=park_id))
+                if request.form['name'] and request.form['description']:
+                    trail.name = request.form['name']
+                    trail.description = request.form['description']
+                    session.add(trail)
+                    session.commit()
+                    #notify user
+                    flash('%s edited' % trail.name)
+                    return redirect(url_for('park', park_id=park_id))
+                else:
+                    flash('All input fields must have entered values')
+                    return redirect(
+                        url_for('trail', park_id=park_id, trail_id=trail_id))
             else:
                 flash('You must be the author of this trail to edit it')
                 return redirect(

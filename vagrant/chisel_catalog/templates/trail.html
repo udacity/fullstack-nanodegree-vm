@@ -2,7 +2,8 @@
 
 {% block content %}
 
-    <h1>{{trail.name}}</h1>
+    <h1>{{trail.name}} in <a href="{{ url_for('park', park_id=park.id)}}">{{ park.name }}</a></h1>
+    <p>{{ trail.description }}</p>
     
     <!-- notify user of any changes -->
     {% with messages = get_flashed_messages() %}

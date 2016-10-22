@@ -4,7 +4,8 @@
 
     <form method="post" action="{{ url_for('editTrail', park_id=park_id, trail_id=trail.id) }}">
     	<h1>Edit trail {{trail.name}} from {{trail.park.name}}</h1>
-    	<input type="text" name="name" placeholder="{{trail.name}}">
+    	<input type="text" name="name" value="{{ trail.name }}">
+        <input type="textarea" name="description" value="{{ trail.description }}">
     	<input type="submit" value="Edit">
     	<a href="{{ url_for('park', park_id=park_id) }}">Cancel</a>
     </form>

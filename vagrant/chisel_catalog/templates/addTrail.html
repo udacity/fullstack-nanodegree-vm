@@ -5,6 +5,7 @@
     <form method="post" action="{{ url_for('addTrail', park_id=park_id) }}">
         <h1>Add new Trail</h1>
         <input type="text" name="name" placeholder="New Trail">
+        <input type="textarea" name="description" placeholder="Description">
         <input type="submit" value="Add">
         <a href="{{ url_for('park', park_id=park_id) }}">Cancel</a>
     </form>
