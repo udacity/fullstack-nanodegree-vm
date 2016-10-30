@@ -15,8 +15,6 @@ import json
 from flask import make_response
 import requests
 
-import cookies
-
 # Connect to database
 engine = create_engine('sqlite:///chisel.db')
 Base.metadata.bind = engine
@@ -140,7 +138,7 @@ def gconnect():
     output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
     flash("Now logged in as %s" % login_session['username'])
     response = redirect(url_for('parks'))
-    response.set_cookie('uid', cookies.make_secure_val(str(user_id)))
+    response.set_cookie('uid', str(user_id))
     print "done!"
     return response
 
