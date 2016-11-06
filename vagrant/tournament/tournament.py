@@ -6,38 +6,39 @@
 import psycopg2
 
 
-def connect():
+def connect(database_name="tournament"):
     """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+    try:
+        db = psycopg2.connect("dbname={}".format(database_name))
+        cursor = db.cursor()
+        return db, cursor
+    except:
+        print("Error connecting to database.")
 
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    # c.execute("TRUNCATE matches;")
-    c.execute("DELETE FROM matches;")
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    cursor.execute("DELETE FROM matches;")
+    db.commit()
+    db.close()
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    conn = connect()
-    c = conn.cursor()
-    # c.execute("TRUNCATE players;")
-    c.execute("DELETE FROM players;")
-    conn.commit()
-    conn.close()
+    db, cursor = connect()
+    cursor.execute("DELETE FROM players;")
+    db.commit()
+    db.close()
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    conn = connect()
-    c = conn.cursor()
-    q = "SELECT * from player_count"
-    c.execute(q)
-    row = c.fetchone()
+    db, cursor = connect()
+    q = "SELECT count(*) FROM players;"
+    cursor.execute(q)
+    row = cursor.fetchone()
+    db.close()
     return row[0]
 
 
@@ -50,14 +51,12 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    conn = connect()
-    c = conn.cursor()
-
+    db, cursor = connect()
     q = "INSERT INTO players (name) VALUES (%s);"
-    c.execute(q, (name,))
-
-    conn.commit()
-    conn.close()
+    parameter = (name,)
+    cursor.execute(q, parameter)
+    db.commit()
+    db.close()
 
 
 def playerStandings():
@@ -73,15 +72,11 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    conn = connect()
-    c = conn.cursor()
+    db, cursor = connect()
     q = "SELECT * from standing"
-    c.execute(q)
-    players = []
-
-    for p in c.fetchall():
-        players.append(p)
-
+    cursor.execute(q)
+    players = cursor.fetchall()
+    db.close()
     return players
 
 
@@ -92,14 +87,11 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
-    conn = connect()
-    c = conn.cursor()
-
+    db, cursor = connect()
     q = "INSERT INTO matches (winner_id, loser_id) VALUES('%s','%s')"
-    c.execute(q, (int(winner), int(loser)))
-
-    conn.commit()
-    conn.close()
+    cursor.execute(q, (int(winner), int(loser)))
+    db.commit()
+    db.close()
 
 
 def swissPairings():
@@ -117,11 +109,16 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
-    conn = connect()
-    c = conn.cursor()
+    db, cursor = connect()
     q = "SELECT id, name from standing"
-    c.execute(q)
-    players = c.fetchall()
+    cursor.execute(q)
+    players = cursor.fetchall()
+
+    '''
+    players = playerStandings()
+    I know this could also probably work but wasn't sure how to only get id and
+    name column from playerStandings so I made a new query.
+    '''
     pairings = []
     index = 0
 
@@ -130,4 +127,5 @@ def swissPairings():
         pairings.append(pair)
         index += 2
 
+    db.close()
     return pairings

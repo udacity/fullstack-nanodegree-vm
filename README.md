@@ -1,6 +1,6 @@
 # Udacity FSND tournament assignment
 ---
-This is a python program that has functionality for a basic swiss-pariing style tournament using a PostGreSQL database. 
+This is a python program that has functionality for a basic swiss-pariing style tournament using a PostGreSQL database.
 The project is as described in this [document](https://docs.google.com/document/d/16IgOm4XprTaKxAa8w02y028oBECOoB1EI1ReddADEeY/pub?embedded=true)
 
 ### Functionalities
@@ -26,15 +26,15 @@ Posts and comments can also be edited and deleted.
 4. Launch the Vagrant VM in the cloned folder with its containing settings by typing:
     - ``` $ cd ../fullstack-nanodegree-vm/vagrant ```
     - ``` $ vagrant up ```
+5. Login to Vagrant
     - ``` $ vagrant ssh ``` (this should connect you to the VM)
-5. Load the sql database setup located in the tournament.sql file
+7. Load the tournament.sql database setup through psql
     - ``` $ cd /vagrant/tournament ```
     - ``` $ psql ```
     - ``` $ \i tournament.sql ```
-6. Exit psql
+8. Exit psql
     - ``` $ \q ```
-7. Run the tournament or tournament test    
+9. Execute tournament test by invoking the python script:
     - ``` $ python tournament_test.py ```
-    - ``` $ python tournament.py ```
-   
+
 ---
