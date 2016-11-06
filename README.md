@@ -27,7 +27,14 @@ Posts and comments can also be edited and deleted.
     - ``` $ cd ../fullstack-nanodegree-vm/vagrant ```
     - ``` $ vagrant up ```
     - ``` $ vagrant ssh ``` (this should connect you to the VM)
+5. Load the sql database setup located in the tournament.sql file
     - ``` $ cd /vagrant/tournament ```
+    - ``` $ psql ```
+    - ``` $ \i tournament.sql ```
+6. Exit psql
+    - ``` $ \q ```
+7. Run the tournament or tournament test    
     - ``` $ python tournament_test.py ```
+    - ``` $ python tournament.py ```
    
 ---
