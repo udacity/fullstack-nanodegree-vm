@@ -8,6 +8,7 @@
 
 from tournament import *
 
+
 def testCount():
     """
     Test for initial player count,
@@ -42,6 +43,7 @@ def testCount():
             "After deletion, countPlayers should return zero.")
     print "4. countPlayers() returns zero after registered players are deleted.\n5. Player records successfully deleted."
 
+
 def testStandingsBeforeMatches():
     """
     Test to ensure players are properly represented in standings prior
@@ -67,6 +69,7 @@ def testStandingsBeforeMatches():
         raise ValueError("Registered players' names should appear in standings, "
                          "even if they have no matches played.")
     print "6. Newly registered players appear in the standings with no matches."
+
 
 def testReportMatches():
     """
@@ -103,6 +106,7 @@ def testReportMatches():
             raise ValueError("After deleting matches, players should have zero wins recorded.")
     print "8. After match deletion, player standings are properly reset.\n9. Matches are properly deleted."
 
+
 def testPairings():
     """
     Test that pairings are generated properly both before and after match reporting.
@@ -131,7 +135,8 @@ def testPairings():
     if len(pairings) != 4:
         raise ValueError(
             "For eight players, swissPairings should return 4 pairs. Got {pairs}".format(pairs=len(pairings)))
-    [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4), (pid5, pname5, pid6, pname6), (pid7, pname7, pid8, pname8)] = pairings
+    [(pid1, pname1, pid2, pname2), (pid3, pname3, pid4, pname4), (pid5, pname5, pid6, pname6),
+     (pid7, pname7, pid8, pname8)] = pairings
     possible_pairs = set([frozenset([id1, id3]), frozenset([id1, id5]),
                           frozenset([id1, id7]), frozenset([id3, id5]),
                           frozenset([id3, id7]), frozenset([id5, id7]),
@@ -139,7 +144,8 @@ def testPairings():
                           frozenset([id2, id8]), frozenset([id4, id6]),
                           frozenset([id4, id8]), frozenset([id6, id8])
                           ])
-    actual_pairs = set([frozenset([pid1, pid2]), frozenset([pid3, pid4]), frozenset([pid5, pid6]), frozenset([pid7, pid8])])
+    actual_pairs = set(
+        [frozenset([pid1, pid2]), frozenset([pid3, pid4]), frozenset([pid5, pid6]), frozenset([pid7, pid8])])
     for pair in actual_pairs:
         if pair not in possible_pairs:
             raise ValueError(
@@ -147,9 +153,46 @@ def testPairings():
     print "10. After one match, players with one win are properly paired."
 
 
+# below test is david writed
+def testRegisterPlayer():
+    username = "testUsername"
+
+    if registerPlayer(username):
+        print "register user:'" + username + "' success"
+        return True
+    else:
+        print "register user:'" + username + "' failed"
+        return False
+
+
+def testCountPlayers():
+    print "the count of plays: " + str(countPlayers())
+
+
+def testDeletePlayers():
+    print "DeletePlayers result:" + str(deletePlayers())
+
+
+def testReportMatch():
+    # this must be sure the 1,2 p_id is existed in t_play table
+    print "ReportMatch result:" + str(reportMatch(1, 2))
+
+
+def testDeleteMatch():
+    print "DeleteMatch result:" + str(deleteMatches())
+
+
 if __name__ == '__main__':
     testCount()
     testStandingsBeforeMatches()
     testReportMatches()
     testPairings()
+    """
+    for my test
+    """
+    # testRegisterPlayer()
+    # testCountPlayers()
+    # testDeletePlayers()
+    # testReportMatch()
+    # testDeleteMatch()
     print "Success!  All tests pass!"
