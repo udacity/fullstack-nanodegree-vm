@@ -8,8 +8,8 @@
       <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
       <secret-storage>master_key</secret-storage>
       <user-name>postgres</user-name>
-      <introspection-scope>tournament:public,pg_catalog,postgres</introspection-scope>
-      <resolve-scope>tournament:public,postgres</resolve-scope>
+      <introspection-scope>tournament:pg_catalog,postgres,public</introspection-scope>
+      <resolve-scope>tournament:postgres,public</resolve-scope>
     </data-source>
   </component>
 </project>

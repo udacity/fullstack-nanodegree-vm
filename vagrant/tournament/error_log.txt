@@ -18,3 +18,15 @@ LINE 1: ...lect p_id,username from t_player where p_id in(81,83,85,87,)
 LINE 1: ...ect p_id,username from t_player where p_id in (81,83,85,87,)
                                                                       ^
 
+2016-11-12 20:08:06 tournament.py[line:34] ERROR write data error:column "player_name" of relation "t_player" does not exist
+LINE 1: insert into t_player(player_name) VALUES('Chandra Nalaar')
+                             ^
+
+2016-11-12 20:10:03 tournament.py[line:34] ERROR write data error:column "player_name" of relation "t_player" does not exist
+LINE 1: insert into t_player(player_name) VALUES('Chandra Nalaar')
+                             ^
+
+2016-11-12 20:10:34 tournament.py[line:34] ERROR write data error:column "player_name" of relation "t_player" does not exist
+LINE 1: insert into t_player(player_name) VALUES('Chandra Nalaar')
+                             ^
+

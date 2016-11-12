@@ -16,8 +16,8 @@
     <schema id="5" parent="1" name="public">
       <object-id>2200</object-id>
       <visible>1</visible>
-      <introspection-state-number>55155</introspection-state-number>
-      <introspection-timestamp>2016-11-12.14:55:34.476</introspection-timestamp>
+      <introspection-state-number>55420</introspection-state-number>
+      <introspection-timestamp>2016-11-12.20:11:06.355</introspection-timestamp>
     </schema>
     <schema id="6" parent="1" name="pg_catalog">
       <object-id>11</object-id>
@@ -35,79 +35,79 @@
       <object-id>11585</object-id>
     </schema>
     <sequence id="11" parent="5" name="t_match_m_id_seq">
-      <object-id>69990</object-id>
-      <state-number>55155</state-number>
+      <object-id>70328</object-id>
+      <state-number>55420</state-number>
     </sequence>
     <sequence id="12" parent="5" name="t_player_p_id_seq">
-      <object-id>69982</object-id>
-      <state-number>55153</state-number>
+      <object-id>70320</object-id>
+      <state-number>55419</state-number>
     </sequence>
     <table id="13" parent="5" name="t_match">
-      <object-id>69992</object-id>
-      <state-number>55155</state-number>
+      <object-id>70330</object-id>
+      <state-number>55420</state-number>
     </table>
     <table id="14" parent="5" name="t_player">
-      <object-id>69984</object-id>
-      <state-number>55155</state-number>
+      <object-id>70322</object-id>
+      <state-number>55420</state-number>
     </table>
     <column id="15" parent="13" name="m_id">
-      <state-number>55155</state-number>
+      <state-number>55420</state-number>
       <mandatory>1</mandatory>
       <data-type>integer|0</data-type>
       <default-expression>nextval('t_match_m_id_seq'::regclass)</default-expression>
     </column>
     <column id="16" parent="13" name="won_p_id">
-      <state-number>55155</state-number>
+      <state-number>55420</state-number>
       <data-type>integer|0</data-type>
     </column>
     <column id="17" parent="13" name="lost_p_id">
-      <state-number>55155</state-number>
+      <state-number>55420</state-number>
       <data-type>integer|0</data-type>
     </column>
     <index id="18" parent="13" name="t_match_pkey">
-      <object-id>69996</object-id>
+      <object-id>70334</object-id>
       <columns>m_id</columns>
       <desc-columns />
       <unique>1</unique>
     </index>
     <key id="19" parent="13" name="t_match_pkey">
-      <object-id>69997</object-id>
+      <object-id>70335</object-id>
       <columns>m_id</columns>
       <underlying-index>t_match_pkey</underlying-index>
       <primary>1</primary>
     </key>
     <foreign-key id="20" parent="13" name="t_match_won_p_id_fkey">
-      <object-id>69998</object-id>
+      <object-id>70336</object-id>
       <columns>won_p_id</columns>
       <ref-key>~.t_player.t_player_pkey</ref-key>
       <cascade-update-rule>restrict</cascade-update-rule>
       <cascade-delete-rule>restrict</cascade-delete-rule>
     </foreign-key>
     <foreign-key id="21" parent="13" name="t_match_lost_p_id_fkey">
-      <object-id>70003</object-id>
+      <object-id>70341</object-id>
       <columns>lost_p_id</columns>
       <ref-key>~.t_player.t_player_pkey</ref-key>
       <cascade-update-rule>restrict</cascade-update-rule>
       <cascade-delete-rule>restrict</cascade-delete-rule>
     </foreign-key>
     <column id="22" parent="14" name="p_id">
-      <state-number>55153</state-number>
+      <state-number>55419</state-number>
       <mandatory>1</mandatory>
       <data-type>integer|0</data-type>
       <default-expression>nextval('t_player_p_id_seq'::regclass)</default-expression>
     </column>
-    <column id="23" parent="14" name="username">
-      <state-number>55153</state-number>
+    <column id="23" parent="14" name="player_name">
+      <state-number>55419</state-number>
       <data-type>varchar(30)|0</data-type>
     </column>
     <index id="24" parent="14" name="t_player_pkey">
-      <object-id>69988</object-id>
+      <object-id>70326</object-id>
       <columns>p_id</columns>
       <desc-columns />
       <unique>1</unique>
     </index>
     <key id="25" parent="14" name="t_player_pkey">
-      <object-id>69989</object-id>
+      <object-id>70327</object-id>
       <columns>p_id</columns>
       <underlying-index>t_player_pkey</underlying-index>
       <primary>1</primary>
