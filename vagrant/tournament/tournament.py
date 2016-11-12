@@ -65,7 +65,7 @@ def readDb(sql):
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
-    conn = psycopg2.connect(database="tournament", user="postgres", password="root", host="127.0.0.1", port=5432)
+    conn = psycopg2.connect(database="tournament")
     return conn
 
 
@@ -151,3 +151,42 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    # check this whether is the first match
+    pair_count = readDb("select count(*) count from t_match")[0]['count']
+    # construct the result
+    result = list()
+    # first pair
+    if int(pair_count) == 0:
+        # get all registered players
+        data = readDb("select p_id,username from t_player")
+        for index in range(0, len(data) / 2, 1):
+            standings = (
+                data[index]['p_id'], data[index]['username'], data[index + 1]['p_id'], data[index + 1]['username'])
+            result.append(standings)
+    # not first pair
+    else:
+        # swissPair for win
+        win_players_id = readDb("select won_p_id from t_match")
+        appendPairs(result, win_players_id, "won_p_id")
+        lost_players_id = readDb("select lost_p_id from t_match")
+        appendPairs(result, lost_players_id, "lost_p_id")
+
+    return result
+
+
+def appendPairs(result, win_players_id, win_or_lost_key_words):
+    p_ids_str = "("
+    # construct the query
+    for p_id in win_players_id:
+        p_ids_str += str(p_id[win_or_lost_key_words]) + ","
+    # cut the last ","
+    p_ids_str = p_ids_str[0:len(p_ids_str) - 1]
+    p_ids_str += ")"
+    query = "select p_id,username from t_player where p_id in " + p_ids_str
+    win_palyers_data = readDb(query)
+    for index in range(0, len(win_palyers_data) / 2, 1):
+        standings = (
+            win_palyers_data[index]['p_id'], win_palyers_data[index]['username'],
+            win_palyers_data[index + 1]['p_id'], win_palyers_data[index + 1]['username'])
+        result.append(standings)
+        # swissPair for lost

@@ -1,0 +1,20 @@
+2016-11-12 16:40:11 tournament.py[line:58] ERROR query error:syntax error at or near ")"
+LINE 1: ...lect p_id,username from t_player where p_id in(81,83,85,87,)
+                                                                      ^
+
+2016-11-12 16:41:19 tournament.py[line:58] ERROR query error:syntax error at or near ")"
+LINE 1: ...lect p_id,username from t_player where p_id in(81,83,85,87,)
+                                                                      ^
+
+2016-11-12 16:41:25 tournament.py[line:58] ERROR query error:syntax error at or near ")"
+LINE 1: ...lect p_id,username from t_player where p_id in(81,83,85,87,)
+                                                                      ^
+
+2016-11-12 16:41:42 tournament.py[line:58] ERROR query error:syntax error at or near ")"
+LINE 1: ...lect p_id,username from t_player where p_id in(81,83,85,87,)
+                                                                      ^
+
+2016-11-12 16:47:11 tournament.py[line:58] ERROR query error:syntax error at or near ")"
+LINE 1: ...ect p_id,username from t_player where p_id in (81,83,85,87,)
+                                                                      ^
+

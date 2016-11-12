@@ -6,7 +6,7 @@
 -- You can write comments in this file by starting them with two dashes, like
 -- these lines here.
 
--- I think in the tournament db should have three tables: t_player t_standing t_match
+-- I think in the tournament db should have two tables: t_player and t_match
 
 DROP TABLE IF EXISTS t_player;
 
