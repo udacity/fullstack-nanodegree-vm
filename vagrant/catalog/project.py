@@ -15,8 +15,8 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 db_session = DBSession()
 # Set these values
-GITHUB_CLIENT_ID = '63db1814c08264ad78d9'
-GITHUB_CLIENT_SECRET = 'fd461bd77e3a24cf3ae7d42fc6ee2affab43a026'
+GITHUB_CLIENT_ID = 'XXXXXXXXXXXX'
+GITHUB_CLIENT_SECRET = 'XXXXXXXXXXXXXXXXXXXXXXXX'
 app.config.from_object(__name__)
 # setup github-flask
 github = GitHub(app)
@@ -28,12 +28,6 @@ def before_request():
     if 'user_id' in login_session:
         g.user = getUserInfo(login_session['user_id'])
 
-
-# Create anti-forgery state token
-@app.route('/login')
-def showLogin():
-    return github.authorize()
-    # return "Already logged in. click to the <a href='/'>index</a>"
 
 
 @github.access_token_getter
@@ -67,11 +61,15 @@ def authorized(access_token):
 
 
 @app.route('/login')
-def login():
+def showLogin():
     if login_session.get('user_id', None) is None:
         return github.authorize()
+        # offline to test this restaurant system
+        # login_session['username']='David'
+        # login_session['user_id'] = 2
+        # return redirect(url_for('showRestaurants'))
     else:
-        return redirect('showRestaurants')
+        return redirect(url_for('showRestaurants'))
 
 
 # User Helper Functions
@@ -201,27 +199,7 @@ def deleteRestaurant(restaurant_id):
         return "<script>function myFunction() {alert('You are not authorized " \
                "" \
                "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
                "to delete this restaurant. Please create your own restaurant " \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
-               "" \
                "" \
                "" \
                "in order to delete.');}</script><body onload='myFunction()''>"
@@ -293,17 +271,17 @@ def newMenuItem(restaurant_id):
                "" \
                "restaurant in order to add items.');}</script><body " \
                "onload='myFunction()''>"
-        if request.method == 'POST':
-            newItem = MenuItem(name=request.form['name'],
-                               description=request.form['description'],
-                               price=request.form[
-                                   'price'], course=request.form['course'],
-                               restaurant_id=restaurant_id,
-                               user_id=restaurant.user_id)
-            db_session.add(newItem)
-            db_session.commit()
-            flash('New Menu %s Item Successfully Created' % (newItem.name))
-            return redirect(url_for('showMenu', restaurant_id=restaurant_id))
+    if request.method == 'POST':
+        newItem = MenuItem(name=request.form['name'],
+                           description=request.form['description'],
+                           price=request.form[
+                               'price'], course=request.form['course'],
+                           restaurant_id=restaurant_id,
+                           user_id=restaurant.user_id)
+        db_session.add(newItem)
+        db_session.commit()
+        flash('New Menu %s Item Successfully Created' % (newItem.name))
+        return redirect(url_for('showMenu', restaurant_id=restaurant_id))
     else:
         return render_template('newmenuitem.html', restaurant_id=restaurant_id,
                                username=login_session['username'])
@@ -396,7 +374,7 @@ def disconnect():
     del login_session['username']
     # del login_session['email']
     # del login_session['picture']
-    # del login_session['user_id']
+    del login_session['user_id']
     flash("You have successfully been logged out.")
     return redirect(url_for('showRestaurants'))
 
