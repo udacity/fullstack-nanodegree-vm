@@ -1,0 +1,100 @@
+<dataSource name="Sqlite (Xerial) - restaurantmenuwithusers.db">
+  <database-model serializer="dbm" rdbms="SQLITE" format-version="2.6">
+    <schema id="1">
+      <visible>1</visible>
+    </schema>
+    <table id="2" parent="1" name="menu_item" />
+    <table id="3" parent="1" name="restaurant" />
+    <table id="4" parent="1" name="user" />
+    <column id="5" parent="2" name="name">
+      <mandatory>1</mandatory>
+      <data-type>VARCHAR(80)(0,-1)|12</data-type>
+    </column>
+    <column id="6" parent="2" name="id">
+      <mandatory>1</mandatory>
+      <data-type>INTEGER(0,-1)|4</data-type>
+    </column>
+    <column id="7" parent="2" name="description">
+      <data-type>VARCHAR(250)(0,-1)|12</data-type>
+    </column>
+    <column id="8" parent="2" name="price">
+      <data-type>VARCHAR(8)(0,-1)|12</data-type>
+    </column>
+    <column id="9" parent="2" name="course">
+      <data-type>VARCHAR(250)(0,-1)|12</data-type>
+    </column>
+    <column id="10" parent="2" name="restaurant_id">
+      <data-type>INTEGER(0,-1)|4</data-type>
+    </column>
+    <column id="11" parent="2" name="user_id">
+      <data-type>INTEGER(0,-1)|4</data-type>
+    </column>
+    <key id="12" parent="2">
+      <columns>id)
+foreign key(restaurant_id</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="13" parent="2" name="#FAKE_menu_item_2">
+      <name-surrogate>1</name-surrogate>
+      <columns>restaurant_id</columns>
+      <deferrable>1</deferrable>
+      <initially-deferred>1</initially-deferred>
+      <ref-key>restaurant(id)</ref-key>
+      <cascade-update-rule>no_action</cascade-update-rule>
+      <cascade-delete-rule>no_action</cascade-delete-rule>
+    </foreign-key>
+    <foreign-key id="14" parent="2" name="#FAKE_menu_item_1">
+      <name-surrogate>1</name-surrogate>
+      <columns>user_id</columns>
+      <deferrable>1</deferrable>
+      <initially-deferred>1</initially-deferred>
+      <ref-key>~.user.#1</ref-key>
+      <cascade-update-rule>no_action</cascade-update-rule>
+      <cascade-delete-rule>no_action</cascade-delete-rule>
+    </foreign-key>
+    <column id="15" parent="3" name="id">
+      <mandatory>1</mandatory>
+      <data-type>INTEGER(0,-1)|4</data-type>
+    </column>
+    <column id="16" parent="3" name="name">
+      <mandatory>1</mandatory>
+      <data-type>VARCHAR(250)(0,-1)|12</data-type>
+    </column>
+    <column id="17" parent="3" name="user_id">
+      <data-type>INTEGER(0,-1)|4</data-type>
+    </column>
+    <key id="18" parent="3">
+      <columns>id)
+foreign key(user_id</columns>
+      <primary>1</primary>
+    </key>
+    <foreign-key id="19" parent="3" name="#FAKE_restaurant_1">
+      <name-surrogate>1</name-surrogate>
+      <columns>user_id</columns>
+      <deferrable>1</deferrable>
+      <initially-deferred>1</initially-deferred>
+      <ref-key>~.user.#1</ref-key>
+      <cascade-update-rule>no_action</cascade-update-rule>
+      <cascade-delete-rule>no_action</cascade-delete-rule>
+    </foreign-key>
+    <column id="20" parent="4" name="id">
+      <mandatory>1</mandatory>
+      <data-type>INTEGER(0,-1)|4</data-type>
+    </column>
+    <column id="21" parent="4" name="name">
+      <mandatory>1</mandatory>
+      <data-type>VARCHAR(250)(0,-1)|12</data-type>
+    </column>
+    <column id="22" parent="4" name="email">
+      <mandatory>1</mandatory>
+      <data-type>VARCHAR(250)(0,-1)|12</data-type>
+    </column>
+    <column id="23" parent="4" name="picture">
+      <data-type>VARCHAR(250)(0,-1)|12</data-type>
+    </column>
+    <key id="24" parent="4">
+      <columns>id</columns>
+      <primary>1</primary>
+    </key>
+  </database-model>
+</dataSource>
