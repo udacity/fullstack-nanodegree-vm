@@ -8,11 +8,7 @@
 
 CREATE TABLE players (
   player_id   SERIAL PRIMARY KEY,
-  username    varchar(20) NOT NULL
-);
-
-CREATE TABLE standings (
-  player_id   integer PRIMARY KEY,
+  username    varchar(20) NOT NULL,
   wins        integer DEFAULT 0,
   matches     integer DEFAULT 0
 );
