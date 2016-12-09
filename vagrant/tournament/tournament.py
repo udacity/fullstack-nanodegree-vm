@@ -52,7 +52,7 @@ def registerPlayer(name):
       name: the player's full name (need not be unique).
     """
     db, c = connect()
-    c.execute("INSERT INTO players (username) VALUES (%s);", (name,))           #insert new player into platyers table
+    c.execute("INSERT INTO players (player_name) VALUES (%s);", (name,))           #insert new player into platyers table
     db.commit()
     db.close()
 
@@ -84,8 +84,9 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     db, c = connect()
-    c.execute("UPDATE players SET wins = wins+1, matches=matches+1 WHERE player_id=(%s);", (winner,)) #add a win to the winners standings and increment matches
-    c.execute("UPDATE players SET matches=matches+1 WHERE player_id=(%s);", (loser,))                 #loser does not receive a win, increment matches
+    c.execute("INSERT INTO matchup (winner, loser) VALUES (%s,%s) ", (winner,loser,)) #add a win to the winners standings and increment matches
+    c.execute("UPDATE players SET wins=wins+1, matches=matches+1 WHERE player_id=(%s) ", (winner,)) #add a win to the winners standings and increment matches
+    c.execute("UPDATE players SET matches=matches+1 WHERE player_id=(%s) ", (loser,)) #add a win to the winners standings and increment matches
     db.commit()
     db.close()
 
@@ -107,22 +108,18 @@ def swissPairings():
     """
 
     rows = playerStandings()                                                      #select all players from standings in win order
-    db, c = connect()
 
     i = True
-    idx = 0
-    pairings = []                                                               #select 2 rows at a time and create a pairing
+    pairings=[]
+    idx=0
     for row in rows:                                                            #tuple format is (id1, username1, id2, username2)
         if i == True:
-            (id1, username_1, wins, matches) = row                              #user_1
+            (id1, player_name_1, wins, matches) = row                              #user_1
             i = False
         else:
-            (id2, username_2, wins, matches) = row                              #user_2
+            (id2, player_name_2, wins, matches) = row                              #user_2
             i = True
-            c.execute("INSERT INTO matchup VALUES (%s, %s, %s, %s);", (id1, username_1, id2, username_2,))
-            idx = idx + 1                                                       #place this tuple row into matchup table
+            pairings.append((id1,player_name_1,id2,player_name_2))
+            idx=idx+1
 
-    c.execute("SELECT * FROM matchup")                                          #return all swiss pairing matchups
-    rows = c.fetchall()
-    db.close()
-    return rows
+    return pairings
