@@ -11,6 +11,7 @@ DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS matches;
 
 CREATE DATABASE tournament;
+\c tournament
 CREATE TABLE players (
     id serial UNIQUE primary key,
     name text
