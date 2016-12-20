@@ -16,6 +16,7 @@ def deleteMatches():
     connection = connect()
     cursor = connection.cursor()
     cursor.execute("DELETE from Matches")
+    connection.commit()
     connection.close()
 
 
@@ -24,6 +25,7 @@ def deletePlayers():
     connection = connect()
     cursor = connection.cursor()
     cursor.execute("DELETE from Players")
+    connection.commit()
     connection.close()
 
 
