@@ -16,6 +16,7 @@ def deleteMatches():
     connection = connect()
     cursor = connection.cursor()
     cursor.execute("DELETE from Matches")
+    connection.commit()
     connection.close()
 
 
@@ -24,6 +25,7 @@ def deletePlayers():
     connection = connect()
     cursor = connection.cursor()
     cursor.execute("DELETE from Players")
+    connection.commit()
     connection.close()
 
 
@@ -46,6 +48,11 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute("INSERT INTO players (name) values (%s)", (name,))
+    connection.commit()
+    connection.close()
 
 
 def playerStandings():
