@@ -7,10 +7,11 @@
 -- these lines here.
 
 DROP DATABASE IF EXISTS tournament;
-DROP TABLE IF EXISTS players CASCADE;
-DROP TABLE IF EXISTS matches;
 
 CREATE DATABASE tournament;
+\c tournament
+DROP TABLE IF EXISTS players CASCADE;
+DROP TABLE IF EXISTS matches;
 CREATE TABLE players (
     id serial UNIQUE primary key,
     name text
