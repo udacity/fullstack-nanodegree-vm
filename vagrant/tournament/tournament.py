@@ -10,32 +10,56 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def commit_query(*query):
+    """
+    Opens a connection, executes the given query, commits the query,
+    then closes the connection.
+
+    Args:
+        query (str or tuple): a valid SQL query
+
+    Example:
+        commit_query("DELETE FROM players")
+    """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute(*query)
+    connection.commit()
+    connection.close()
+
+def fetch_query(*query):
+    """
+    Opens a connection, executes the given query, fetchs the result,
+    closes the connection, and returns the result.
+
+    Args:
+        query (str or tuple): a valid SQL query
+
+    Example:
+        fetch_query("SELECT id from Players")
+        ---> [query result]
+    """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute(*query)
+    result = cursor.fetchall()
+    connection.close()
+    return result
+
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    connection = connect()
-    cursor = connection.cursor()
-    cursor.execute("DELETE from Matches")
-    connection.commit()
-    connection.close()
+    commit_query("DELETE from Matches")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    connection = connect()
-    cursor = connection.cursor()
-    cursor.execute("DELETE from Players")
-    connection.commit()
-    connection.close()
+    commit_query("DELETE from Players")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    connection = connect()
-    cursor = connection.cursor()
-    cursor.execute("SELECT id from Players")
-    count = cursor.fetchall()
-    connection.close()
+    count = fetch_query("SELECT id from Players")
     return len(count)
 
 
@@ -48,11 +72,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
-    connection = connect()
-    cursor = connection.cursor()
-    cursor.execute("INSERT INTO players (name) values (%s)", (name,))
-    connection.commit()
-    connection.close()
+    commit_query("INSERT INTO players (name) values (%s)", (name,))
 
 
 def playerStandings():
@@ -68,17 +88,14 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    connection = connect()
-    cursor = connection.cursor()
-    cursor.execute("SELECT p.id, p.name, p.wins, temp.matches "
-                   "FROM ("
-                   "    SELECT id, SUM(wins + losses) as matches "
-                   "    FROM players "
-                   "    GROUP BY id"
-                   "    ) temp JOIN players p ON p.id = temp.id "
-                   "ORDER BY wins")
-    players = cursor.fetchall()
-    connection.close()
+    players = fetch_query(
+        "SELECT p.id, p.name, p.wins, temp.matches "
+        "FROM ("
+        "    SELECT id, SUM(wins + losses) as matches "
+        "    FROM players "
+        "    GROUP BY id"
+        "    ) temp JOIN players p ON p.id = temp.id "
+        "ORDER BY wins")
     return players
 
 
