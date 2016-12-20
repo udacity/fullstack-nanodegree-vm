@@ -16,7 +16,7 @@ def commit_query(*query):
     then closes the connection.
 
     Args:
-        query (str): a valid SQL query
+        query (str or tuple): a valid SQL query
 
     Example:
         commit_query("DELETE FROM players")
@@ -33,7 +33,7 @@ def fetch_query(*query):
     closes the connection, and returns the result.
 
     Args:
-        query (str): a valid SQL query
+        query (str or tuple): a valid SQL query
 
     Example:
         fetch_query("SELECT id from Players")
