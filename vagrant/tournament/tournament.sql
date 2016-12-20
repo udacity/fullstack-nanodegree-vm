@@ -15,8 +15,8 @@ DROP TABLE IF EXISTS matches;
 CREATE TABLE players (
     id serial UNIQUE primary key,
     name text,
-    wins integer,
-    losses integer
+    wins integer DEFAULT 0,
+    losses integer DEFAULT 0
     );
 CREATE TABLE matches (
     winner integer REFERENCES players,
