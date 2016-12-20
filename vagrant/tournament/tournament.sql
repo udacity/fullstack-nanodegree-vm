@@ -14,7 +14,9 @@ DROP TABLE IF EXISTS players CASCADE;
 DROP TABLE IF EXISTS matches;
 CREATE TABLE players (
     id serial UNIQUE primary key,
-    name text
+    name text,
+    wins integer,
+    losses integer
     );
 CREATE TABLE matches (
     winner integer REFERENCES players,
