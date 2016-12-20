@@ -78,6 +78,7 @@ def playerStandings():
                    "    ) temp JOIN players p ON p.id = temp.id "
                    "ORDER BY wins")
     players = cursor.fetchall()
+    connection.close()
     return players
 
 
