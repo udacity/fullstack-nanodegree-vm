@@ -68,6 +68,17 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute("SELECT p.id, p.name, p.wins, temp.matches "
+                   "FROM ("
+                   "    SELECT id, SUM(wins + losses) as matches "
+                   "    FROM players "
+                   "    GROUP BY id"
+                   "    ) temp JOIN players p ON p.id = temp.id "
+                   "ORDER BY wins")
+    players = cursor.fetchall()
+    return players
 
 
 def reportMatch(winner, loser):
