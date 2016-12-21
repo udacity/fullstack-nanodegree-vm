@@ -14,3 +14,8 @@ CREATE TABLE players (
     wins integer DEFAULT 0,
     losses integer DEFAULT 0
     );
+CREATE TABLE matches (
+    id serial UNIQUE primary key,
+    winner integer REFERENCES players,
+    loser integer REFERENCES players,
+)
