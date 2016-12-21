@@ -11,8 +11,6 @@ CREATE DATABASE tournament;
 CREATE TABLE players (
     id serial UNIQUE primary key,
     name text,
-    wins integer DEFAULT 0,
-    losses integer DEFAULT 0
     );
 CREATE TABLE matches (
     id serial UNIQUE primary key,
