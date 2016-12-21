@@ -10,11 +10,14 @@ Common code for the Relational Databases and Full Stack Fundamentals courses
 * Run `vagrant up` from /vagrant
 * Once the VM has been created, run `vagrant ssh` from /vagrant
 * Navigate back to the vagrant folder in the VM (by default use `cd /vagrant`)
+* Run `psql -f tournament/tournament.sql`
 * Run the following command for the unit tests: `python tournament/tournament_test.py`
 * ????
 * Profit
 
 ### Files Included:
+
+rdb-fullstack
 
 >   fullstack-nanodegree-vm__________
 >   |                               |

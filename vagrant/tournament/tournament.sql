@@ -10,7 +10,10 @@ CREATE DATABASE tournament;
 \c tournament
 CREATE TABLE players (
     id serial UNIQUE primary key,
-    name text,
-    wins integer DEFAULT 0,
-    losses integer DEFAULT 0
+    name text
     );
+CREATE TABLE matches (
+    id serial UNIQUE primary key,
+    winner integer REFERENCES players,
+    loser integer REFERENCES players
+)

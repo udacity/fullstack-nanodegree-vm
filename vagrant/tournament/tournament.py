@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# 
+#
 # tournament.py -- implementation of a Swiss-system tournament
 #
 
@@ -9,6 +9,7 @@ import psycopg2
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
+
 
 def commit_query(*query):
     """
@@ -26,6 +27,7 @@ def commit_query(*query):
     cursor.execute(*query)
     connection.commit()
     connection.close()
+
 
 def fetch_query(*query):
     """
@@ -49,17 +51,18 @@ def fetch_query(*query):
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    commit_query("UPDATE players set wins = 0, losses = 0")
+    commit_query("DELETE FROM matches")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    commit_query("DELETE from Players")
+    deleteMatches()
+    commit_query("DELETE FROM players")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    count = fetch_query("SELECT id from Players")
+    count = fetch_query("SELECT id FROM players")
     return len(count)
 
 
@@ -68,7 +71,7 @@ def registerPlayer(name):
   
     The database assigns a unique serial id number for the player.  (This
     should be handled by your SQL database schema, not in your Python code.)
-  
+
     Args:
       name: the player's full name (need not be unique).
     """
@@ -78,8 +81,8 @@ def registerPlayer(name):
 def playerStandings():
     """Returns a list of the players and their win records, sorted by wins.
 
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
+    The first entry in the list should be the player in first place, or a
+    player tied for first place if there is currently a tie.
 
     Returns:
       A list of tuples, each of which contains (id, name, wins, matches):
@@ -88,14 +91,27 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    players = fetch_query(
-        "SELECT p.id, p.name, p.wins, temp.matches "
-        "FROM ("
-        "    SELECT id, SUM(wins + losses) as matches "
-        "    FROM players "
-        "    GROUP BY id"
-        "    ) temp JOIN players p ON p.id = temp.id "
-        "ORDER BY wins desc")
+    players = fetch_query("""
+        SELECT p.id, p.name, p.wins, m.matches
+        FROM (
+            SELECT players.id as id,
+                   players.name,
+                   count(matches.winner) as wins
+            FROM players LEFT JOIN matches
+            ON players.id = matches.winner
+            GROUP BY players.id
+            ) p
+        LEFT JOIN (
+            SELECT players.id as id,
+                   count(matches.winner + matches.loser) as matches
+            FROM players LEFT JOIN matches
+            ON players.id = matches.winner or players.id = matches.loser
+            GROUP BY players.id
+            ) m 
+        ON p.id = m.id
+        GROUP BY p.id, p.name, p.wins, m.matches
+        ORDER BY p.wins desc
+        """)
     return players
 
 
@@ -107,11 +123,10 @@ def reportMatch(winner, loser):
       loser:  the id number of the player who lost
     """
     commit_query(
-        "UPDATE players SET wins = wins + 1 WHERE id = %s", (winner,))
-    commit_query(
-        "UPDATE players SET losses = losses + 1 WHERE id = %s", (loser,))
- 
- 
+        "INSERT INTO matches (winner, loser)"
+        " VALUES (%s, %s)", (winner, loser,))
+
+
 def swissPairings():
     """Returns a list of pairs of players for the next round of a match.
   
@@ -119,7 +134,7 @@ def swissPairings():
     appears exactly once in the pairings.  Each player is paired with another
     player with an equal or nearly-equal win record, that is, a player adjacent
     to him or her in the standings.
-  
+
     Returns:
       A list of tuples, each of which contains (id1, name1, id2, name2)
         id1: the first player's unique id
