@@ -51,17 +51,19 @@ def fetch_query(*query):
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    commit_query("DELETE FROM matches")
     commit_query("UPDATE players set wins = 0, losses = 0")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    commit_query("DELETE from Players")
+    deleteMatches()
+    commit_query("DELETE FROM players")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    count = fetch_query("SELECT id from Players")
+    count = fetch_query("SELECT id FROM players")
     return len(count)
 
 
