@@ -92,14 +92,35 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    players = fetch_query(
-        "SELECT p.id, p.name, p.wins, temp.matches "
-        "FROM ("
-        "    SELECT id, SUM(wins + losses) as matches "
-        "    FROM players "
-        "    GROUP BY id"
-        "    ) temp JOIN players p ON p.id = temp.id "
-        "ORDER BY wins desc")
+    players = fetch_query("""
+        SELECT p.id, p.name, p.wins, m.matches
+        FROM (
+            SELECT players.id as id,
+                   players.name,
+                   count(matches.winner) as wins
+            FROM players LEFT JOIN matches
+            ON players.id = matches.winner
+            GROUP BY players.id
+            ) p
+        LEFT JOIN (
+            SELECT players.id as id,
+                   count(matches.winner + matches.loser) as matches
+            FROM players LEFT JOIN matches
+            ON players.id = matches.winner or players.id = matches.loser
+            GROUP BY players.id
+            ) m 
+        ON p.id = m.id
+        GROUP BY p.id, p.name, p.wins, m.matches\
+        ORDER BY p.wins desc
+        """)
+        #"SELECT p.id, p.name, p.wins, temp.matches "
+        #"FROM ("
+        #"    SELECT id, SUM(wins + losses) as matches "
+        #"    FROM players "
+        #"    GROUP BY id"
+        #"    ) temp JOIN players p ON p.id = temp.id "
+        #"ORDER BY wins desc")
+
     return players
 
 
