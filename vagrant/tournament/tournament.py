@@ -50,6 +50,7 @@ def fetch_query(*query):
 def deleteMatches():
     """Remove all the match records from the database."""
     commit_query("DELETE from Matches")
+    commit_query("UPDATE players set wins = 0, losses = 0")
 
 
 def deletePlayers():
