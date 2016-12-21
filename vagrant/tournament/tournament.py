@@ -49,13 +49,11 @@ def fetch_query(*query):
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    commit_query("DELETE from Matches")
     commit_query("UPDATE players set wins = 0, losses = 0")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
-    deleteMatches()
     commit_query("DELETE from Players")
 
 
@@ -112,8 +110,6 @@ def reportMatch(winner, loser):
         "UPDATE players SET wins = wins + 1 WHERE id = %s", (winner,))
     commit_query(
         "UPDATE players SET losses = losses + 1 WHERE id = %s", (loser,))
-    commit_query(
-        "INSERT INTO matches (winner, loser) values (%s, %s)", (winner, loser,))
  
  
 def swissPairings():
