@@ -16,24 +16,24 @@ Common code for the Relational Databases and Full Stack Fundamentals courses
 
 ### Files Included:
 
-fullstack-nanodegree-vm__________
-|                               |
-|- README.md                    |
-|- vagrant                      |
-|   |                           |
-|   |- Vagrantfile              |
-|   |- pgconfig.sh              |
-|   |- catalog                  |
-|   |   |- README.txt           |
-|   |- forum                    |
-|       |- forum.py             |
-|       |- forum.sql            |
-|       |- forumdb.py           |
-|   |- tournament               |
-|       |- tournament.py        |
-|       |- tournament.sql       |
-|       |- tournament_test.py   |
-|_______________________________|
+> fullstack-nanodegree-vm__________
+> |                               |
+> |- README.md                    |
+> |- vagrant                      |
+> |   |                           |
+> |   |- Vagrantfile              |
+> |   |- pgconfig.sh              |
+> |   |- catalog                  |
+> |   |   |- README.txt           |
+> |   |- forum                    |
+> |       |- forum.py             |
+> |       |- forum.sql            |
+> |       |- forumdb.py           |
+> |   |- tournament               |
+> |       |- tournament.py        |
+> |       |- tournament.sql       |
+> |       |- tournament_test.py   |
+> |_______________________________|
 
 ### Authors:
 Paul Castillo
