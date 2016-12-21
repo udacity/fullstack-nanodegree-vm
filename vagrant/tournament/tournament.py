@@ -97,7 +97,7 @@ def playerStandings():
         "    FROM players "
         "    GROUP BY id"
         "    ) temp JOIN players p ON p.id = temp.id "
-        "ORDER BY wins")
+        "ORDER BY wins desc")
     return players
 
 
@@ -131,3 +131,13 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    players = playerStandings()
+    pairings = []
+    count = 0
+    while count < len(players):
+        pairings.append((players[count][0],
+                        players[count][1],
+                        players[count + 1][0],
+                        players[count + 1][1]))
+        count += 2
+    return pairings
