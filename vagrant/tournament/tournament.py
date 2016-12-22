@@ -64,7 +64,7 @@ def deleteMatches():
 def deletePlayers():
     """Remove all the player records from the database."""
     deleteMatches()
-    commit_query("TRUNCATE players")
+    commit_query("TRUNCATE players CASCADE")
 
 
 def countPlayers():
