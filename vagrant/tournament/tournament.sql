@@ -19,3 +19,8 @@ CREATE TABLE matches (
     winner integer REFERENCES players,
     loser integer REFERENCES players
 )
+CREATE VIEW player_wins AS
+SELECT players.id as id, players.name, count(matches.winner) as wins
+FROM players LEFT JOIN matches
+ON players.id = matches.winner
+GROUP BY players.id
