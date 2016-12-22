@@ -98,15 +98,19 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    players = fetch_query("""
+    players = fetch_query(
+        """
         SELECT player_wins.id,
                player_wins.name,
                player_wins.wins,
                player_matches.matches
         FROM player_wins LEFT JOIN player_matches
-        ON p.id = m.id
-        GROUP BY p.id, p.name, p.wins, m.matches
-        ORDER BY p.wins desc
+        ON player_wins.id = player_matches.id
+        GROUP BY player_wins.id,
+                 player_wins.name,
+                 player_wins.wins,
+                 player_matches.matches
+        ORDER BY wins desc
         """)
     return players
 
