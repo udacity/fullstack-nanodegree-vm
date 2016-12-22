@@ -92,14 +92,11 @@ def playerStandings():
         matches: the number of matches the player has played
     """
     players = fetch_query("""
-        SELECT player_wins.id, player_wins.name, player_wins.wins, m.matches
-        FROM player_wins LEFT JOIN (
-            SELECT players.id as id,
-                   count(matches.winner + matches.loser) as matches
-            FROM players LEFT JOIN matches
-            ON players.id = matches.winner or players.id = matches.loser
-            GROUP BY players.id
-            ) m 
+        SELECT player_wins.id,
+               player_wins.name,
+               player_wins.wins,
+               player_matches.matches
+        FROM player_wins LEFT JOIN player_matches
         ON p.id = m.id
         GROUP BY p.id, p.name, p.wins, m.matches
         ORDER BY p.wins desc
