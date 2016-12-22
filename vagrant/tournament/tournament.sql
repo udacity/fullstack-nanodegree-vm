@@ -16,8 +16,8 @@ CREATE TABLE players (
     );
 CREATE TABLE matches (
     id serial UNIQUE primary key,
-    winner integer REFERENCES players,
-    loser integer REFERENCES players
+    winner integer REFERENCES players(id),
+    loser integer REFERENCES players(id)
 )
 CREATE VIEW player_wins AS
 SELECT players.id as id, players.name as name, count(matches.winner) as wins
