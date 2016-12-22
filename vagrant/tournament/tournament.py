@@ -7,10 +7,17 @@ import psycopg2
 
 
 def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    db = psycopg2.connect("dbname=tournament")
-    cursor = db.cursor()
-    return db, cursor
+    """
+    Connect to the PostgreSQL database. Tries returning a database
+    connection and it's cursor. If an exception occurs, returns
+    error message.
+    """
+    try:
+        db = psycopg2.connect("dbname=tournament")
+        cursor = db.cursor()
+        return db, cursor
+    except:
+        print("<error message>")
 
 
 def commit_query(*query):
