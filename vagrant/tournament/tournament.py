@@ -70,7 +70,7 @@ def deletePlayers():
 def countPlayers():
     """Returns the number of players currently registered."""
     count = fetch_query("SELECT count(id) FROM players")
-    return count
+    return count[0][0]
 
 
 def registerPlayer(name):
