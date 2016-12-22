@@ -8,7 +8,9 @@ import psycopg2
 
 def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+    db = psycopg2.connect("dbname=tournament")
+    cursor = db.cursor()
+    return db, cursor
 
 
 def commit_query(*query):
@@ -22,8 +24,7 @@ def commit_query(*query):
     Example:
         commit_query("DELETE FROM players")
     """
-    connection = connect()
-    cursor = connection.cursor()
+    connection, cursor = connect()
     cursor.execute(*query)
     connection.commit()
     connection.close()
@@ -41,8 +42,7 @@ def fetch_query(*query):
         fetch_query("SELECT id from Players")
         ---> [query result]
     """
-    connection = connect()
-    cursor = connection.cursor()
+    connection, cursor = connect()
     cursor.execute(*query)
     result = cursor.fetchall()
     connection.close()
