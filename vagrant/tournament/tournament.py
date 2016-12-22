@@ -7,8 +7,17 @@ import psycopg2
 
 
 def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
+    """
+    Connect to the PostgreSQL database. Tries returning a database
+    connection and it's cursor. If an exception occurs, returns
+    error message.
+    """
+    try:
+        db = psycopg2.connect("dbname=tournament")
+        cursor = db.cursor()
+        return db, cursor
+    except:
+        print("<error message>")
 
 
 def commit_query(*query):
@@ -22,8 +31,7 @@ def commit_query(*query):
     Example:
         commit_query("DELETE FROM players")
     """
-    connection = connect()
-    cursor = connection.cursor()
+    connection, cursor = connect()
     cursor.execute(*query)
     connection.commit()
     connection.close()
@@ -41,8 +49,7 @@ def fetch_query(*query):
         fetch_query("SELECT id from Players")
         ---> [query result]
     """
-    connection = connect()
-    cursor = connection.cursor()
+    connection, cursor = connect()
     cursor.execute(*query)
     result = cursor.fetchall()
     connection.close()
@@ -51,19 +58,19 @@ def fetch_query(*query):
 
 def deleteMatches():
     """Remove all the match records from the database."""
-    commit_query("DELETE FROM matches")
+    commit_query("TRUNCATE matches")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
     deleteMatches()
-    commit_query("DELETE FROM players")
+    commit_query("TRUNCATE players CASCADE")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
-    count = fetch_query("SELECT id FROM players")
-    return len(count)
+    count = fetch_query("SELECT count(id) FROM players")
+    return count[0][0]
 
 
 def registerPlayer(name):
@@ -91,26 +98,19 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
-    players = fetch_query("""
-        SELECT p.id, p.name, p.wins, m.matches
-        FROM (
-            SELECT players.id as id,
-                   players.name,
-                   count(matches.winner) as wins
-            FROM players LEFT JOIN matches
-            ON players.id = matches.winner
-            GROUP BY players.id
-            ) p
-        LEFT JOIN (
-            SELECT players.id as id,
-                   count(matches.winner + matches.loser) as matches
-            FROM players LEFT JOIN matches
-            ON players.id = matches.winner or players.id = matches.loser
-            GROUP BY players.id
-            ) m 
-        ON p.id = m.id
-        GROUP BY p.id, p.name, p.wins, m.matches
-        ORDER BY p.wins desc
+    players = fetch_query(
+        """
+        SELECT player_wins.id,
+               player_wins.name,
+               player_wins.wins,
+               player_matches.matches
+        FROM player_wins LEFT JOIN player_matches
+        ON player_wins.id = player_matches.id
+        GROUP BY player_wins.id,
+                 player_wins.name,
+                 player_wins.wins,
+                 player_matches.matches
+        ORDER BY wins desc
         """)
     return players
 
