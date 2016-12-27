@@ -1,0 +1,63 @@
+body {
+	margin: 0;
+	font-family: "Comic Sans MS", cursive, sans-serif;
+}
+
+.search {
+	width: 100%;
+	display: flex;
+}
+
+.search-box {
+	flex-grow: 1;
+	height: 30px;
+	font-size: 1em;
+	padding: 5px 20px;
+	background-color: #FFF
+}
+
+.app {
+	width: 100%;
+	height: 100%;
+	display: flex;
+}
+
+.list {
+	order: 1;
+	flex-grow: 1;
+	background-color: #000CFF;
+}
+
+.map {
+	order: 2;
+	flex-grow: 4;
+	background-color: #fff;
+	text-align: center;
+	height: 1000px;
+}
+
+.results {
+	margin: 0;
+	padding: 0;
+}
+
+.place {
+    margin: 10px;
+    padding: 10px;
+    list-style: none;
+    background-color: #006AFF;
+}
+
+
+@media only screen and (max-device-width : 959px), only screen and (max-width : 959px)  {
+
+.app {
+	flex-direction: column;
+}
+
+
+.search-box, .list {
+	font-size: 1.5em;
+}
+
+}
