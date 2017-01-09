@@ -34,9 +34,16 @@ class RestuarantsHandler(object):
         """Returns a list of all the restuarants."""
         return session.query(Restaurant).all()
 
+    @classmethod
+    def get_restaurant_by_id(cls, id):
+        """Return a restaurant with the given id."""
+        pass
+
+
 
 class webserverHandler(BaseHTTPRequestHandler):
     """docstring for webserverHandler"""
+
     def send_get_response(self, output):
         """
         Sends a 200 response and text/html header, then sends and
@@ -61,6 +68,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                 output += ("<form method='POST' enctype='multipart/form-data' "
                            "action='/hello'><h2>What would you like me to say?"
                            "</h2><input name='message' type='text' ><input "
+                           "type='hidden' name='form' value='hello'><input "
                            "type='submit' value='Submit'> </form>")
                 self.send_get_response(output)
                 return
@@ -73,6 +81,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                 output += ("<form method='POST' enctype='multipart/form-data' "
                            "action='/hello'><h2>What would you like me to say?"
                            "</h2><input name='message' type='text' ><input "
+                           "type='hidden' name='form' value='hello'><input "
                            "type='submit' value='Submit'> </form>")
                 self.send_get_response(output)
                 return
@@ -90,8 +99,28 @@ class webserverHandler(BaseHTTPRequestHandler):
                                '</a><br>' % restaurant.id)
                     output += ('<a href="/restaurant/%s/delete">Delete'
                                '</a><br>' % restaurant.id)
+                output += ('<h2><a href="/restaurant/new">Make a New'
+                           'Restaurant Here.</a></h2>')
                 self.send_get_response(output)
                 return
+
+            if self.path.endswith("/restaurants/new"):
+                # Handler for restuarants page
+
+                output = ""
+                output += "<h1>Make a New Restaurant</h1><br>"
+                output += ("<form method='POST' enctype='multipart/form-data'"
+                           "action='/restaurants'><input name='name' "
+                           "type='text' ><input type='hidden' name='form' "
+                           "value='new_restaurant'><input type='submit' "
+                           "value='Create'>"
+                           "</form>")
+                self.send_get_response(output)
+                return
+
+            if self.path.endswith("/edit"):
+                # Handler for editing a restaurants name
+                pass
 
 
         except IOError:
@@ -107,20 +136,27 @@ class webserverHandler(BaseHTTPRequestHandler):
             if ctype == 'multipart/form-data':
                 fields = cgi.parse_multipart(self.rfile, pdict)
                 messagecontent = fields.get('message')
+                formcontent = fields.get('form')
+                namecontent = fields.get('name')
 
-            output = ""
-            output += "<html><body>"
-            output += " <h2> Okay, how about this: </h2>"
-            output += "<h1> %s </h1>" % messagecontent[0]
+            if form = 'hello':
+                output = ""
+                output += "<html><body>"
+                output += " <h2> Okay, how about this: </h2>"
+                output += "<h1> %s </h1>" % messagecontent[0]
 
-            output += ("<form method='POST' enctype='multipart/form-data' "
-                       "action='/hello'><h2>What would you like me to say?"
-                       "</h2><input name='message' type='text' ><input "
-                       "type='submit' value='Submit'> </form>")
+                output += ("<form method='POST' enctype='multipart/form-data' "
+                           "action='/hello'><h2>What would you like me to say?"
+                           "</h2><input name='message' type='text' ><input "
+                           "type='hidden' name='form' value='hello'><input "
+                           "type='submit' value='Submit'> </form>")
             
-            output += "</body></html>"
-            self.wfile.write(output)
-            print output
+                output += "</body></html>"
+                self.wfile.write(output)
+                print output
+
+            if form = 'new_restaurant':
+                new_restaurant = 
 
 
         except:
