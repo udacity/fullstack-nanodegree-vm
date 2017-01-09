@@ -51,8 +51,11 @@ class RestuarantsHandler(object):
         Renames the restaurant with the given integer id to the
         given string name.
         """
+        print "in rename restaurant"
         restaurant = cls.get_restaurant_by_id(id)
+        print "restaurant name =", restaurant.name
         restaurant.name = name
+        print "restaurant name =", restaurant.name
         session.add(restaurant)
         session.commit()
 
@@ -176,9 +179,13 @@ class webserverHandler(BaseHTTPRequestHandler):
                 messagecontent = fields.get('message')
                 formcontent = fields.get('form')
                 namecontent = fields.get('name')
+                restaurant_id = int(fields.get('restaurant_id')[0])
 
             print formcontent
+            print "form content equals rename?"
+            print formcontent[0] == 'rename'
             print namecontent
+            print restaurant_id
 
             if formcontent[0] == 'hello':
                 output = ""
@@ -203,6 +210,17 @@ class webserverHandler(BaseHTTPRequestHandler):
                 # Render restaurants page
                 output = self.render_restaurants()
                 self.wfile.write(output)
+
+            if formcontent[0] == 'rename':
+                # Rename restaurant
+                print "renaming"
+                RestuarantsHandler.rename_restaurant(
+                    restaurant_id, namecontent[0])
+
+                # Render restaurants page
+                output =self.render_restaurants()
+                self.wfile.write(output)
+                print html_output
 
 
 
