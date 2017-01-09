@@ -62,7 +62,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                            "action='/hello'><h2>What would you like me to say?"
                            "</h2><input name='message' type='text' ><input "
                            "type='submit' value='Submit'> </form>")
-                send_get_response(output)
+                self.send_get_response(output)
                 return
 
             if self.path.endswith("/hola"):
@@ -74,7 +74,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                            "action='/hello'><h2>What would you like me to say?"
                            "</h2><input name='message' type='text' ><input "
                            "type='submit' value='Submit'> </form>")
-                send_get_response(output)
+                self.send_get_response(output)
                 return
 
             if self.path.endswith("/restaurants"):
@@ -87,10 +87,10 @@ class webserverHandler(BaseHTTPRequestHandler):
                 for restaurant in restuarants:
                     output += "<h1>%s</h1>\n" % restaurant.name
                     output += ('<a href="/restaurant/%s/edit">Edit'
-                               '</a>' % restaurant.id)
+                               '</a><br>' % restaurant.id)
                     output += ('<a href="/restaurant/%s/delete">Delete'
-                               '</a>' % restaurant.id)
-                send_get_response(output)
+                               '</a><br>' % restaurant.id)
+                self.send_get_response(output)
                 return
 
 
