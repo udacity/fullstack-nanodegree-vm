@@ -36,13 +36,24 @@ class RestuarantsHandler(object):
 
     @classmethod
     def get_restaurant_by_id(cls, id):
-        """Return a restaurant with the given id."""
-        pass
+        """Return a restaurant with the given integer id."""
+        return session.query(Restaurant).filter_by(id = id).all()[0]
 
     @classmethod
     def add_restuarant(cls, name):
         """Adds a restuarant with the given name."""
         session.add(Restaurant(name = name))
+        session.commit()
+
+    @classmethod
+    def rename_restaurant(cls, id, name):
+        """
+        Renames the restaurant with the given integer id to the
+        given string name.
+        """
+        restaurant = cls.get_restaurant_by_id(id)
+        restaurant.name = name
+        session.add(restaurant)
         session.commit()
 
 
@@ -66,7 +77,8 @@ class webserverHandler(BaseHTTPRequestHandler):
                        '</a><br>' % restaurant.id)
         output += ('<h2><a href="/restaurants/new">Make a New '
                    'Restaurant Here.</a></h2>')
-        return output
+        html_output = html_wrapper(output)
+        return html_output
 
     def send_get_response(self, output):
         """
@@ -133,7 +145,20 @@ class webserverHandler(BaseHTTPRequestHandler):
 
             if self.path.endswith("/edit"):
                 # Handler for editing a restaurants name
-                pass
+                id = self.path.split('/')[2]
+                restaurant = RestuarantsHandler.get_restaurant_by_id(int(id))
+                output = ""
+                output += "<h1>%s</h1><br>" % restaurant.name
+                output += "<h2>Rename?<h2><br>"
+                output += ("<form method='POST' enctype='multipart/form-data'"
+                           "action='/restaurants'><input name='name' "
+                           "type='text' ><input type='hidden' name='form' "
+                           "value='rename'><input type='hidden' "
+                           "name='restaurant_id' value='%s'><input "
+                           "type='submit' value='Rename'></form>" % id)
+                self.send_get_response(output)
+                return
+
 
 
         except IOError:
@@ -151,6 +176,9 @@ class webserverHandler(BaseHTTPRequestHandler):
                 messagecontent = fields.get('message')
                 formcontent = fields.get('form')
                 namecontent = fields.get('name')
+
+            print formcontent
+            print namecontent
 
             if formcontent[0] == 'hello':
                 output = ""
@@ -174,9 +202,8 @@ class webserverHandler(BaseHTTPRequestHandler):
 
                 # Render restaurants page
                 output = self.render_restaurants()
-                html_output = html_wrapper(output)
-                self.wfile.write(html_output)
-                print html_output
+                self.wfile.write(output)
+
 
 
         except:
