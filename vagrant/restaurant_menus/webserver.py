@@ -77,6 +77,22 @@ class webserverHandler(BaseHTTPRequestHandler):
                 send_get_response(output)
                 return
 
+            if self.path.endswith("/restaurants"):
+                # Handler for restuarants page
+
+                # Get all the restaurants
+                restuarants = RestuarantsHandler.get_restaurants()
+
+                output = ""
+                for restaurant in restuarants:
+                    output += "<h1>%s</h1>\n" % restaurant.name
+                    output += ('<a href="/restaurant/%s/edit">Edit'
+                               '</a>' % restaurant.id)
+                    output += ('<a href="/restaurant/%s/delete">Delete'
+                               '</a>' % restaurant.id)
+                send_get_response(output)
+                return
+
 
         except IOError:
             self.send_error(404, "File Not Found %s" % self.path)
