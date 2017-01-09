@@ -4,6 +4,7 @@
 #
 
 import psycopg2
+import bleach
 
 
 def connect():
@@ -13,14 +14,58 @@ def connect():
 
 def deleteMatches():
     """Remove all the match records from the database."""
-
+    # connect to the database server
+    connection = connect()
+ 
+    # execute the query
+    cursor = connection.cursor()
+    cursor.execute("TRUNCATE TABLE matches;")
+ 	
+    # accept the change
+    connection.commit()
+    
+    #close connection
+    connection.close()
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    # connect to the database server
+    connection = connect()
+ 
+    # execute the query
+    cursor = connection.cursor()
+    cursor.execute("TRUNCATE TABLE player_names;")
+ 	
+    # accept the change
+    connection.commit()
+    
+    #close connection
+    connection.close()
+ 
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    # connect to the database server
+    connection = connect()
+ 
+    # execute the query
+    cursor = connection.cursor()
+    cursor.execute("SELECT COUNT(*) FROM player_names;")
+    
+    # fetch results
+    results = cursor.fetchone()
+    
+    print("Player count: %d" % results[0])
+
+    #close connection
+    connection.close()
+    
+    # Boolean check returns zero when results list is empty
+    if not results:
+    	return 0
+    else:
+    	return int(results[0])
 
 
 def registerPlayer(name):
@@ -32,6 +77,24 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    # generate random id
+    
+    # connect to the database server
+    connection = connect()
+ 
+    # execute the query
+    cursor = connection.cursor()
+    
+    sql = "INSERT INTO player_names (player_name, wins, matches) VALUES (%s, %s, %s);"
+    data = (bleach.clean(name), 0, 0)
+    
+    cursor.execute(sql, data)
+ 	
+ 	# accept the change
+    connection.commit()
+    
+    #close connection
+    connection.close()
 
 
 def playerStandings():
@@ -47,6 +110,29 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    
+    # connect to the database server
+    connection = connect()
+    
+    # execute the query into player_names
+    cursor = connection.cursor()
+    
+    # execute the queries into player_names to update match count and get player standings
+    cursor.execute("SELECT * FROM player_names ORDER BY wins DESC;")
+    #cursor.execute("CREATE VIEW standings AS SELECT player_names.player_id, player_names.player_name (SELECT COUNT(matches.winner_id) FROM matches WHERE player_names.player_id = matches.winner_id) AS wins, (SELECT COUNT(matches.match_id) FROM Results WHERE player_names.player_id = Results.winner OR player_names.player_id  = Results.loser) AS total_matches FROM player_names Order BY wins DESC, matches DESC;")
+    #cursor.execute("SELECT player_id, player_name FROM player_names LEFT JOIN matches ON player_names.player_id = matches.winner_id ORDER BY player_names.player_id;")
+    
+    # fetch results
+    results = cursor.fetchall()
+    
+    for result in results:
+    	print("player id %s name %s wins %s matches %s " % (result[0], result[1], result[2], result[3]))
+    
+    #cursor.execute("UPDATE player_names SET matches = matches + 1;")
+    #close connection
+    connection.close()
+    print("%d players" % len(results))
+    return results
 
 
 def reportMatch(winner, loser):
@@ -56,6 +142,28 @@ def reportMatch(winner, loser):
       winner:  the id number of the player who won
       loser:  the id number of the player who lost
     """
+    
+    # connect to the database server
+    connection = connect()
+ 
+    # execute the query into matches
+    cursor = connection.cursor()
+    
+    sql = "INSERT INTO matches (winner_id, loser_id) VALUES (%s, %s);"
+    data = (winner, loser)
+    cursor.execute(sql, data)
+    
+    print("winner id: %d" % winner)
+    
+    # update wins
+    cursor.execute("UPDATE player_names SET wins = wins + 1 WHERE player_id = %s;", [winner])
+    cursor.execute("UPDATE player_names SET matches = matches + 1;")
+ 	
+ 	# accept the change
+    connection.commit()
+    
+    #close connection
+    connection.close()
  
  
 def swissPairings():
@@ -73,5 +181,22 @@ def swissPairings():
         id2: the second player's unique id
         name2: the second player's name
     """
+    
+    # connect to the database server
+    connection = connect()
+ 
+    # execute the query
+    cursor = connection.cursor()
+    cursor.execute("SELECT * FROM player_names ORDER BY player_id;")
+    
+    # fetch results
+    results = cursor.fetchall()
+ 	
+    #close connection
+    connection.close()
+    
+    return results
+    
+    # return [(player_id+dx, player_name+dy) for player_id,player_name in players for dx,dy in offsets]
 
 
