@@ -6,7 +6,7 @@ import cgi
 
 
 # Create database
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///restaurantmenu.db', echo=True)
 Base.metadata.create_all(engine)
 
 # Create database connector
@@ -39,10 +39,34 @@ class RestuarantsHandler(object):
         """Return a restaurant with the given id."""
         pass
 
+    @classmethod
+    def add_restuarant(cls, name):
+        """Adds a restuarant with the given name."""
+        session.add(Restaurant(name = name))
+        session.commit()
 
 
 class webserverHandler(BaseHTTPRequestHandler):
     """docstring for webserverHandler"""
+    def render_restaurants(self):
+        """
+        Returns as a string the html necessary for rendering the
+        restaurants page.
+        """
+
+        # Get all the restaurants
+        restuarants = RestuarantsHandler.get_restaurants()
+
+        output = ""
+        for restaurant in restuarants:
+            output += "<h1>%s</h1>\n" % restaurant.name
+            output += ('<a href="/restaurant/%s/edit">Edit'
+                       '</a><br>' % restaurant.id)
+            output += ('<a href="/restaurant/%s/delete">Delete'
+                       '</a><br>' % restaurant.id)
+        output += ('<h2><a href="/restaurants/new">Make a New '
+                   'Restaurant Here.</a></h2>')
+        return output
 
     def send_get_response(self, output):
         """
@@ -89,18 +113,7 @@ class webserverHandler(BaseHTTPRequestHandler):
             if self.path.endswith("/restaurants"):
                 # Handler for restuarants page
 
-                # Get all the restaurants
-                restuarants = RestuarantsHandler.get_restaurants()
-
-                output = ""
-                for restaurant in restuarants:
-                    output += "<h1>%s</h1>\n" % restaurant.name
-                    output += ('<a href="/restaurant/%s/edit">Edit'
-                               '</a><br>' % restaurant.id)
-                    output += ('<a href="/restaurant/%s/delete">Delete'
-                               '</a><br>' % restaurant.id)
-                output += ('<h2><a href="/restaurant/new">Make a New'
-                           'Restaurant Here.</a></h2>')
+                output = self.render_restaurants()
                 self.send_get_response(output)
                 return
 
@@ -139,7 +152,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                 formcontent = fields.get('form')
                 namecontent = fields.get('name')
 
-            if form = 'hello':
+            if formcontent[0] == 'hello':
                 output = ""
                 output += "<html><body>"
                 output += " <h2> Okay, how about this: </h2>"
@@ -155,8 +168,15 @@ class webserverHandler(BaseHTTPRequestHandler):
                 self.wfile.write(output)
                 print output
 
-            if form = 'new_restaurant':
-                new_restaurant = 
+            if formcontent[0] == 'new_restaurant':
+                # Add new restaurant
+                RestuarantsHandler.add_restuarant(namecontent[0])
+
+                # Render restaurants page
+                output = self.render_restaurants()
+                html_output = html_wrapper(output)
+                self.wfile.write(html_output)
+                print html_output
 
 
         except:
