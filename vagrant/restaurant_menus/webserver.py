@@ -36,7 +36,11 @@ class RestuarantsHandler(object):
 
     @classmethod
     def get_restaurant_by_id(cls, id):
-        """Return a restaurant with the given integer id."""
+        """
+        Return a restaurant with the given id.
+
+        id (int)
+        """
         return session.query(Restaurant).filter_by(id = id).all()[0]
 
     @classmethod
@@ -48,16 +52,28 @@ class RestuarantsHandler(object):
     @classmethod
     def rename_restaurant(cls, id, name):
         """
-        Renames the restaurant with the given integer id to the
-        given string name.
+        Renames the restaurant with the given id to the given name.
+
+        id (int)
+        name (string)
         """
-        print "in rename restaurant"
         restaurant = cls.get_restaurant_by_id(id)
-        print "restaurant name =", restaurant.name
         restaurant.name = name
-        print "restaurant name =", restaurant.name
         session.add(restaurant)
         session.commit()
+
+    @classmethod
+    def delete_restaurant(cls, id):
+        """
+        Deletes the restaurant with the given id.
+
+        id (int)
+        """
+        print "deleting restaurant"
+        restaurant = cls.get_restaurant_by_id(id)
+        session.delete(restaurant)
+        session.commit()
+        print "restaurant deleted"
 
 
 class webserverHandler(BaseHTTPRequestHandler):
@@ -148,8 +164,8 @@ class webserverHandler(BaseHTTPRequestHandler):
 
             if self.path.endswith("/edit"):
                 # Handler for editing a restaurants name
-                id = self.path.split('/')[2]
-                restaurant = RestuarantsHandler.get_restaurant_by_id(int(id))
+                rest_id = int(self.path.split('/')[2])
+                restaurant = RestuarantsHandler.get_restaurant_by_id(rest_id)
                 output = ""
                 output += "<h1>%s</h1><br>" % restaurant.name
                 output += "<h2>Rename?<h2><br>"
@@ -158,7 +174,23 @@ class webserverHandler(BaseHTTPRequestHandler):
                            "type='text' ><input type='hidden' name='form' "
                            "value='rename'><input type='hidden' "
                            "name='restaurant_id' value='%s'><input "
-                           "type='submit' value='Rename'></form>" % id)
+                           "type='submit' value='Rename'></form>" % rest_id)
+                self.send_get_response(output)
+                return
+
+            if self.path.endswith("/delete"):
+                # Handler for deleting a restaurant
+                rest_id = int(self.path.split('/')[2])
+                restaurant = RestuarantsHandler.get_restaurant_by_id(rest_id)
+                output = ""
+                output += "<h1>%s</h1><br>" % restaurant.name
+                output += "<h2>Are You Sure You Want To Delete?<h2><br>"
+                output += ("<form method='POST' enctype='multipart/form-data'"
+                           "action='/restaurants'><input type='hidden' "
+                           "name='form' value='delete'><input type='hidden' "
+                           "name='restaurant_id' value='%s'><input "
+                           "type='submit' value='Delete'>"
+                           "</form><br>" % rest_id)
                 self.send_get_response(output)
                 return
 
@@ -218,9 +250,18 @@ class webserverHandler(BaseHTTPRequestHandler):
                     restaurant_id, namecontent[0])
 
                 # Render restaurants page
-                output =self.render_restaurants()
+                output = self.render_restaurants()
                 self.wfile.write(output)
-                print html_output
+
+            if formcontent[0] == 'delete':
+                # Delete the restaurant
+                print "deleting"
+
+                RestuarantsHandler.delete_restaurant(restaurant_id)
+
+                # Render restaurants page
+                output = self.render_restaurants()
+                self.wfile.write(output)
 
 
 
