@@ -5,6 +5,7 @@
 
 import psycopg2
 import bleach
+import random
 
 
 def connect():
@@ -17,9 +18,13 @@ def deleteMatches():
     # connect to the database server
     connection = connect()
  
-    # execute the query
+    # clean up matches table
     cursor = connection.cursor()
     cursor.execute("TRUNCATE TABLE matches;")
+    
+    #clean up match count and win count
+    cursor.execute("UPDATE player_names SET matches = 0;")
+    cursor.execute("UPDATE player_names SET wins = 0;")
  	
     # accept the change
     connection.commit()
@@ -154,8 +159,13 @@ def reportMatch(winner, loser):
     
     # update wins
     cursor.execute("UPDATE player_names SET wins = wins + 1 WHERE player_id = %s;", [winner])
-    cursor.execute("UPDATE player_names SET matches = matches + 1;")
- 	
+    
+    #update relevant match count
+    sql = "UPDATE player_names SET matches = matches + 1 WHERE player_id = %s OR player_id = %s;"
+    data = (winner, loser)
+    
+    cursor.execute(sql, data)
+    
  	# accept the change
     connection.commit()
     
@@ -188,11 +198,26 @@ def swissPairings():
     
     # fetch results
     results = cursor.fetchall()
+    
+    # randomize players
+    random.shuffle(results)
+    
+    for result in results:
+    	print("name %s" % result[1])
+    
+    # create swiss pairings
+    pairings = [] # start with an empty list
+    
+    pairCount = len(results)/2 # we need half as many pairs as there are players
+    
+    for x in range(0, pairCount, 2):
+    	pairings.append((results[x], results[x+1][1]))
+    	print("%s vs %s" % (results[x], results[x+1][1]))
  	
     #close connection
     connection.close()
     
-    return results
+    return pairings
     
     # return [(player_id+dx, player_name+dy) for player_id,player_name in players for dx,dy in offsets]
 
