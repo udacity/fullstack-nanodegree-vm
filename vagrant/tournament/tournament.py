@@ -117,18 +117,15 @@ def playerStandings():
     # execute the query into player_names
     cursor = connection.cursor()
     
-    # execute the queries into player_names to update match count and get player standings
+    # execute the queries into player_names to get player standings
     cursor.execute("SELECT * FROM player_names ORDER BY wins DESC;")
-    #cursor.execute("CREATE VIEW standings AS SELECT player_names.player_id, player_names.player_name (SELECT COUNT(matches.winner_id) FROM matches WHERE player_names.player_id = matches.winner_id) AS wins, (SELECT COUNT(matches.match_id) FROM Results WHERE player_names.player_id = Results.winner OR player_names.player_id  = Results.loser) AS total_matches FROM player_names Order BY wins DESC, matches DESC;")
-    #cursor.execute("SELECT player_id, player_name FROM player_names LEFT JOIN matches ON player_names.player_id = matches.winner_id ORDER BY player_names.player_id;")
-    
+	
     # fetch results
     results = cursor.fetchall()
     
     for result in results:
     	print("player id %s name %s wins %s matches %s " % (result[0], result[1], result[2], result[3]))
     
-    #cursor.execute("UPDATE player_names SET matches = matches + 1;")
     #close connection
     connection.close()
     print("%d players" % len(results))
