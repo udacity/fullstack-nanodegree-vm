@@ -17,8 +17,9 @@ import requests
 
 # custom libraries
 import routes
-import goauth
-import fboauth
+
+from modules import fboauth
+from modules import goauth
 
 app = Flask(__name__)
 
@@ -36,6 +37,10 @@ def parksJSON():
 @app.route('/parks/<int:park_id>JSON')
 def parkTrailsJSON(park_id):
     return routes.parkTrailsJSON(park_id)
+
+@app.route('/trail/<int:trail_id>JSON')
+def trailJSON(trail_id):
+    return routes.trailJSON(trail_id)
 
 # clear sessions for testing implementation
 @app.route('/clearSession')
@@ -80,6 +85,9 @@ def gdisconnect():
 @app.route('/parks/', methods=['Get'])
 def parks():
     return routes.parks()
+@app.route('/search/', methods=['Get'])
+def search():
+    return routes.search()
 @app.route('/parks/add', methods=['GET', 'POST'])
 def addPark():
     return routes.addPark()

@@ -14,4 +14,4 @@ INSTRUCTIONS:
 4. Run the setup_chisel_db.py file through the terminal to create the database and tables
 	> python setup_chisel_db.py
 5. Run the chisel_app.py file through the terminal to test the function calls in the tournament.py file
-	> python chise_app.py
+	> python chisel_app.py

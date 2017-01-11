@@ -25,9 +25,9 @@ class Parks(Base):
 
     id = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
-    lat = Column(Integer)
-    lon = Column(Integer)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    lat = Column(Integer, nullable=False)
+    lon = Column(Integer, nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
     description = Column(Text)
 
@@ -54,7 +54,9 @@ class Trails(Base):
     name = Column(String(80), nullable=False)
     park_id = Column(Integer, ForeignKey('parks.id'))
     park = relationship(Parks)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('user.id'))
+    lat = Column(Integer, nullable=False)
+    lon = Column(Integer, nullable=False)
     user = relationship(User)
     description = Column(Text)
 
@@ -64,6 +66,8 @@ class Trails(Base):
         return {
             'id' : self.id,
             'name' : self.name,
+            'lat' : self.lat,
+            'lon' : self.lon,
             'park' : self.park_id,
             'description' : self.description
         }

@@ -61,18 +61,22 @@ def fbconnect():
 
     app_id = json.loads(open('fb_client_secrets.json', 'r').read())[
         'web']['app_id']
+    print "appd id = %s" % app_id
     app_secret = json.loads(
         open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+    print "app secret = %s" % app_secret
     url = 'https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id=%s&client_secret=%s&fb_exchange_token=%s' % (
         app_id, app_secret, access_token)
+    print "url = %s" % url
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
+    print "so far so good, 1, result = %s" % result
 
     # Use token to get user info from API
     userinfo_url = "https://graph.facebook.com/v2.4/me"
     # strip expire tag from access token
     token = result.split("&")[0]
-
+    print "so far so good, 2"
 
     url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token
     h = httplib2.Http()
@@ -85,16 +89,19 @@ def fbconnect():
     login_session['email'] = data["email"]
     login_session['facebook_id'] = data["id"]
     login_session['account'] = 'Facebook'
+    print "so far so good, 3"
 
     # The token must be stored in the login_session in order to properly logout, let's strip out the information before the equals sign in our token
     stored_token = token.split("=")[1]
     login_session['access_token'] = stored_token
+    print "so far so good, 4"
 
     # Get user picture
     url = 'https://graph.facebook.com/v2.4/me/picture?%s&redirect=0&height=200&width=200' % token
     h = httplib2.Http()
     result = h.request(url, 'GET')[1]
     data = json.loads(result)
+    print "so far so good, 5"
 
     login_session['picture'] = data["data"]["url"]
 
@@ -104,6 +111,7 @@ def fbconnect():
         user_id = createUser(login_session)
     login_session['user_id'] = user_id
     #create uid cookie
+    print "so far so good, 6"
 
     output = ''
     output += '<h1>Welcome, '

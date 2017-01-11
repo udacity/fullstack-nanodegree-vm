@@ -2,11 +2,14 @@
 <html>
 <head>
     <title>The Chisel Blog</title>
-    <link rel="stylesheet" type="text/css" href="/static/styles.css">
-    <link rel="stylesheet" type="text/css" href="/static/bootstrap.css">
 
+    <!-- Meta -->
     <meta name="viewport" content="initial-scale=1.0">
     <meta charset="utf-8">
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="/static/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/styles.css">
 
     <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
     <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
@@ -33,7 +36,9 @@
                 <!-- Collect the nav links, forms, and other content for toggling -->
                 <div class="collapse navbar-collapse" id="">
                   <ul class="nav navbar-nav navbar-right">
-                    
+
+                    <li><a href="/search">Search</a></li>
+
                     {% if user.username %}
                     <li><a href="#">{{ user.username }}</a></li>
                     <li><a href="/logout">Logout</a></li>

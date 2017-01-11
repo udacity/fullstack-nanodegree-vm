@@ -1,10 +1,10 @@
 from flask import Flask, render_template, url_for, request, \
-        redirect, flash, jsonify
+        redirect, flash, jsonify, json
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from setup_chisel_db import Base, Parks, Trails, User
 
-import cookies
+from modules import cookies
 
 # Connect to Database
 engine = create_engine('sqlite:///chisel.db')
@@ -13,18 +13,24 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-
 def parksJSON():
     parks = session.query(Parks).all()
-    return jsonify(Restaurants=[p.serialize for p in parks])
+    return jsonify(Parks=[p.serialize for p in parks])
 
 def parkTrailsJSON(park_id):
     trails = session.query(Trails).filter_by(park_id=park_id).all()
     return jsonify(Trails=[t.serialize for t in trails])
 
+def trailJSON(trail_id):
+    trail = session.query(Trails).filter_by(id=trail_id).one()
+    return jsonify(Trail=trail.serialize)
+
 def parks():
     parks = session.query(Parks).all()
     return render_template('parks.html', parks=parks)
+
+def search():
+    return render_template('search.html')
 
 
 def addPark():
@@ -86,7 +92,7 @@ def editPark(park_id):
             #Enforce Authorization
             if uid_cookie.split('|')[0] == str(park.user_id):
                 if request.form['name'] and request.form['lon'] \
-                        and request.form['lat'] and request.form['description']:
+                        and request.form['lat'] and request.form['lat'] and request.form['lon']:
                     park.name = request.form['name']
                     park.lon = request.form['lon']
                     park.lat = request.form['lat']
@@ -117,8 +123,8 @@ def park(park_id):
 
 def trail(park_id, trail_id):
     park = session.query(Parks).filter_by(id=park_id).one()
-    trail = session.query(Trails).filter_by(id=trail_id).one()
-    return render_template('trail.html', trail=trail, park=park)
+    trail = {"description": "Great View","id": 1,"lat": 37.27088,"lon": -112.93951,"name": "Canyon Overlook","park": 1}
+    return render_template('trail.html', trail=trail, park=park, trailJSON=json.dumps(trail))
 
 def addTrail(park_id):
     if request.method == 'POST':
@@ -128,6 +134,8 @@ def addTrail(park_id):
                 and cookies.check_secure_val(uid_cookie):
             user_id = uid_cookie.split('|')[0]
             newTrail = Trails(name=request.form['name'],
+                            lat=request.form['lat'],
+                            lon=request.form['lon'],
                             park_id=park_id, user_id=user_id,
                             description=request.form['description'])
             session.add(newTrail)
@@ -151,7 +159,7 @@ def editTrail(park_id, trail_id):
                 and cookies.check_secure_val(uid_cookie):
             #Enforce Authorization
             if uid_cookie.split('|')[0] == str(trail.user_id):
-                if request.form['name'] and request.form['description']:
+                if request.form['name'] and request.form['lat'] and request.form['lon']:
                     trail.name = request.form['name']
                     trail.description = request.form['description']
                     session.add(trail)

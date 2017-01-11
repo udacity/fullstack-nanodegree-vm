@@ -3,17 +3,10 @@
 {% block content %}
 
   <!-- Map -->
-  <div id="map" style="width: 100%; height: 100%;"></div>
-    <script>
-      var map;
-      function initMap() {
-        map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: -34.397, lng: 150.644},
-          zoom: 8
-        });
-      }
-    </script>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9HruWNEZUBfdIyuBEehLKI0whMeX_bAQ&callback=initMap"
-    async defer></script>
+  <div id="map" style="width: 100%; height: 700px;"></div>
+
+  <script type="text/javascript" src="/static/search.js"></script>
+  <script type="text/javascript"> initMap() </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9HruWNEZUBfdIyuBEehLKI0whMeX_bAQ&callback=initMap" async defer></script>
 
 {% endblock %}

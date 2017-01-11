@@ -40,7 +40,7 @@
             if (result) {
               $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
               setTimeout(function(){
-              window.location.href = "/restaurant";}, 4000);
+              window.location.href = "/";}, 0);
             }
             else {
               $('#result').html('Failed to make a server-side call. Check your configuration and console.');
@@ -101,8 +101,8 @@
             if (result) {
               $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
              setTimeout(function() {
-              window.location.href = "/restaurant";
-             }, 4000);
+              window.location.href = "/";
+             }, 0);
             } 
             else if (authResult['error']) {
               console.log('There was an error: ' + authResult['error']);

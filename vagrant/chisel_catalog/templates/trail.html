@@ -20,6 +20,13 @@
         <a href="{{ url_for('deleteTrail', park_id=park.id, trail_id=trail.id) }}">Delete</a>
                 <a href="{{ url_for('editTrail', park_id=park.id, trail_id=trail.id) }}">Edit</a>
     {% endif %}
+
+    <!-- Map -->
+    <div id="map" style="width: 100%; height: 700px;"></div>
+    
+    <script type="text/javascript" src="/static/trail.js"></script>
+    <script type="text/javascript"> initMap({{trailJSON|tojson}}) </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB9HruWNEZUBfdIyuBEehLKI0whMeX_bAQ&callback=initMap" async defer></script>
     
 
 {% endblock %}
