@@ -362,12 +362,12 @@ def newSportItem(sport_id):
     sport = session.query(Sport).filter_by(id=sport_id).one()
     if login_session['user_id'] != sport.user_id:
         return "<script>function myFunction() {alert('You are not authorized to add items to this sport. Please create your own sport in order to add items.');}</script><body onload='myFunction()''>"
-        if request.method == 'POST':
-            newItem = SportItem(name=request.form['name'], description=request.form['description'], sport_id=sport_id, user_id=sport.user_id)
-            session.add(newItem)
-            session.commit()
-            flash('New %s Item Successfully Created' % (newItem.name))
-            return redirect(url_for('showItem', sport_id=sport_id))
+    if request.method == 'POST':
+        newItem = SportItem(name=request.form['name'], description=request.form['description'], sport_id=sport_id, user_id=sport.user_id)
+        session.add(newItem)
+        session.commit()
+        flash('New %s Item Successfully Created' % (newItem.name))
+        return redirect(url_for('showMenu', sport_id=sport_id))
     else:
         return render_template('newitem.html', sport_id=sport_id)
 
@@ -390,7 +390,7 @@ def editSportItem(sport_id, item_id):
         session.add(editedItem)
         session.commit()
         flash('Item Successfully Edited')
-        return redirect(url_for('showItem', sport_id=sport_id))
+        return redirect(url_for('showMenu', sport_id=sport_id))
     else:
         return render_template('edititem.html', sport_id=sport_id, item_id=item_id, item=editedItem)
 
@@ -408,7 +408,7 @@ def deleteSportItem(sport_id, item_id):
         session.delete(itemToDelete)
         session.commit()
         flash('Item Successfully Deleted')
-        return redirect(url_for('showItem', sport_id=sport_id))
+        return redirect(url_for('showMenu', sport_id=sport_id))
     else:
         return render_template('deleteItem.html', item=itemToDelete)
 
