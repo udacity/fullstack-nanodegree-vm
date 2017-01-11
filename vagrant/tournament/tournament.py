@@ -213,9 +213,10 @@ def swissPairings():
     print("%d players, %d rounds" % (len(results), pairCount))
     
     for x in range(0, pairCount):
-    	opponent = x+1
-    	pairings.append((results[x], results[opponent]))
-    	print("%s vs %s" % (results[x][1], results[opponent][1]))
+    	opponent = x+1 # next player is always opponent
+    	pairings.append((results[x][0], results[x][1], results[opponent][0], results[opponent][1]))
+    	print("id %s name %s vs id %s name %s" % (results[x][0], results[x][1], results[opponent][0], results[opponent][1]))
+    	print("total in match: %s" % len(pairings[x]))
  	
     #close connection
     connection.close()
