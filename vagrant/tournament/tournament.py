@@ -203,7 +203,7 @@ def swissPairings():
     random.shuffle(results)
     
     for result in results:
-    	print("name %s" % result[1])
+    	print("id %s name %s" % (result[0], result[1]))
     
     # create swiss pairings
     pairings = [] # start with an empty list
@@ -222,7 +222,4 @@ def swissPairings():
     connection.close()
     
     return pairings
-    
-    # return [(player_id+dx, player_name+dy) for player_id,player_name in players for dx,dy in offsets]
-
 
