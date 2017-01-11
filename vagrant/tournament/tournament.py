@@ -210,9 +210,12 @@ def swissPairings():
     
     pairCount = len(results)/2 # we need half as many pairs as there are players
     
-    for x in range(0, pairCount, 2):
-    	pairings.append((results[x], results[x+1][1]))
-    	print("%s vs %s" % (results[x], results[x+1][1]))
+    print("%d players, %d rounds" % (len(results), pairCount))
+    
+    for x in range(0, pairCount):
+    	opponent = x+1
+    	pairings.append((results[x], results[opponent]))
+    	print("%s vs %s" % (results[x][1], results[opponent][1]))
  	
     #close connection
     connection.close()
