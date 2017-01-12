@@ -1,4 +1,5 @@
 Author: Jordan Shulman
+
 Title: Sport's Item Catalog
 
 -To initiate the database for this program, you must first run the command "python database_setup.py".
