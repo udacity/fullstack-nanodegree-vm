@@ -263,7 +263,7 @@ def sportItemJSON(sport_id):
 
 
 @app.route('/sport/<int:sport_id>/items/<int:item_id>/JSON')
-def sportItemJSON(sport_id, item_id):
+def sportsItemJSON(sport_id, item_id):
     Sport_Item = session.query(SportItem).filter_by(id=item_id).one()
     return jsonify(Sport_Item=Sport_Item.serialize)
 
@@ -420,7 +420,7 @@ def disconnect():
         if login_session['provider'] == 'google':
             gdisconnect()
             del login_session['gplus_id']
-            del login_session['credentials']
+            del login_session['access_token']
         if login_session['provider'] == 'facebook':
             fbdisconnect()
             del login_session['facebook_id']
