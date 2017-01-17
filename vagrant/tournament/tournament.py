@@ -191,7 +191,10 @@ def swissPairings():
     
     # connect to the database server
     connection = connect()
- 
+    
+    # get and store player standings
+    standings = playerStandings()
+    
     # execute the query
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM player_names ORDER BY player_id;")
