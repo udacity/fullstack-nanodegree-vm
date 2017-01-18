@@ -197,23 +197,17 @@ def swissPairings():
     
     # execute the query
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM player_names ORDER BY player_id;")
+    cursor.execute("SELECT COUNT(*) FROM standings;")
     
     # fetch results
     results = cursor.fetchall()
-    
-    # randomize players
-    #random.shuffle(results)
-    
-    for result in results:
-    	print("id %s name %s" % (result[0], result[1]))
     
     # create swiss pairings
     player = [item[0:2] for item in standings]
     
     index = 0 # our starting point
     pairings = []
-    for row in result:
+    for row in results:
         while (index < row[0]):
             pair = player[index] + player[index+1] # Add two neighbors into one pair
             pairings.append(pair)

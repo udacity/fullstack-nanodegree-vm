@@ -44,7 +44,7 @@ FROM player_names LEFT JOIN matches
 ON player_names.player_id = matches.winner_id or player_names.player_id = matches.loser_id
 GROUP BY player_names.player_id;
   
---create view standing
+--create standings view
 CREATE VIEW standings AS
 select matches_count.ID AS ID,
 matches_count.Name AS Name,

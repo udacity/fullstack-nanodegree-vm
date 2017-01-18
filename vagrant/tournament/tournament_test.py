@@ -141,8 +141,6 @@ def testPairings():
                           ])
     actual_pairs = set([frozenset([pid1, pid2]), frozenset([pid3, pid4]), frozenset([pid5, pid6]), frozenset([pid7, pid8])])
     for pair in actual_pairs:
-        print actual_pairs # <-- Here
-        print possible_pairs # <-- and here
         if pair not in possible_pairs:
             raise ValueError(
                 "After one match, players with one win should be paired.")
