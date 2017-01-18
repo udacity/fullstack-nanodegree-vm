@@ -12,7 +12,6 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
-
 def deleteMatches():
     """Remove all the match records from the database."""
     # connect to the database server
@@ -22,10 +21,6 @@ def deleteMatches():
     cursor = connection.cursor()
     cursor.execute("TRUNCATE TABLE matches;")
     
-    #clean up match count and win count
-    cursor.execute("UPDATE player_names SET matches = 0;")
-    cursor.execute("UPDATE player_names SET wins = 0;")
- 	
     # accept the change
     connection.commit()
     
@@ -39,7 +34,7 @@ def deletePlayers():
  
     # execute the query
     cursor = connection.cursor()
-    cursor.execute("TRUNCATE TABLE player_names;")
+    cursor.execute("TRUNCATE TABLE players CASCADE;")
  	
     # accept the change
     connection.commit()
@@ -56,7 +51,7 @@ def countPlayers():
  
     # execute the query
     cursor = connection.cursor()
-    cursor.execute("SELECT COUNT(*) FROM player_names;")
+    cursor.execute("SELECT COUNT(*) FROM players;")
     
     # fetch results
     results = cursor.fetchone()
@@ -90,10 +85,7 @@ def registerPlayer(name):
     # execute the query
     cursor = connection.cursor()
     
-    sql = "INSERT INTO player_names (player_name, wins, matches) VALUES (%s, %s, %s);"
-    data = (bleach.clean(name), 0, 0)
-    
-    cursor.execute(sql, data)
+    cursor.execute("INSERT INTO players (player_name) VALUES (%s);", (bleach.clean(name),))
  	
  	# accept the change
     connection.commit()
@@ -119,10 +111,10 @@ def playerStandings():
     # connect to the database server
     connection = connect()
     
-    # execute the query into player_names
+    # execute the query into players
     cursor = connection.cursor()
     
-    # execute the queries into player_names to get player standings
+    # execute the queries into players to get player standings
     cursor.execute("SELECT * FROM standings;")
 	
     # fetch results
@@ -156,15 +148,6 @@ def reportMatch(winner, loser):
     cursor.execute(sql, data)
     
     print("winner id: %d" % winner)
-    
-    # update wins
-    cursor.execute("UPDATE player_names SET wins = wins + 1 WHERE player_id = %s;", [winner])
-    
-    #update relevant match count
-    sql = "UPDATE player_names SET matches = matches + 1 WHERE player_id = %s OR player_id = %s;"
-    data = (winner, loser)
-    
-    cursor.execute(sql, data)
     
  	# accept the change
     connection.commit()
