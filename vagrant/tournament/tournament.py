@@ -123,7 +123,7 @@ def playerStandings():
     cursor = connection.cursor()
     
     # execute the queries into player_names to get player standings
-    cursor.execute("SELECT * FROM player_names ORDER BY wins DESC;")
+    cursor.execute("SELECT * FROM standings;")
 	
     # fetch results
     results = cursor.fetchall()
@@ -203,24 +203,22 @@ def swissPairings():
     results = cursor.fetchall()
     
     # randomize players
-    random.shuffle(results)
+    #random.shuffle(results)
     
     for result in results:
     	print("id %s name %s" % (result[0], result[1]))
     
     # create swiss pairings
-    pairings = [] # start with an empty list
+    player = [item[0:2] for item in standings]
     
-    pairCount = len(results)/2 # we need half as many pairs as there are players
-    
-    print("%d players, %d rounds" % (len(results), pairCount))
-    
-    for x in range(0, pairCount):
-    	opponent = x+1 # next player is always opponent
-    	pairings.append((results[x][0], results[x][1], results[opponent][0], results[opponent][1]))
-    	print("id %s name %s vs id %s name %s" % (results[x][0], results[x][1], results[opponent][0], results[opponent][1]))
-    	print("total in match: %s" % len(pairings[x]))
- 	
+    index = 0 # our starting point
+    pairings = []
+    for row in result:
+        while (index < row[0]):
+            pair = player[index] + player[index+1] # Add two neighbors into one pair
+            pairings.append(pair)
+            index = index + 2 # Move our pairing cursor up by two
+
     #close connection
     connection.close()
     
