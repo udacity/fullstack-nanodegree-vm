@@ -7,3 +7,11 @@
 -- these lines here.
 
 
+CREATE TABLE players (id SERIAL PRIMARY KEY,
+                      name TEXT);
+
+CREATE TABLE matches (match_id SERIAL PRIMARY KEY,
+                      winner INTEGER,
+                      loser INTEGER,
+                      draw BOOLEAN);
+-- insert into players (id, name) VALUES (DEFAULT, 'Christian');
