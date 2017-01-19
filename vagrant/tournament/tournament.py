@@ -20,7 +20,6 @@ def deleteMatches():
     connection.close()
 
 
-
 def deletePlayers():
     """Remove all the player records from the database."""
     connection = connect()
@@ -36,12 +35,10 @@ def countPlayers():
     cursor = connection.cursor()
     cursor.execute("select count(*) from players;")
     results = cursor.fetchone()
-    number_of_players = results[0] # count
-    print number_of_players
+    number_of_players = results[0]  # count
     connection.commit()
     connection.close()
     return number_of_players
-
 
 
 def registerPlayer(name):
@@ -53,6 +50,12 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute(
+        "insert into players (id, name) VALUES (DEFAULT, %s);", (name, ))
+    connection.commit()
+    connection.close()
 
 
 def playerStandings():
@@ -68,6 +71,18 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute("select players.id, players.name, count(matches.winner) as wins FROM players left join matches on players.id = matches.winner group by players.name, players.id;")
+    standings = [(row[0], row[1], row[2], 0) for row in cursor.fetchall()]
+    # results = cursor.fetchall()
+    print standings
+    connection.commit()
+    connection.close()
+
+    return standings
+
+#
 
 
 def reportMatch(winner, loser):
