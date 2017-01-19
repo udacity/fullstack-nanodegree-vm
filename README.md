@@ -5,16 +5,19 @@ Common code for the Relational Databases and Full Stack Fundamentals courses
 
 This program creates an SQL database for a game tournament and comes with a tester
 for inserting and removing names as well as tracking wins and losses. To run the program,
-navigate to its directory in your command line and set up a vagrant server. Then, you
-can run it on a virtual server using the following command sequence:
+navigate to its directory in your command line and set up a vagrant server using the following two commands:
 
 vagrant up
 
 vagrant ssh
 
-cd /vagrant
+Then, you can set up the tournament database on a virtual server using the following one-step command:
 
-(use cd command to navigate to the directory that has your files, usually /tournament)
+psql -f tournament.sql
+
+Or if you prefer, you can use the following command sequence
+
+cd /vagrant/tournament
 
 psql tournament
 
@@ -24,12 +27,15 @@ psql tournament
 
 \q
 
+Finally, you can run the actual tournament program:
+
+python tournament.py
+
+Or run the tester:
+
 python tournament_test.py
 
-Note that tournament_test.py is a test program, while the actual tournament code is handled by
-tournament.py.
-
-For more information on the command sequence, refer to Vagrant and PSQL command line
+For more information on the command sequences, refer to Vagrant and PSQL command line
 documentation:
 
 https://www.vagrantup.com/docs/
