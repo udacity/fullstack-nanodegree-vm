@@ -8,10 +8,11 @@
 
 DROP DATABASE IF EXISTS tournament;
 CREATE DATABASE tournament;
+\c tournament
 
 CREATE TABLE players(player_id SERIAL PRIMARY KEY, player_name TEXT NOT NULL);
 
-CREATE TABLE matches(match_id SERIAL PRIMARY KEY, winner_id int REFERENCES players(player_id), loser_id INT REFERENCES players(player_id));
+CREATE TABLE matches(match_id SERIAL PRIMARY KEY, winner_id int REFERENCES players(player_id) ON DELETE CASCADE, loser_id INT REFERENCES players(player_id) ON DELETE CASCADE);
 
 --Count how many times each player has won
 CREATE VIEW win_count AS 
