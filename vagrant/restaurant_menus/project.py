@@ -17,6 +17,12 @@ session = DBSession()
 restuarants_url = '/restaurants/<int:restaurant_id>/'
 
 @app.route('/')
+@app.route('/restaurants')
+@app.route('/restaurants/')
+def all_restaurants():
+    restaurants = session.query(Restaurant).all()
+    return render_template('all_restaurants.html', restaurants=restaurants)
+
 @app.route(restuarants_url)
 def restaruant_menu(restaurant_id):
     restaurant = (
