@@ -6,7 +6,7 @@
 <body>
   <h1>{{restaurant.name}}</h1>
   <a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}">Create New Item</a>
-  {% with messages = get_flash_messages() %}
+  {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul>
       {% for message in messages %}
