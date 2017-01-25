@@ -14,7 +14,7 @@ Base.metadata.create_all(engine)
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
-restuarants_url = '/restuarants/<int:restaurant_id>/'
+restuarants_url = '/restaurants/<int:restaurant_id>/'
 
 @app.route('/')
 @app.route(restuarants_url)
@@ -28,11 +28,11 @@ def restaruant_menu(restaurant_id):
 @app.route(restuarants_url + 'new/', methods=['GET', 'POST'])
 def new_menu_item(restaurant_id):
     if request.method == 'POST':
-        newItem = MenuItem(name=request.form['name'],
-                           restaurant_id=restaurant_id)
-        session.add(newItem)
+        new_item = MenuItem(name=request.form['name'],
+                            restaurant_id=restaurant_id)
+        session.add(new_item)
         session.commit()
-        flash("New menu item, %s, created!" % request.form['name'])
+        flash("New menu item, %s, created!" % new_item.name)
         return redirect(url_for('restaruant_menu', restaurant_id=restaurant_id))
     else:
         return render_template('new_menu_item.html',
@@ -44,9 +44,11 @@ def edit_menu_item(restaurant_id, menu_id):
     edited_item = session.query(MenuItem).filter_by(id = menu_id).one()
     if request.method == 'POST':
         if request.form['name']:
+            old_name = edited_item.name
             edited_item.name = request.form['name']
-        session.add(edited_item)
-        session.commit()
+            session.add(edited_item)
+            session.commit()
+            flash('%s is now named %s!' % (old_name, edited_item.name))
         return redirect(url_for('restaruant_menu',
                         restaurant_id=restaurant_id))
     else:
