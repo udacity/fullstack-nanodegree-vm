@@ -11,9 +11,13 @@
 <body>
   <h1>New Menu Item</h1>
   <form action="{{ url_for('new_menu_item', restaurant_id=restaurant_id)}}" method="POST">
-      <p>Name:</p>
-        <input type="text" name="name" size='30'>
-        <input type="submit" value="Create" name="Submit">
+    <label>Name:</label>
+    <div class="row">
+      <input class="col-sm-3" type="text" name="name" size='30' placeholder="Pizza!">
+      <input class="button col-sm-3" type="submit" value="Create" name="Submit">
+    </div>
+    <br>
+    <a class="button" href="{{ url_for('restaruant_menu', restaurant_id = restaurant_id) }}">Cancel</a>
   </form>
 </body>
 </html>

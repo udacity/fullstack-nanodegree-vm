@@ -13,12 +13,12 @@
 <div class="container">
     
   <h1>{{restaurant.name}}</h1>
-  <a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}">Create New Item</a>
   {% with messages = get_flashed_messages() %}
+  <a class="button" href="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}">Create New Item</a>
     {% if messages %}
       <ul>
       {% for message in messages %}
-        <li><strong> {{message}} </strong></li>
+        <strong class="error important"> {{message}} </strong><
       {% endfor %}
       </ul>
     {% endif %}
