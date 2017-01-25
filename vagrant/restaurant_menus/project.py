@@ -1,4 +1,4 @@
-from flask import Flask, render_template, url_for, redirect, request, flash
+from flask import Flask, render_template, url_for, redirect, request, flash, jsonify
 app = Flask(__name__)
 
 from sqlalchemy import create_engine
@@ -15,6 +15,20 @@ DBSession = sessionmaker(bind = engine)
 session = DBSession()
 
 restuarants_url = '/restaurants/<int:restaurant_id>/'
+menu_id_url = '<int:menu_id>/'
+
+# Making an API Endpoint (GET Request)
+@app.route(restuarants_url + 'menu/JSON')
+def restaurant_menu_json(restaurant_id):
+    restaurant = (
+        session.query(Restaurant).filter_by(id = restaurant_id).first())
+    items = session.query(MenuItem).filter_by(restaurant_id = restaurant.id)
+    return jsonify(MenuItems=[item.serialize for item in items])
+
+@app.route(restuarants_url + 'menu/' + menu_id_url + 'JSON')
+def menu_item_json(restaurant_id, menu_id):
+    menu_item = session.query(MenuItem).filter_by(id = menu_id).one()
+    return jsonify(menu_item.serialize)
 
 @app.route('/')
 @app.route('/restaurants')
@@ -44,8 +58,8 @@ def new_menu_item(restaurant_id):
         return render_template('new_menu_item.html',
                                restaurant_id=restaurant_id)
 
-@app.route(restuarants_url + '<int:menu_id>/edit', methods=['GET','POST'])
-@app.route(restuarants_url + '<int:menu_id>/edit/', methods=['GET','POST'])
+@app.route(restuarants_url + menu_id_url + 'edit', methods=['GET','POST'])
+@app.route(restuarants_url + menu_id_url + 'edit/', methods=['GET','POST'])
 def edit_menu_item(restaurant_id, menu_id):
     edited_item = session.query(MenuItem).filter_by(id = menu_id).one()
     if request.method == 'POST':
@@ -63,8 +77,8 @@ def edit_menu_item(restaurant_id, menu_id):
                                menu_id=menu_id,
                                item=edited_item)
 
-@app.route(restuarants_url + '<int:menu_id>/delete', methods=['GET', 'POST'])
-@app.route(restuarants_url + '<int:menu_id>/delete/', methods=['GET', 'POST'])
+@app.route(restuarants_url + menu_id_url + 'delete', methods=['GET', 'POST'])
+@app.route(restuarants_url + menu_id_url + 'delete/', methods=['GET', 'POST'])
 def delete_menu_item(restaurant_id, menu_id):
     to_delete_item = session.query(MenuItem).filter_by(id = menu_id).one()
     if request.method == 'POST':
