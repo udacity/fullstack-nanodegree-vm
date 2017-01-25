@@ -6,15 +6,24 @@
 <body>
   <h1>{{restaurant.name}}</h1>
   <a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}">Create New Item</a>
+  {% with messages = get_flash_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <li><strong> {{message}} </strong></li>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
   {% if items == 0 %}
     <p>There are no menu items!</p>
   {% else %}
     {% for item in items %}
       <div>
-          <p>{{item.name}} - {{item.price}}</p>
-          <p>{{item.description}}</p>
-          <p><a href="{{ url_for('edit_menu_item', restaurant_id=restaurant.id, menu_id=item.id) }}">Edit</a> | <a href="{{ url_for('delete_menu_item', restaurant_id=restaurant.id, menu_id=item.id) }}">Delete</a></p>
-          <br>
+        <p>{{item.name}} - {{item.price}}</p>
+        <p>{{item.description}}</p>
+        <p><a href="{{ url_for('edit_menu_item', restaurant_id=restaurant.id, menu_id=item.id) }}">Edit</a> | <a href="{{ url_for('delete_menu_item', restaurant_id=restaurant.id, menu_id=item.id) }}">Delete</a></p>
+        <br>
       </div>
     {% endfor %}
   {% endif %}
