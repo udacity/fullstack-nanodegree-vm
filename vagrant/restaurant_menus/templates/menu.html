@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+  <title>{{ restaurant.name }}'s Menu</title>
 </head>
 <body>
+
+<div class="container">
+    
   <h1>{{restaurant.name}}</h1>
   <a href="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}">Create New Item</a>
   {% with messages = get_flashed_messages() %}
@@ -27,6 +35,8 @@
       </div>
     {% endfor %}
   {% endif %}
+
+</div>
 
 </body>
 </html>
