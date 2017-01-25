@@ -9,7 +9,8 @@
     <p>Name:</p>
     <input type="text" name="name" size='30' placeholder="{{item.name}}">
     <input type="submit" value="Create" name="Submit">
-    <a href="{{url_for('restaurant_menu', restaurant_id=item.restaurant_id))}}">Cancel</a>
+    <br>
+    <a href="{{ url_for('restaruant_menu', restaurant_id = restaurant_id) }}">Cancel</a>
   </form>
 </body>
 </html>
