@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>All Restaurants</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+</head>
+<body>
+<h1>All Restaurants</h1>
+<br>
+<br>
+{% for restaurant in restaurants %}
+  <li>
+    <h2>    
+      <a href="{{ url_for('restaruant_menu', restaurant_id = restaurant.id) }}">{{ restaurant.name }}</a>
+    </h2>
+  </li>
+{% endfor %}
+</body>
+</html>
