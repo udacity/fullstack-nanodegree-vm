@@ -18,6 +18,7 @@ import requests
 
 app = Flask(__name__)
 
+# Load JSON secrets as needed
 CLIENT_ID = json.loads(open('client_secrets.json', 'r').read())['web']['client_id']
 
 APPLICATION_NAME = "Item Catalog"
