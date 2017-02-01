@@ -33,6 +33,21 @@ session = DBSession()
 
 # Front page
 @app.route('/')
+def showMainPage():
+    return render_template('main.html')
+
+# JSON APIs to view Items in a Category
+@app.route('/catalog/<string:catalog_name>')
+def catalogJSON(catalog_name):
+    catalog = session.query(Category).filter_by(name=catalog_name).one()
+    items = session.query(Item).filter_by(category_name=catalog_name).all()
+    return jsonify(MenuItems=[i.serialize for i in items])
+
+# View details of an item in a category
+@app.route('/catalog/<string:catalog_name>/<string:item_name>/')
+def showItem(item_name):
+    item = session.query(Item).filter_by(name=item_name)
+    return jsonify(item)
 
 # USER LOGIN SYSTEM
 
@@ -186,3 +201,10 @@ def gdisconnect():
         response = make_response(json.dumps('Failed to revoke token for given user.', 400))
         response.headers['Content-Type'] = 'application/json'
         return response
+
+# Network setup
+
+if __name__ == '__main__':
+    app.secret_key = 'super_secret_key'
+    app.debug = True
+    app.run(host='0.0.0.0', port=5000)

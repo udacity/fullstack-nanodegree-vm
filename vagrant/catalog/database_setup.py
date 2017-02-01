@@ -36,8 +36,9 @@ class Item(Base):
     description = Column(String(250))
     price = Column(String(8))
     course = Column(String(250))
-    catalog_id = Column(Integer,ForeignKey('catalog.id'))
-    restaurant = relationship(Category)
+    category_name = Column(String,ForeignKey('catalog.name'))
+    #catalog_id = Column(Integer,ForeignKey('catalog.id'))
+    category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
 
