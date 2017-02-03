@@ -34,7 +34,12 @@ session = DBSession()
 # Front page
 @app.route('/')
 def showMainPage():
-    return render_template('main.html')
+    categories = session.query(Category).order_by(asc(Category.name))
+    if 'username' not in login_session:
+        return render_template('front.html', categories = categories)
+    else:
+        return render_template('front.html', categories = categories)
+
 
 # JSON APIs to view Items in a Category
 @app.route('/catalog/<string:catalog_name>')
