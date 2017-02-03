@@ -11,13 +11,21 @@
 <body>
   <h1>New Menu Item</h1>
   <form action="{{ url_for('new_menu_item', restaurant_id=restaurant_id)}}" method="POST">
-    <label>Name:</label>
     <div class="row">
-      <input class="col-sm-3" type="text" name="name" size='30' placeholder="Pizza!">
-      <input class="button col-sm-3" type="submit" value="Create" name="Submit">
+      <label>Name:</label>
+        <input class="col-sm-3" type="text" name="name" size='30' placeholder="Pizza!">
+      <label>Description:</label>
+        <input class='col-sm-3' type="text" name="description" size='30' placeholder="The best food.">
+      <label>Price:</label>
+        <input class="col-sm-3" type="text" name="price" size='30' placeholder="$13">
+      <label>Course:</label>
+        <input class="col-sm-3" type="text" name="course" size='30' placeholder="Dinner">
+    </div>
+    <div class="row">
+      <a class="button center col-xs-3" href="{{ url_for('restaurant_menu', restaurant_id = restaurant_id) }}">Cancel</a>
+      <input class="button center col-xs-3" type="submit" value="Create" name="Submit">
     </div>
     <br>
-    <a class="button" href="{{ url_for('restaurant_menu', restaurant_id = restaurant_id) }}">Cancel</a>
   </form>
 </body>
 </html>
