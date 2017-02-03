@@ -27,9 +27,11 @@ def render_message(message):
 def all_restaurants():
     #restaurants = session.query(Restaurant).all()
     if len(restaurants) <= 0:
-        return render_template('all_restaurants.html', no_restaurants = 0)
+        return render_template(
+            'all_restaurants.html', restaurants=0)
     else:
-        return render_template('all_restaurants.html', restaurants=restaurants)
+        return render_template(
+            'all_restaurants.html', restaurants=restaurants)
 
 @app.route('/restaurant/new')
 @app.route('/restaurant/new/')
@@ -41,12 +43,29 @@ def new_restaurant():
 @app.route(restuarant_url + '/menu')
 @app.route(restuarant_url + '/menu/')
 def restaurant_menu(restaurant_id):
-    return render_message("This page is the menu for restaurant %s" % restaurant_id)
+    #restaurant = (
+    #    session.query(Restaurant).filter_by(id = restaurant_id).first())
+    #items = session.query(MenuItem).filter_by(restaurant_id = restaurant.id)
+    if len(items) <= 0:
+        return render_template('menu.html',
+                               restaurant=restaurant,
+                               items=0)
+    else:
+        return render_template('menu.html',
+                               restaurant=restaurant,
+                               items=items)
 
 @app.route(restuarant_url + '/edit')
 @app.route(restuarant_url + '/edit/')
 def edit_restaurant(restaurant_id):
-    return render_message("This page will be for editing restaurant %s" % restaurant_id)
+    #restaurant = (
+    #    session.query(Restaurant).filter_by(id = restaurant_id).first())
+    if restaurant:
+        return render_template('edit_restaurant.html',
+                               restaurant=restaurant,
+                               restaurant_id=restaurant_id)
+    else:
+        return redirect(url_for('all_restaurants'))
 
 @app.route(restuarant_url + '/delete')
 @app.route(restuarant_url + '/delete/')

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Edit Menu Item</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+</head>
+<body>
+  <h1>Edit Menu Item</h1>
+  <form action="{{ url_for('edit_restaurant', restaurant_id=restaurant_id)}}" method="POST">
+    <p>Name:</p>
+    <input type="text" name="name" size='30' placeholder="{{restaurant.name}}">
+    <input type="submit" value="Edit" name="Edit">
+    <br>
+    <a class="button" href="{{ url_for('restaurant_menu', restaurant_id=restaurant_id) }}">Cancel</a>
+  </form>
+</body>
+</html>
