@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>New Restaurant</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+</head>
+<body>
+  <h1>New Restaurant</h1>
+  <form action="{{ url_for('new_restaurant') }}" method="POST">
+    <label>Name:</label>
+    <div class="row">
+      <input class="col-sm-3" type="text" name="name" size='30' placeholder="Pizza Palace!">
+      <input class="button col-sm-3" type="submit" value="Create" name="Submit">
+    </div>
+    <br>
+    <a class="button" href="{{ url_for('all_restaurants') }}">Cancel</a>
+  </form>
+</body>
+</html>
