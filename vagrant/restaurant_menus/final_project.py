@@ -70,7 +70,14 @@ def edit_restaurant(restaurant_id):
 @app.route(restuarant_url + '/delete')
 @app.route(restuarant_url + '/delete/')
 def delete_restaurant(restaurant_id):
-    return render_message("This page will be for deleting restaurant %s" % restaurant_id)
+    #restaurant = (
+    #    session.query(Restaurant).filter_by(id = restaurant_id).first())
+    if restaurant:
+        return render_template('delete_restaurant.html',
+                               restaurant=restaurant,
+                               restaurant_id=restaurant_id)
+    else:
+        return redirect(url_for('all_restaurants'))
 
 @app.route(restuarant_url + '/menu/new')
 @app.route(restuarant_url + '/menu/new/')
