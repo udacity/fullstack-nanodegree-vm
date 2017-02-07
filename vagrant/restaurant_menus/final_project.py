@@ -5,48 +5,67 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
-#Fake Restaurants
-restaurant = {'name': 'The CRUDdy Crab', 'id': '1'}
+# Create database
+engine = create_engine('sqlite:///restaurantmenu.db')
+Base.metadata.create_all(engine)
 
-restaurants = [{'name': 'The CRUDdy Crab', 'id': '1'}, {'name':'Blue Burgers', 'id':'2'},{'name':'Taco Hut', 'id':'3'}]
+# Create database connector
+DBSession = sessionmaker(bind = engine)
+session = DBSession()
 
+# Common urls
+restaurant_url = '/restaurant/<int:restaurant_id>'
+menu_id_url = restaurant_url + '/menu/<int:menu_id>'
 
-#Fake Menu Items
-items = [ {'name':'Cheese Pizza', 'description':'made with fresh cheese', 'price':'$5.99','course' :'Entree', 'id':'1'}, {'name':'Chocolate Cake','description':'made with Dutch Chocolate', 'price':'$3.99', 'course':'Dessert','id':'2'},{'name':'Caesar Salad', 'description':'with fresh organic vegetables','price':'$5.99', 'course':'Entree','id':'3'},{'name':'Iced Tea', 'description':'with lemon','price':'$.99', 'course':'Beverage','id':'4'},{'name':'Spinach Dip', 'description':'creamy dip with fresh spinach','price':'$1.99', 'course':'Appetizer','id':'5'} ]
-item =  {'name':'Cheese Pizza','description':'made with fresh cheese','price':'$5.99','course' :'Entree'}
+#Methods used
+methods = ['GET', 'POST']
 
-restuarant_url = '/restaurant/<int:restaurant_id>'
-menu_id_url = restuarant_url + '/menu/<int:menu_id>'
+def get_restaurant_by_id(restaurant_id):
+    """
+    Function for getting a restaurant object given the restaurant id.
+    """
+    return session.query(Restaurant).filter_by(id = restaurant_id).first()
 
-def render_message(message):
-    return render_template('message.html', message=message)
+def get_menu_item_by_id(menu_id):
+    """
+    Function for getting a menu item object given the menu item id.
+    """
+    return session.query(MenuItem).filter_by(id = menu_id).first()
 
 @app.route('/')
 @app.route('/restaurants')
 @app.route('/restaurants/')
 def all_restaurants():
-    #restaurants = session.query(Restaurant).all()
-    if len(restaurants) <= 0:
-        return render_template(
-            'all_restaurants.html', restaurants=0)
-    else:
-        return render_template(
-            'all_restaurants.html', restaurants=restaurants)
+    restaurants = session.query(Restaurant).all()
+    return render_template('all_restaurants.html', restaurants=restaurants)
 
-@app.route('/restaurant/new')
-@app.route('/restaurant/new/')
+@app.route('/restaurant/new', methods=methods)
+@app.route('/restaurant/new/', methods=methods)
 def new_restaurant():
-    return render_template('new_restaurant.html')
+    if request.method == 'POST':
+        restaurant_name = request.form['name']
+        if restaurant_name:
+            new_rest = Restaurant(name=request.form['name'])
+            session.add(new_rest)
+            session.commit()
+            flash("New restaurant, %s, created!" % new_rest.name)
+            return redirect(url_for('all_restaurants'))
+        else:
+            flash("Please enter a restaurant name!")
+            return render_template('new_restaurant.html')
 
-@app.route(restuarant_url)
-@app.route(restuarant_url + '/')
-@app.route(restuarant_url + '/menu')
-@app.route(restuarant_url + '/menu/')
+    else:
+        return render_template('new_restaurant.html')
+
+@app.route(restaurant_url)
+@app.route(restaurant_url + '/')
+@app.route(restaurant_url + '/menu')
+@app.route(restaurant_url + '/menu/')
 def restaurant_menu(restaurant_id):
-    #restaurant = (
-    #    session.query(Restaurant).filter_by(id = restaurant_id).first())
-    #items = session.query(MenuItem).filter_by(restaurant_id = restaurant.id)
-    if len(items) <= 0:
+    restaurant = get_restaurant_by_id(restaurant_id)
+    items = session.query(MenuItem).filter_by(
+        restaurant_id = restaurant.id).all()
+    if not items:
         return render_template('menu.html',
                                restaurant=restaurant,
                                items=0)
@@ -55,11 +74,25 @@ def restaurant_menu(restaurant_id):
                                restaurant=restaurant,
                                items=items)
 
-@app.route(restuarant_url + '/edit')
-@app.route(restuarant_url + '/edit/')
+@app.route(restaurant_url + '/edit', methods=methods)
+@app.route(restaurant_url + '/edit/', methods=methods)
 def edit_restaurant(restaurant_id):
-    #restaurant = (
-    #    session.query(Restaurant).filter_by(id = restaurant_id).first())
+    restaurant = get_restaurant_by_id(restaurant_id)
+    if request.method == 'POST':
+        restaurant_name = request.form['name']
+        if restaurant_name:
+            old_name = restaurant.name
+            restaurant.name = restaurant_name
+            session.add(restaurant)
+            session.commit()
+            flash('%s is now named %s!' % (old_name, restaurant.name))
+            return redirect(url_for('restaurant_menu',
+                                    restaurant_id=restaurant.id))
+        else:
+            flash("Please enter a restaurant name!")
+            return render_template('edit_restaurant.html',
+                                   restaurant=restaurant,
+                                   restaurant_id=restaurant_id)
     if restaurant:
         return render_template('edit_restaurant.html',
                                restaurant=restaurant,
@@ -67,73 +100,132 @@ def edit_restaurant(restaurant_id):
     else:
         return redirect(url_for('all_restaurants'))
 
-@app.route(restuarant_url + '/delete')
-@app.route(restuarant_url + '/delete/')
+@app.route(restaurant_url + '/delete', methods=methods)
+@app.route(restaurant_url + '/delete/', methods=methods)
 def delete_restaurant(restaurant_id):
-    #restaurant = (
-    #    session.query(Restaurant).filter_by(id = restaurant_id).first())
+    restaurant = get_restaurant_by_id(restaurant_id)
     if restaurant:
-        return render_template('delete_restaurant.html',
-                               restaurant=restaurant,
-                               restaurant_id=restaurant_id)
+        if request.method == 'POST':
+            if request.form['Delete']:
+                deleted_name = restaurant.name
+                session.delete(restaurant)
+                session.commit()
+                flash('%s was deleted.' % deleted_name)
+                return redirect(url_for('all_restaurants'))
+        else:
+            return render_template('delete_restaurant.html',
+                                   restaurant=restaurant,
+                                   restaurant_id=restaurant_id)
     else:
         return redirect(url_for('all_restaurants'))
 
-@app.route(restuarant_url + '/menu/new')
-@app.route(restuarant_url + '/menu/new/')
+@app.route(restaurant_url + '/menu/new', methods=methods)
+@app.route(restaurant_url + '/menu/new/', methods=methods)
 def new_menu_item(restaurant_id):
-    if request.method == 'POST':
-        # new_item = MenuItem(name=request.form['name'],
-        #                    restaurant_id=restaurant_id)
-        #session.add(new_item)
-        #session.commit()
-        #flash("New menu item, %s, created!" % new_item.name)
-        #return redirect(url_for('restaruant_menu', restaurant_id=restaurant_id))
-        pass
+    restaurant = get_restaurant_by_id(restaurant_id)
+    if restaurant:
+        if request.method == 'POST':
+            new_item_data = {
+                'name' : request.form['name'],
+                'price' : request.form['price'],
+                'description' : request.form['description'],
+                'course' : request.form['course']               
+            }
+            missing_items = []
+            for name, data in new_item_data.iteritems():
+                if not new_item_data[name]:
+                    missing_items.append(name)
+            if missing_items:
+                flash("Please enter an item %s!" % missing_items)
+                return render_template('new_menu_item.html',
+                                       restaurant=restaurant,
+                                       name_val=new_item_data['name'],
+                                       desc_val=new_item_data['description'],
+                                       price_val=new_item_data['price'],
+                                       course_val=new_item_data['course'])
+            else:
+                new_item = MenuItem(name=new_item_data['name'],
+                                    description=new_item_data['description'],
+                                    price=int(new_item_data['price']),
+                                    course=new_item_data['course'],
+                                    restaurant_id=restaurant.id)
+                session.add(new_item)
+                session.commit()
+                flash("New menu item, %s, created!" % new_item.name)
+                return redirect(url_for(
+                    'restaurant_menu', restaurant_id=restaurant.id))
+        else:
+            return render_template('new_menu_item.html',
+                                   restaurant=restaurant)
     else:
-        return render_template('new_menu_item.html',
-                               restaurant_id=restaurant_id)
+        return redirect(url_for('all_restaurants'))
 
-
-@app.route(menu_id_url + '/edit')
-@app.route(menu_id_url + '/edit/')
+@app.route(menu_id_url + '/edit', methods=methods)
+@app.route(menu_id_url + '/edit/', methods=methods)
 def edit_menu_item(restaurant_id, menu_id):
-    #edited_item = session.query(MenuItem).filter_by(id = menu_id).one()
-    edited_item = item
-    if request.method == 'POST':
-    #    if request.form['name']:
-    #        old_name = edited_item.name
-    #        edited_item.name = request.form['name']
-    #        session.add(edited_item)
-    #        session.commit()
-    #        flash('%s is now named %s!' % (old_name, edited_item.name))
-    #    return redirect(url_for('restaruant_menu',
-    #                    restaurant_id=restaurant_id))
-        pass
+    restaurant = get_restaurant_by_id(restaurant_id)
+    edited_item = get_menu_item_by_id(menu_id)
+    if not restaurant or not edited_item:
+        return redirect(url_for('all_restaurants'))
     else:
-        return render_template('edit_menu_item.html',
-                               restaurant_id=restaurant_id,
-                               menu_id=menu_id,
-                               item=edited_item)
+        if edited_item.restaurant_id != restaurant.id:
+            flash('Sorry, that menu item does not belong to this restaurant.')
+            return redirect('restaurant_menu', restaurant_id=restaurant.id)
+        else:
+            if request.method == 'POST':
+                new_item_data = {
+                    'name' : request.form['name'],
+                    'price' : request.form['price'],
+                    'description' : request.form['description'],
+                    'course' : request.form['course']
+                }
+                missing_items = []
+                for name, data in new_item_data.iteritems():
+                    if not new_item_data[name]:
+                        missing_items.append(name)
+                if missing_items:
+                    flash("Please enter an item %s!" % missing_items)
+                    return render_template('edit_menu_item.html',
+                                           restaurant=restaurant,
+                                           item=edited_item)
+                else:
+                    edited_item.name = new_item_data['name']
+                    edited_item.price = new_item_data['price']
+                    edited_item.description = new_item_data['description']
+                    edited_item.course = new_item_data['course']
+                    session.add(edited_item)
+                    session.commit()
+                    flash('%s has been updated!' % (edited_item.name))
+                    return redirect(url_for(
+                        'restaurant_menu', restaurant_id=restaurant.id))
+            else:
+                return render_template('edit_menu_item.html',
+                                       restaurant=restaurant,
+                                       item=edited_item)
 
-@app.route(menu_id_url + '/delete')
-@app.route(menu_id_url + '/delete/')
+@app.route(menu_id_url + '/delete', methods=methods)
+@app.route(menu_id_url + '/delete/', methods=methods)
 def delete_menu_item(restaurant_id, menu_id):
-    # to_delete_item = session.query(MenuItem).filter_by(id = menu_id).one()
-    to_delete_item = item
-    if request.method == 'POST':
-    #    if request.form['Delete']:
-    #        session.delete(to_delete_item)
-    #        session.commit()
-    #        flash('%s was deleted.' % to_delete_item.name)
-    #    return redirect(url_for('restaruant_menu',
-    #                            restaurant_id=restaurant_id))
-        pass
+    restaurant = get_restaurant_by_id(restaurant_id)
+    to_delete_item = get_menu_item_by_id(menu_id)
+    if not restaurant or not to_delete_item:
+        return redirect(url_for('all_restaurants'))
     else:
-        return render_template('delete_menu_item.html',
-                               restaurant_id=restaurant_id,
-                               menu_id=menu_id,
-                               item=to_delete_item)
+        if to_delete_item.restaurant_id != restaurant.id:
+            flash('Sorry, that menu item does not belong to this restaurant.')
+            return redirect('restaurant_menu', restaurant_id=restaurant.id)
+        else:
+            if request.method == 'POST':
+                if request.form['Delete']:
+                    session.delete(to_delete_item)
+                    session.commit()
+                    flash('%s was deleted.' % to_delete_item.name)
+                return redirect(url_for('restaurant_menu',
+                                        restaurant_id=restaurant_id))
+            else:
+                return render_template('delete_menu_item.html',
+                                       restaurant=restaurant,
+                                       item=to_delete_item)
 
 
 
