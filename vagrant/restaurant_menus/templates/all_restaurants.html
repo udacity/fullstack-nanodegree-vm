@@ -9,18 +9,33 @@
   <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
 </head>
 <body>
+
+
+
 <h1>All Restaurants</h1>
 <br>
+<hr>
 <br>
-<a class="button" href="{{ url_for('new_restaurant') }}"> Add New Restaurant</a>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <strong class="error important"> {{message}} </strong>
+      {% endfor %}
+      </ul>
+      <br>
+    {% endif %}
+  {% endwith %}
+<div class="row">
+  <a class="button col-sm-3" href="{{ url_for('new_restaurant') }}"> Add New Restaurant</a>
+</div>
 <br>
-{% if not no_restaurants == 0 %}
+{% if restaurants%}
   {% for restaurant in restaurants %}
-    <li>
       <h2>    
         <a href="{{ url_for('restaurant_menu', restaurant_id = restaurant.id) }}">{{ restaurant.name }}</a>
       </h2>
-    </li>
+      <br>
   {% endfor %}
 {% else %}
   <h2>There are no restaurants!</h2>

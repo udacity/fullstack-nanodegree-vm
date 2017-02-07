@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Edit Menu Item</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
-  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
-  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
-</head>
-<body>
-  <h1>Edit Menu Item</h1>
+{% extends "restaurant_base.html" %}
+
+{% block content %}
   <form action="{{ url_for('edit_restaurant', restaurant_id=restaurant_id)}}" method="POST">
-    <p>Name:</p>
-    <input type="text" name="name" size='30' placeholder="{{restaurant.name}}">
-    <input type="submit" value="Edit" name="Edit">
+    <div class="row">
+      <label class="col-sm-1">Name:</label>
+      <input class="col-sm-3" type="text" name="name" size='30' value="{{restaurant.name}}">
+    </div>
     <br>
-    <a class="button" href="{{ url_for('restaurant_menu', restaurant_id=restaurant_id) }}">Cancel</a>
+    <div class="row">
+      <a class="col-sm-3 button center" href="{{ url_for('restaurant_menu', restaurant_id=restaurant_id) }}">Cancel</a>
+      <input class="col-sm-3 button center" type="submit" value="Edit" name="Edit">
+    </div>
   </form>
-</body>
-</html>
+{% endblock %}
