@@ -1,21 +1,17 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>All Restaurants</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
   <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
   <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+  <title>New Restaurant</title>
 </head>
 <body>
 
-
-
-<h1>All Restaurants</h1>
-<br>
-<hr>
-<br>
+<div class="container">
+  <h1>New Restaurant</h1>
   {% with messages = get_flashed_messages() %}
     {% if messages %}
       <ul>
@@ -23,26 +19,23 @@
         <strong class="error important"> {{message}} </strong>
       {% endfor %}
       </ul>
-      <br>
     {% endif %}
   {% endwith %}
-<div class="row">
-  <div class="col-xs-3">
-    <a class="button col-xs-3" href="{{ url_for('new_restaurant') }}"> Add New Restaurant</a>
-  </div>
-</div>
+  <form action="{{ url_for('new_restaurant') }}" method="POST">
+    <div class="row">
+      <label class="col-sm-1">Name:</label>
+      <input class="col-sm-3" type="text" name="name" size='30' placeholder="Pizza Palace!">
+    </div>
+    <br>
+    <div class="row">      
+      <a class="button col-sm-3" href="{{ url_for('all_restaurants') }}">Cancel</a>
+      <input class="button col-sm-3" type="submit" value="Create" name="Submit">
+    </div>
+  </form>
 <br>
-{% if restaurants%}
-  <div class="row">    
-  {% for restaurant in restaurants %}
-      <h2 class="col-xs-6">   
-        <a href="{{ url_for('restaurant_menu', restaurant_id = restaurant.id) }}">{{ restaurant.name }}</a>
-      </h2>
-      <br>
-  {% endfor %}
-  </div>
-{% else %}
-  <h2>There are no restaurants!</h2>
-{% endif %}
+<hr>
+<br>
+<a href="{{ url_for('all_restaurants') }}">See all of our affiliated restaurants!</a>
+</div>
 </body>
 </html>

@@ -1,23 +1,36 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>New Menu Item</title>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
-  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
-  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
-</head>
-<body>
-  <h1>New Menu Item</h1>
-  <form action="{{ url_for('new_menu_item', restaurant_id=restaurant_id)}}" method="POST">
-    <label>Name:</label>
+{% extends "restaurant_base.html" %}
+
+{% block content %}
+  <h2>New Menu Item</h2>
+  <form action="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}" method="POST">
     <div class="row">
-      <input class="col-sm-3" type="text" name="name" size='30' placeholder="Pizza!">
-      <input class="button col-sm-3" type="submit" value="Create" name="Submit">
+        <div class="col-xs-3">
+          <label>Name:</label>
+            <input type="text" name="name" size='30' value="{{ name_val }}" placeholder="Pizza!">
+        </div>
+        <div class="col-xs-3 col-xs-offset-1">
+          <label>Price:</label>
+            <input type="text" name="price" size='30' value="{{ price_val }}" placeholder="$13">
+        </div>
+        <div class="col-xs-3 col-xs-offset-1">
+          <label>Course:</label>
+            <input type="text" name="course" size='30' value="{{ course_val }}" placeholder="Dinner">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xs-8">
+          <label>Description:</label>
+          <textarea name="description" size='30' placeholder="The best food in the universe.">{{ desc_val }}</textarea>
+        </div>
+      </div>
+    <div class="row">
+      <div class="col-xs-3">
+        <a class="button center col-xs-3" href="{{ url_for('restaurant_menu', restaurant_id = restaurant.id) }}">Cancel</a>
+      </div>
+      <div class="col-xs-3">
+        <input class="button center col-xs-3" type="submit" value="Create" name="Submit">
+      </div>
     </div>
     <br>
-    <a class="button" href="{{ url_for('restaruant_menu', restaurant_id = restaurant_id) }}">Cancel</a>
   </form>
-</body>
-</html>
+{% endblock %}

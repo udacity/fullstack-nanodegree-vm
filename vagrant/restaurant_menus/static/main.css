@@ -36,10 +36,11 @@ textarea {
 }
 
 input {
-    width: 500px;
     font-size: 20px;
     padding: 2px;
     font-family: monospace;
+    margin:10px;
+    width: 100%;
 }
 
 label {
@@ -61,6 +62,7 @@ hr {
 a {
     min-width: 46px;
     min-height: 46px;
+    font-color: black;
 }
 
 pre {
@@ -74,6 +76,11 @@ pre {
     margin-bottom: 5px;
 }
 
+.subtitle-heading {
+    height: 1px;
+    margin-bottom: 20px;
+}
+
 .heading-rule-bot {
     margin-bottom: 20px;
 }
@@ -81,12 +88,6 @@ pre {
 .error {
     color: red;
     font-weight: bold;
-}
-
-.edit-post-error {
-    font-size: 20pt;
-    margin-top:15px;
-    margin-bottom: 20px;
 }
 
 .important {
@@ -97,206 +98,32 @@ pre {
     max-width: 960px;
 }
 
-.subject {
-    padding: 2%;
-}
-
-.blog-heading {
-    color: black;
-    margin-bottom: 36px;
-    font-weight: bold;
-    font-size: 36pt;
-}
-
-.post-title {
-    font-size: 30pt;
-    font-weight: bold;
-    margin-top: 30px;
-    margin-bottom: 0.1%;
-}
-
-.post-body {
+.item-name {
     font-size: 14pt;
+}
+
+.description {
+    font-size: 10pt;
     max-width: 960px;
     max-height: 500px;
     margin-bottom: 20px;
-}
-
-.signed-in-option {
-    font-size: 20pt;
-    font-weight: bold;
-}
-
-.welcome-title {
-    font-size: 36pt;
-    font-weight: bold;
-}
-
-.figure-head {
-    margin-top: 20px;
-    padding: 1%;
-}
-
-.header-link {
-    font-size: 12pt;
-    text-align: center;
-    margin-top: 3px;
-    margin-bottom: 3px;
 }
 
 * {
     font-family: "Cabin", sans-serif;
 }
 
-@import url(http://weloveiconfonts.com/api/?family=iconicfill|zocial);
-
-/* iconicfill */
-[class*="iconicfill-"]:before {
-  font-family: 'IconicFill', sans-serif;
-}
-
-/* zocial */
-[class*="zocial-"]:before {
-  font-family: 'zocial', sans-serif;
-}
-
-.icon {
-    min-width: 46px;
-    min-height: 46px;
-}
-
-.post-stats {
-    height: 20px;
-    font-size: 14px;
-    text-align: left;
-}
-
-.post-stats-title {
-    font-weight: bold;
-}
-
-.edit-post {
-    color: black;
-    background-color: lightgray;
-    border-color: lightgray;
-}
-
-.datetime {
-    text-align: left;
-}
-
 .button {
-    font-size: 14px;
-    margin-right: 10px;
-    margin-left: 10px;
-    margin-bottom: 10px;
-    width: 100%;
-    font-weight: bold;
-    border-style: outset;
-    border-width: medium;
-}
-
-.edit-post-button {
-    font-size: 16pt;
-    margin-top: 5%;
-    border-style: outset;
-    border-width: medium;
-}
-
-.like-button {
-    background-color: green;
-    color: black;
-    border-color: green;
-}
-
-.dislike-button {
-    background-color: red;
-    color: white;
-    border-color: red;
-}
-
-.disabled {
-    background-color: white;
-    border-color: black;
-}
-
-.disabled-like {
-    color: green;
-}
-
-.disabled-dislike {
-    color: red;
-}
-
-.delete-post-title {
-    margin-top: 30px;
-}
-
-.comments-heading {
     font-size: 20px;
+    margin: 20px;
     font-weight: bold;
-    border-width: 1px;
-    border-bottom-style: solid;
-    margin-bottom: 10px;
-}
-
-.comment {
-    margin-bottom: 20px;
-    border: black;
-    border-width: 1px;
-    border-right-style: solid;
-    border-bottom-style: solid;
-    padding-right: 5px;
-}
-
-.multi-comment {
-    height: 215px;
-    margin: auto;
-    margin-bottom: 20px;
-}
-
-.comment-subject {
-    font-size: 12pt;
-    font-weight: bold;
-    padding-left: 5px;
-}
-
-.comment-content {
-    height: 125px;
-    font-size: 10pt;
-    overflow: hidden;
-    padding: 12px;
-    margin-bottom: 10px;
-}
-
-.comment-stats {
-    font-size: 10pt;
-}
-
-.comment-stats-title {
-    padding-left: 5px;
-    font-weight: bold;
+    border-style: outset;
+    border-width: medium;
+    width: 100%;
+    background: darkgray;
+    font-color: black;
 }
 
 .center {
     text-align: center;
-}
-
-.delete-post-button {
-    margin-bottom: 45px;
-    margin-top: 30px;
-    width: 25%;
-    margin-left: 16.6666667%;
-}
-
-.social-links {
-    text-align: center;
-    font-size: 24px;
-    margin-bottom: 30px;
-}
-
-.contact-me {
-    font-size: 18px;
-    text-align: center;
-    margin: auto;
 }

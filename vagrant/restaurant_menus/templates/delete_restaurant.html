@@ -1,0 +1,21 @@
+{% extends "restaurant_base.html" %}
+
+{% block content %}
+  <h2 class="important error">Are you sure you want to delete {{restaurant.name}}?</h1>
+  <br>
+  <div class="row">
+  <form action="{{ url_for('delete_restaurant', restaurant_id=restaurant.id) }}" method="POST">
+    <div class="row">
+      <div class="col-xs-3">
+        <a class="button col-xs-3 center" href="{{ url_for('restaurant_menu', restaurant_id=restaurant_id) }}"> Cancel </a>        
+      </div>
+      <div class="col-xs-3">
+        <input class="button col-xs-3 center" type="submit" name="Delete" value="Delete">      
+      </div>
+    </div>
+  </div>
+  </form>
+  <br>
+</body>
+</html>
+{% endblock %}
