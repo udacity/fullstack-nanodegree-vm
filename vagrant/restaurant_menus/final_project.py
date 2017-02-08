@@ -32,14 +32,24 @@ def get_menu_item_by_id(menu_id):
     """
     return session.query(MenuItem).filter_by(id = menu_id).first()
 
+def get_restaurant_menu_items_by_id(restaurant_id):
+    """Returns the menu items for the given restaurant id."""
+    return session.query(MenuItem).filter_by(
+        restaurant_id = restaurant_id).all()
+
 @app.route('/')
-@app.route('/restaurants')
 @app.route('/restaurants/')
 def all_restaurants():
     restaurants = session.query(Restaurant).all()
     return render_template('all_restaurants.html', restaurants=restaurants)
 
-@app.route('/restaurant/new', methods=methods)
+@app.route('/restaurants/json/')
+@app.route('/restaurants/JSON/')
+def all_restaurants_json():
+    restaurants = session.query(Restaurant).all()
+    return jsonify(Restaurant=[rest.serialize for rest in restaurants])
+
+
 @app.route('/restaurant/new/', methods=methods)
 def new_restaurant():
     if request.method == 'POST':
@@ -57,24 +67,20 @@ def new_restaurant():
     else:
         return render_template('new_restaurant.html')
 
-@app.route(restaurant_url)
 @app.route(restaurant_url + '/')
-@app.route(restaurant_url + '/menu')
 @app.route(restaurant_url + '/menu/')
 def restaurant_menu(restaurant_id):
     restaurant = get_restaurant_by_id(restaurant_id)
-    items = session.query(MenuItem).filter_by(
-        restaurant_id = restaurant.id).all()
-    if not items:
-        return render_template('menu.html',
-                               restaurant=restaurant,
-                               items=0)
-    else:
-        return render_template('menu.html',
-                               restaurant=restaurant,
-                               items=items)
+    items = get_restaurant_menu_items_by_id(restaurant.id)
+    return render_template('menu.html', restaurant=restaurant, items=items)
 
-@app.route(restaurant_url + '/edit', methods=methods)
+@app.route(restaurant_url + '/menu/json/')
+@app.route(restaurant_url + '/menu/JSON/')
+def restaurant_menu_json(restaurant_id):
+    restaurant = get_restaurant_by_id(restaurant_id)
+    items = get_restaurant_menu_items_by_id(restaurant_id)
+    return jsonify(MenuItem=[item.serialize for item in items])
+
 @app.route(restaurant_url + '/edit/', methods=methods)
 def edit_restaurant(restaurant_id):
     restaurant = get_restaurant_by_id(restaurant_id)
@@ -100,7 +106,6 @@ def edit_restaurant(restaurant_id):
     else:
         return redirect(url_for('all_restaurants'))
 
-@app.route(restaurant_url + '/delete', methods=methods)
 @app.route(restaurant_url + '/delete/', methods=methods)
 def delete_restaurant(restaurant_id):
     restaurant = get_restaurant_by_id(restaurant_id)
@@ -119,7 +124,6 @@ def delete_restaurant(restaurant_id):
     else:
         return redirect(url_for('all_restaurants'))
 
-@app.route(restaurant_url + '/menu/new', methods=methods)
 @app.route(restaurant_url + '/menu/new/', methods=methods)
 def new_menu_item(restaurant_id):
     restaurant = get_restaurant_by_id(restaurant_id)
@@ -160,7 +164,6 @@ def new_menu_item(restaurant_id):
     else:
         return redirect(url_for('all_restaurants'))
 
-@app.route(menu_id_url + '/edit', methods=methods)
 @app.route(menu_id_url + '/edit/', methods=methods)
 def edit_menu_item(restaurant_id, menu_id):
     restaurant = get_restaurant_by_id(restaurant_id)
@@ -203,7 +206,6 @@ def edit_menu_item(restaurant_id, menu_id):
                                        restaurant=restaurant,
                                        item=edited_item)
 
-@app.route(menu_id_url + '/delete', methods=methods)
 @app.route(menu_id_url + '/delete/', methods=methods)
 def delete_menu_item(restaurant_id, menu_id):
     restaurant = get_restaurant_by_id(restaurant_id)
@@ -226,6 +228,12 @@ def delete_menu_item(restaurant_id, menu_id):
                 return render_template('delete_menu_item.html',
                                        restaurant=restaurant,
                                        item=to_delete_item)
+
+@app.route(menu_id_url + '/json/')
+@app.route(menu_id_url + '/JSON/')
+def menu_item_json(restaurant_id, menu_id):
+    menu_item = get_menu_item_by_id(menu_id)
+    return jsonify(MenuItems=[menu_item.serialize])
 
 
 
