@@ -27,16 +27,20 @@
     {% endif %}
   {% endwith %}
 <div class="row">
-  <a class="button col-sm-3" href="{{ url_for('new_restaurant') }}"> Add New Restaurant</a>
+  <div class="col-xs-3">
+    <a class="button col-xs-3" href="{{ url_for('new_restaurant') }}"> Add New Restaurant</a>
+  </div>
 </div>
 <br>
 {% if restaurants%}
+  <div class="row">    
   {% for restaurant in restaurants %}
-      <h2>    
+      <h2 class="col-xs-6">   
         <a href="{{ url_for('restaurant_menu', restaurant_id = restaurant.id) }}">{{ restaurant.name }}</a>
       </h2>
       <br>
   {% endfor %}
+  </div>
 {% else %}
   <h2>There are no restaurants!</h2>
 {% endif %}

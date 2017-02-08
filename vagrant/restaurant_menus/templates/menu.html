@@ -4,13 +4,21 @@
   {% if not items %}
     <h2>There are no menu items!</h2>
   {% else %}
+    <div class="row">
+      <h2 class="col-xs-12 center">Menu</h2>
+    </div>
+    <div class="row">
+      <hr class="col-xs-8 col-xs-offset-2 subtitle-heading">      
+    </div>
+    <div class="row">
     {% for item in items %}
-      <div>
-        <p><b>{{item.name}}</b> - {{item.price}}</p>
-        <p>{{item.description}}</p>
+      <div class="col-md-6 col-xs-12">
+        <p class="item-name"><b>{{item.name}}</b> - {{item.price}}</p>
+        <p class="description">{{item.description}}</p>
         <p><a href="{{ url_for('edit_menu_item', restaurant_id=restaurant.id, menu_id=item.id) }}">Edit</a> | <a href="{{ url_for('delete_menu_item', restaurant_id=restaurant.id, menu_id=item.id) }}">Delete</a></p>
         <br>
       </div>
     {% endfor %}
+    </div>
   {% endif %}
 {% endblock %}
