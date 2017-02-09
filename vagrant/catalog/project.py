@@ -111,8 +111,8 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
         
-        stored_credentials = login_session.get('credentials')
-        stored_gplus_id = login_session.get('gplus_id')
+    stored_credentials = login_session.get('credentials')
+    stored_gplus_id = login_session.get('gplus_id')
     
     if stored_credentials is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('Current user is already connected.'),200)
@@ -138,7 +138,7 @@ def gconnect():
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
-    login_session['user_id'] = user_id
+        login_session['user_id'] = user_id
     
     output = ''
     output += '<h1>Welcome, '
