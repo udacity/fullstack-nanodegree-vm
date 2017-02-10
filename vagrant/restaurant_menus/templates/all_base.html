@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Restauranterator</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+</head>
+<body>
+
+<div class="row">
+  <h1>Restauranterator</h1>
+</div>
+<div class="row">
+  <div class="col-xs-offset-6 col-xs-3">
+    <a href="{{ url_for('show_login') }}">Login</a>      
+  </div>
+  <div class="col-xs-3">
+    <a href="{{ url_for('gdisconnect') }}">Logout</a>
+  </div>
+</div>
+<br>
+<hr class="heading-rule">
+<br>
+
+  {% block content %}
+  {% endblock %}
+
+</body>
+</html>
