@@ -5,6 +5,9 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
+from flask import session as login_session
+import random, string
+
 # Create database
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.create_all(engine)
@@ -36,6 +39,13 @@ def get_restaurant_menu_items_by_id(restaurant_id):
     """Returns the menu items for the given restaurant id."""
     return session.query(MenuItem).filter_by(
         restaurant_id = restaurant_id).all()
+
+@app.route('/login/')
+def show_login():
+    state = ''.join(random.choice(
+        string.ascii_uppoercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    return "The current session state is %s" % login_session['state']
 
 @app.route('/')
 @app.route('/restaurants/')
