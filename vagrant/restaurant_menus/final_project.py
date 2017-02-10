@@ -43,7 +43,7 @@ def get_restaurant_menu_items_by_id(restaurant_id):
 @app.route('/login/')
 def show_login():
     state = ''.join(random.choice(
-        string.ascii_uppoercase + string.digits) for x in xrange(32))
+        string.ascii_uppercase + string.digits) for x in xrange(32))
     login_session['state'] = state
     return "The current session state is %s" % login_session['state']
 
