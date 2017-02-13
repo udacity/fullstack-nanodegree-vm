@@ -2,7 +2,6 @@
 # 
 # A buggy web service in need of a database.
 
-import datetime
 from flask import Flask, request, redirect, url_for
 
 from forumdb_initial import get_posts, add_post
