@@ -35,11 +35,33 @@ session = DBSession()
 @app.route('/')
 def showMainPage():
     categories = session.query(Category).order_by(asc(Category.name))
-    if 'username' not in login_session:
-        return render_template('front.html', categories = categories)
-    else:
-        return render_template('front.html', categories = categories)
+    return render_template('front.html', categories = categories)
+    #if 'username' not in login_session:
+    #    return render_template('front.html', categories = categories)
+    #else:
+    #    return render_template('front.html', categories = categories)
 
+@app.route('/catalog/')
+def showCategory():
+    categories = session.query(Category).order_by(asc(Category.name))
+    return render_template('categories.html', categories=categories)
+    #if 'username' not in login_session:
+    #   return render_template('publicrestaurants.html', restaurants = restaurants)
+    #else:
+    #   return render_template('restaurants.html', restaurants=restaurants)
+
+@app.route('/catalog/new/', methods=['GET', 'POST'])
+def newCategory():
+    if 'username' not in login_session:
+        return redirect('/login')
+    if request.method == 'POST':
+        newCategory = Category(name=request.form['name'])
+        session.add(newCategory)
+        flash('New Category %s Successfully Created' % newCategory.name)
+        session.commit()
+        return redirect(url_for('showMainPage'))
+    else:
+        return render_template('newCategory.html')
 
 # JSON APIs to view Items in a Category
 @app.route('/catalog/<string:catalog_name>')
@@ -99,7 +121,7 @@ def gconnect():
 
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token['sub']
-    if result['user_id'] != gplus_id:
+    if result['gplus_id'] != gplus_id:
         response = make_response(json.dumps("Token's user ID doesn't match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
@@ -138,7 +160,7 @@ def gconnect():
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
-        login_session['user_id'] = user_id
+        login_session['gplus_id'] = user_id
     
     output = ''
     output += '<h1>Welcome, '

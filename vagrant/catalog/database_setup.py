@@ -13,10 +13,21 @@ class User(Base):
     email = Column(String(250), nullable=False)
     picture = Column(String(250))
 
+    @property
+    def serialize(self):
+        """Return object data in easily serializeable format"""
+        return {
+            'user_id' : self.id,
+            'name' : self.name,
+            'email' : self.email,
+            'picture' : self.picture,
+    }
+
 class Category(Base):
     __tablename__ = 'catalog'
-   
+    
     id = Column(Integer, primary_key=True)
+    #user_id = Column(Integer, ForeignKey('user.id'))
     name = Column(String(250), nullable=False)
 
     @property
@@ -24,6 +35,7 @@ class Category(Base):
         """Return object data in easily serializeable format"""
         return {
             'name'         : self.name,
+            #'user_id'      : self.user_id,
             'id'           : self.id,
         }
  
