@@ -5,6 +5,20 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Restaurant, MenuItem
 
+from flask import session as login_session
+import random, string
+
+from oauth2client.client import flow_from_clientsecrets
+from oauth2client.client import FlowExchangeError
+import httplib2
+import json
+from flask import make_response
+import requests
+
+CLIENT_ID = json.loads(
+    open('client_secrets.json', 'r').read())['web']['client_id']
+APPLICATION_NAME = "Restauranterator"
+
 # Create database
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.create_all(engine)
@@ -37,6 +51,126 @@ def get_restaurant_menu_items_by_id(restaurant_id):
     return session.query(MenuItem).filter_by(
         restaurant_id = restaurant_id).all()
 
+def make_json_response(message, code):
+    """
+    Returns a json response with the given message and code.
+
+    response = make_json_response("Invalid state", 401)
+    """
+    response = make_response(json.dumps(message), code)
+    response.headers['Content-Type'] = 'application/json'
+    return response
+
+
+@app.route('/gconnect', methods=['POST'])
+def gconnect():
+    """Logs the user in using Google third party authentication."""
+
+    if request.args.get('state') != login_session['state']:
+        return make_json_response('Invalid state parameter', 401)
+    code = request.data
+
+    try:
+        # Upgrade the authorization code into a credentials object
+        oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
+        oauth_flow.redirect_uri = 'postmessage'
+        credentials = oauth_flow.step2_exchange(code)
+    except FlowExchangeError:
+        return make_json_response(
+            'Failed to upgrade the authorization code', 401)
+
+    # Check that the access token is valid
+    access_token = credentials.access_token
+    url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s' % (
+        access_token))
+    h = httplib2.Http()
+    result = json.loads(h.request(url, 'GET')[1])
+
+    # If there was an error in the access token info, abort.
+    if result.get('error') is not None:
+        return make_json_response(result.get('error'), 500)
+
+    # Verify that the access token is used for the intended user.
+    gplus_id = credentials.id_token['sub']
+    if result['user_id'] != gplus_id:
+        message = "Token's user ID doesn't match given user ID."
+        return make_json_response(message, 401)
+
+    # Verify that the access token is valid for this app
+    if result['issued_to'] != CLIENT_ID:
+        message = "Token's client ID does not match app's."
+        print message
+        return make_json_response(message, 401)
+
+    # Check to see if user is already logged in
+    stored_credentials = login_session.get('credentials')
+    stored_gplus_id = login_session.get('gplus_id')
+    if stored_credentials is not None and gplus_id == stored_gplus_id:
+        return make_json_response('Current user is already connected.', 200)
+
+    # Store the access token in the session for later use.
+    login_session['credentials'] = credentials
+    login_session['gplus_id'] = gplus_id
+
+    # Get user info
+    userinfo_url = "https://www.googleapis.com/oauth2/v1/userinfo"
+    params = {'access_token': credentials.access_token, 'alt' : 'json'}
+    answer = requests.get(userinfo_url, params=params)
+    data = json.loads(answer.text)
+
+    login_session['username'] = data['name']
+    login_session['picture'] = data['picture']
+    login_session['email'] = data['email']
+
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    flash("You are now logged in as %s" % login_session['username'])
+    print "done!"
+    return output
+
+@app.route("/gdisconnect")
+def gdisconnect():
+    """
+    Disconnects a logged in user. Should only be used with
+    a connected user.
+    """
+    credentials = login_session.get('credentials')
+    if credentials is None:
+        return make_json_response("Current user not connected.", 401)
+
+    # Execute HTTP GET request to revoke current token.
+    access_token = credentials.access_token
+    url = ('https://accounts.google.com/o/oauth2/revoke?token=%s' % (
+        access_token))
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[0]
+
+    if result['status'] == '200':
+        # Reset the users session.
+        del login_session['credentials']
+        del login_session['gplus_id']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+
+        return make_json_response('Successfully disconnected.', 200)
+    else:
+        # For whatever reason, the given token was invalid.
+        return make_json_response(
+            'Failed to revoke token for given user.', 400)
+
+@app.route('/login/')
+def show_login():
+    state = ''.join(random.choice(
+        string.ascii_uppercase + string.digits) for x in xrange(32))
+    login_session['state'] = state
+    return render_template('login.html', STATE=state)
+
 @app.route('/')
 @app.route('/restaurants/')
 def all_restaurants():
@@ -52,6 +186,8 @@ def all_restaurants_json():
 
 @app.route('/restaurant/new/', methods=methods)
 def new_restaurant():
+    if 'username' not in login_session:
+        return redirect('/login')
     if request.method == 'POST':
         restaurant_name = request.form['name']
         if restaurant_name:
@@ -83,6 +219,8 @@ def restaurant_menu_json(restaurant_id):
 
 @app.route(restaurant_url + '/edit/', methods=methods)
 def edit_restaurant(restaurant_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     restaurant = get_restaurant_by_id(restaurant_id)
     if request.method == 'POST':
         restaurant_name = request.form['name']
@@ -108,6 +246,8 @@ def edit_restaurant(restaurant_id):
 
 @app.route(restaurant_url + '/delete/', methods=methods)
 def delete_restaurant(restaurant_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     restaurant = get_restaurant_by_id(restaurant_id)
     if restaurant:
         if request.method == 'POST':
@@ -126,6 +266,8 @@ def delete_restaurant(restaurant_id):
 
 @app.route(restaurant_url + '/menu/new/', methods=methods)
 def new_menu_item(restaurant_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     restaurant = get_restaurant_by_id(restaurant_id)
     if restaurant:
         if request.method == 'POST':
@@ -166,6 +308,8 @@ def new_menu_item(restaurant_id):
 
 @app.route(menu_id_url + '/edit/', methods=methods)
 def edit_menu_item(restaurant_id, menu_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     restaurant = get_restaurant_by_id(restaurant_id)
     edited_item = get_menu_item_by_id(menu_id)
     if not restaurant or not edited_item:
@@ -208,6 +352,8 @@ def edit_menu_item(restaurant_id, menu_id):
 
 @app.route(menu_id_url + '/delete/', methods=methods)
 def delete_menu_item(restaurant_id, menu_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     restaurant = get_restaurant_by_id(restaurant_id)
     to_delete_item = get_menu_item_by_id(menu_id)
     if not restaurant or not to_delete_item:

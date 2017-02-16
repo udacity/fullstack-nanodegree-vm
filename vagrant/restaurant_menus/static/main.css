@@ -102,6 +102,13 @@ pre {
     font-size: 14pt;
 }
 
+.header-link {
+    font-size: 12pt;
+    text-align: center;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
 .description {
     font-size: 10pt;
     max-width: 960px;
