@@ -47,9 +47,28 @@ def get_menu_item_by_id(menu_id):
     """
     return session.query(MenuItem).filter_by(id = menu_id).first()
 
+def create_user(login_session):
+    new_user = User(name=login_session['username'],
+                    email=login_session['email'],
+                    picture=login_session['picture'])
+    session.add(new_user)
+    session.commit()
+    return get_user_id_by_email(login_session['email'])
+
 def get_user_by_id(user_id):
     """Function for getting a user object given the user id."""
     return session.query(User).filter_by(id = user_id).one()
+
+def get_user_id_by_email(email):
+    """
+    Function for getting the user id for the given email. If the user
+    id cannot be found, returns None.
+    """
+    try:
+        user = session.query(User).filter_by(email = email).one()
+        return user.id
+    except:
+        return None
 
 def get_restaurant_menu_items_by_id(restaurant_id):
     """Returns the menu items for the given restaurant id."""
@@ -127,6 +146,14 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # See if user exists, and create the user.
+    user_id = get_user_id_by_email(login_session['email'])
+    if not user_id:
+        user_id = create_user(login_session)
+
+    login_session['user_id'] = user_id
+
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -176,14 +203,6 @@ def show_login():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
-def create_user(login_session):
-    new_user = User(name = login_session['username'],
-                    email=login_session['email'],
-                    picture=login_session['picture'])
-    session.add(new_user)
-    session.commit()
-    user = session.query(User).filter_by(email=login_session['email']).one()
-    return user.id
 
 @app.route('/')
 @app.route('/restaurants/')
@@ -205,7 +224,8 @@ def new_restaurant():
     if request.method == 'POST':
         restaurant_name = request.form['name']
         if restaurant_name:
-            new_rest = Restaurant(name=request.form['name'])
+            new_rest = Restaurant(
+                name=request.form['name'], user_id=login_session['user_id'])
             session.add(new_rest)
             session.commit()
             flash("New restaurant, %s, created!" % new_rest.name)
@@ -222,7 +242,18 @@ def new_restaurant():
 def restaurant_menu(restaurant_id):
     restaurant = get_restaurant_by_id(restaurant_id)
     items = get_restaurant_menu_items_by_id(restaurant.id)
-    return render_template('menu.html', restaurant=restaurant, items=items)
+    creator = get_user_by_id(restaurant.user_id)
+    if login_session['user_id']:
+        if restaurant.user_id = login_session['user_id']:
+            return render_template('menu.html',
+                                   restaurant=restaurant,
+                                   items=items,
+                                   creator=creator)
+    else:
+        return render_template('public_menu.html',
+                               restaurant=restaurant,
+                               items=items,
+                               creator=creator)
 
 @app.route(restaurant_url + '/menu/json/')
 @app.route(restaurant_url + '/menu/JSON/')
@@ -289,14 +320,14 @@ def new_menu_item(restaurant_id):
                 'name' : request.form['name'],
                 'price' : request.form['price'],
                 'description' : request.form['description'],
-                'course' : request.form['course']               
+                'course' : request.form['course']
             }
             missing_items = []
             for name, data in new_item_data.iteritems():
                 if not new_item_data[name]:
                     missing_items.append(name)
             if missing_items:
-                flash("Please enter an item %s!" % missing_items)
+                flash("Please enter an item %s!" % (missing_items,))
                 return render_template('new_menu_item.html',
                                        restaurant=restaurant,
                                        name_val=new_item_data['name'],
@@ -308,7 +339,8 @@ def new_menu_item(restaurant_id):
                                     description=new_item_data['description'],
                                     price=int(new_item_data['price']),
                                     course=new_item_data['course'],
-                                    restaurant_id=restaurant.id)
+                                    restaurant_id=restaurant.id,
+                                    user_id=login_session['user_id'])
                 session.add(new_item)
                 session.commit()
                 flash("New menu item, %s, created!" % new_item.name)
