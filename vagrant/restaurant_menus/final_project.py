@@ -31,9 +31,10 @@ session = DBSession()
 restaurant_url = '/restaurant/<int:restaurant_id>'
 menu_id_url = restaurant_url + '/menu/<int:menu_id>'
 
-#Methods used
+# Methods used
 methods = ['GET', 'POST']
 
+# Helper functions
 def get_restaurant_by_id(restaurant_id):
     """
     Function for getting a restaurant object given the restaurant id.
@@ -45,6 +46,10 @@ def get_menu_item_by_id(menu_id):
     Function for getting a menu item object given the menu item id.
     """
     return session.query(MenuItem).filter_by(id = menu_id).first()
+
+def get_user_by_id(user_id):
+    """Function for getting a user object given the user id."""
+    return session.query(User).filter_by(id = user_id).one()
 
 def get_restaurant_menu_items_by_id(restaurant_id):
     """Returns the menu items for the given restaurant id."""
