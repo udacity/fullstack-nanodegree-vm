@@ -249,7 +249,7 @@ def restaurant_menu(restaurant_id):
     items = get_restaurant_menu_items_by_id(restaurant.id)
     creator = get_user_by_id(restaurant.user_id)
     if login_session['user_id']:
-        if restaurant.user_id = login_session['user_id']:
+        if restaurant.user_id == login_session['user_id']:
             return render_template('menu.html',
                                    restaurant=restaurant,
                                    items=items,
