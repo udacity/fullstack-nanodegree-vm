@@ -1,0 +1,65 @@
+{% extends "main.html" %}
+{% block content %}
+{% include "header.html" %}
+
+<div class="row top-menu">
+    <div class="col-md-10"></div>
+    <div class="col-md-2 text-right">
+    </div>
+</div>
+<div class="row divider blue">
+    <div class="col-md-12"></div>
+</div>
+<div class="row banner main">
+    <div class="col-md-1"></div>
+    <div class="col-md-11 padding-none">
+        <h1>{{self.name}}</h1>
+    </div>
+</div>
+
+<!--
+ <div class = 'flash'>
+ {% with messages = get_flashed_messages() %}
+ {% if messages %}
+ 
+ <ul>
+ {% for message in messages %}
+ <li> <strong> {{ message }} </strong> </li>
+ {% endfor %}
+ </ul>
+ {% endif %}
+ {% endwith %}
+ 
+ </div>
+ -->
+<div class="row padding-top padding-bottom">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 padding-none">
+        {%if 'username' not in session %}
+        You must login to edit categories
+        {% else %}
+        <dv>
+        <a href="{{url_for('editCategory')}}">
+            <button class="btn btn-default" id="edit-category">
+                <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Edit
+            </button>
+        </a>
+        <a href="{{url_for('deleteCategory')}}">
+            <button class="btn btn-default" id="delete-category">
+                <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Delete
+            </button>
+        </a>
+        </div>
+        <div>
+            <a href="{{url_for('newItem')}}">
+                <button class="btn btn-default" id="new-item">
+                    <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Item
+                </button>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+{% endblock %}

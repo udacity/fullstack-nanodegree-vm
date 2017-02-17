@@ -41,10 +41,11 @@ def showMainPage():
     #else:
     #    return render_template('front.html', categories = categories)
 
+# Catalog category management
 @app.route('/catalog/')
 def showCategory():
     categories = session.query(Category).order_by(asc(Category.name))
-    return render_template('categories.html', categories=categories)
+    return render_template('category.html', categories=categories)
     #if 'username' not in login_session:
     #   return render_template('publicrestaurants.html', restaurants = restaurants)
     #else:
@@ -62,6 +63,22 @@ def newCategory():
         return redirect(url_for('showMainPage'))
     else:
         return render_template('newCategory.html')
+
+@app.route('/catalog/edit/', methods=['GET', 'POST'])
+def editCategory():
+    #TODO: Implement
+    return
+
+@app.route('/catalog/delete/', methods=['GET', 'POST'])
+def deleteCategory():
+    #TODO: Implement
+    return
+
+# Catalog item addition
+@app.route('/catalog/items/new', methods=['GET', 'POST'])
+def newItem():
+    #TODO: Implement
+    return
 
 # JSON APIs to view Items in a Category
 @app.route('/catalog/<string:catalog_name>')
@@ -121,7 +138,7 @@ def gconnect():
 
     # Verify that the access token is used for the intended user.
     gplus_id = credentials.id_token['sub']
-    if result['gplus_id'] != gplus_id:
+    if result['user_id'] != gplus_id:
         response = make_response(json.dumps("Token's user ID doesn't match given user ID."), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
