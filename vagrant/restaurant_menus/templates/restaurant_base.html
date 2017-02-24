@@ -11,19 +11,22 @@
 <body>
 
 <div class="container">
-    
+<div class="row">
+  <figure class="creator col-xs-2 icon">
+    <img class="img-responsive" src="{{ creator.picture }}">
+    <figcaption>from {{ creator.name }}</figcaption>
+  </figure>
   <h1>{{restaurant.name}}</h1>
-  <div class="row">
-    <div class="col-xs-3">
-      <a class="button col-xs-3 center" href="{{ url_for('new_menu_item', restaurant_id=restaurant.id)}}"> Create New Item </a>
+</div>    
+    <div class="row">
+      <div class="col-xs-offset-10 col-xs-2">
+        {% if 'username' not in session %}
+          <a href="{{ url_for('show_login') }}">Login</a>      
+        {% else %}
+          <a href="{{ url_for('disconnect') }}">Logout</a>
+        {% endif %}
+      </div>
     </div>
-    <div class="col-xs-3">
-      <a class="button col-xs-3 center" href="{{ url_for('edit_restaurant', restaurant_id=restaurant.id) }}"> Edit Restaurant </a>      
-    </div>
-    <div class="col-xs-3 center">
-      <a class="button col-xs-3 center" href="{{ url_for('delete_restaurant', restaurant_id=restaurant.id) }}"> Delete Restaurant </a>      
-    </div>
-  </div>
 <br>
 <hr class="heading-rule">
 <br>

@@ -85,6 +85,26 @@ def make_json_response(message, code):
     response.headers['Content-Type'] = 'application/json'
     return response
 
+def login_or_create_user(login_session):
+    # See if user exists, and create the user.
+    user_id = get_user_id_by_email(login_session['email'])
+    if not user_id:
+        user_id = create_user(login_session)
+
+    login_session['user_id'] = user_id
+
+    output = ''
+    output += '<h1>Welcome, '
+    output += login_session['username']
+    output += '!</h1>'
+    output += '<img src="'
+    output += login_session['picture']
+    output += (' " style = "width: 300px; height: 300px;border-radius: '
+               '150px;-webkit-border-radius: 150px;-moz-border-radius: '
+               '150px;"> ')
+    return output
+
+
 
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
@@ -145,22 +165,10 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    login_session['provider'] = 'google'
 
-    # See if user exists, and create the user.
-    user_id = get_user_id_by_email(login_session['email'])
-    if not user_id:
-        user_id = create_user(login_session)
-
-    login_session['user_id'] = user_id
-
-
-    output = ''
-    output += '<h1>Welcome, '
-    output += login_session['username']
-    output += '!</h1>'
-    output += '<img src="'
-    output += login_session['picture']
-    output += ' " style = "width: 300px; height: 300px;border-radius: 150px;-webkit-border-radius: 150px;-moz-border-radius: 150px;"> '
+    # See if user exists, and create the user if not.
+    output = login_or_create_user(login_session)
     flash("You are now logged in as %s" % login_session['username'])
     print "done!"
     return output
@@ -183,18 +191,92 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
 
     if result['status'] == '200':
-        # Reset the users session.
-        del login_session['credentials']
-        del login_session['gplus_id']
-        del login_session['username']
-        del login_session['email']
-        del login_session['picture']
-
         return make_json_response('Successfully disconnected.', 200)
     else:
         # For whatever reason, the given token was invalid.
         return make_json_response(
             'Failed to revoke token for given user.', 400)
+
+@app.route('/fbconnect', methods=['POST'])
+def fbconnect():
+    if request.args.get('state') != login_session['state']:
+        return make_json_response('Invalid sate parameter', 401)
+    access_token = request.data
+
+    # Exchange client token for long-lived server-side token with GET
+    # /oauth/access_token?grant_type=fb_exchange_token&client_id=
+    # {app-id}&client_secret={app-secret}&fb_exchange_token=
+    # {short-lived-token}
+    app_id = json.loads(
+        open('fb_client_secrets.json', 'r').read())['web']['app_id']
+    app_secret = json.loads(
+        open('fb_client_secrets.json', 'r').read())['web']['app_secret']
+    url = ('https://graph.facebook.com/oauth/access_token?grant_type=fb_exchange_token&client_id='
+           '%s&client_secret=%s&fb_exchange_token=%s' % (
+            app_id, app_secret, access_token))
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[1]
+
+    # Use token to user info from API
+    userinfo_url = "https://graph.facebook.com/v2.4/me"
+    # Strip expire tag from access token
+    token = result.split("&")[0]
+
+    url = 'https://graph.facebook.com/v2.4/me?%s&fields=name,id,email' % token
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[1]
+    #print "url sent for API access: %s" % url
+    #print "API JSON result: %s" % result
+    data = json.loads(result)
+    login_session['provider'] = 'facebook'
+    login_session['username'] = data["name"]
+    login_session['email'] = data["email"]
+    login_session['facebook_id'] = data["id"]
+    login_session['provider'] = 'facebook'
+
+    # Get user picture
+    url = ('https://graph.facebook.com/v2.4/me/picture?%s&redirect=0'
+           '&height=100&width=100' % token)
+    h = httplib2.Http()
+    result = h.request(url, 'GET')[1]
+    data = json.loads(result)
+
+    login_session['picture'] = data['data']['url']
+
+    # See if user exists, and create the user if not.
+    output = login_or_create_user(login_session)
+    flash("You are now logged in as %s" % login_session['username'])
+    print "done!"
+    return output
+
+@app.route('/fbdisconnect/')
+def fbdisconnect():
+    facebook_id = login_session['facebook_id']
+    url = 'https://graph.facebook.com/%s/permissions' % facebook_id
+    h = httplib2.Http()
+    result = h.request(url, 'DELETE')[1]
+
+@app.route('/disconnect/')
+def disconnect():
+    if 'provider' in login_session:
+        if login_session['provider'] == 'google':
+            gdisconnect()
+            del login_session['gplus_id']
+            del login_session['credentials']
+        if login_session['provider'] == 'facebook':
+            fbdisconnect()
+            del login_session['facebook_id']
+
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
+        del login_session['user_id']
+        del login_session['provider']
+        flash("You have successfully been logged out.")
+        return redirect(url_for('all_restaurants'))
+    else:
+        flash("You were not logged in to begin with!")
+        redirect(url_for('all_restaurants'))
 
 @app.route('/login/')
 def show_login():

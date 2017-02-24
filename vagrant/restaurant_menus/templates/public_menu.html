@@ -1,21 +1,5 @@
-{% extends "main.html" %}
+{% extends "restaurant_base.html" %}
 {% block content %}
-{% include "header.html" %}
-	
-	<div class="row divider green">
-		<div class="col-md-12"></div>
-	</div>
-	<div class="row banner menu">
-		<div class="col-md-11 col-md-offset-1 padding-none">
-			<h1>{{ restaurant.name }}
-			<figure class="creator">
-				<img src="{{ creator.picture}}">
-				<figcaption>{{ creator.name }}</figcaption>
-			</figure>
-			</h1>
-
-		</div>
-	</div>
 	<div class="row padding-top padding-bottom">
 		<div class="col-md-1"></div>
 		<div class="col-md-11 padding-none">

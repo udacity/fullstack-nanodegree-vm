@@ -1,20 +1,10 @@
-{% extends "main.html" %}
+{% extends "all_base.html" %}
 {% block content %}
-	<div class="row top-menu">
-		<div class="col-md-10"></div>
-		<div class="col-md-2 text-right">
-			<a href="{{url_for('show_login')}}">Click Here to Log in </a>
-		</div>
-	</div>
-	<div class="row divider blue">
-		<div class="col-md-12"></div>
-	</div>
-	<div class="row banner main">
-		<div class="col-md-1"></div>
-		<div class="col-md-11 padding-none">
-			<h1>Restaurants</h1>
-		</div>
-	</div>
+<div class="row">
+  <h2 class="col-xs-12 center">Our Affiliated Restaurants</h2>
+</div>
+<div class="row">
+  <hr class="col-xs-8 col-xs-offset-2 subtitle-heading">
 
 	<div class = 'flash'>
 		      {% with messages = get_flashed_messages() %}

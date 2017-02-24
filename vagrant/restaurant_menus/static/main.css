@@ -69,6 +69,12 @@ pre {
     white-space: pre-wrap;
 }
 
+.icon {
+    margin: 1%;
+    max-height: 100px;
+    max-width: 200px;
+}
+
 .heading-rule {
     height: 2px;
     color: darkgray;
