@@ -36,27 +36,25 @@ session = DBSession()
 def showMainPage():
     categories = session.query(Category).order_by(asc(Category.name))
     return render_template('front.html', categories = categories)
-    #if 'username' not in login_session:
-    #    return render_template('front.html', categories = categories)
-    #else:
-    #    return render_template('front.html', categories = categories)
 
 # Catalog category management
-@app.route('/catalog/')
-def showCategory():
+@app.route('/catalog/<int:category_id>/')
+def showCategory(category_id):
     categories = session.query(Category).order_by(asc(Category.name))
-    return render_template('category.html', categories=categories)
-    #if 'username' not in login_session:
-    #   return render_template('publicrestaurants.html', restaurants = restaurants)
-    #else:
-    #   return render_template('restaurants.html', restaurants=restaurants)
+    
+    category = session.query(Category).filter_by(id=category_id).one()
+    #creator = getUserInfo(category.user_id)
+    
+    items = session.query(Category).filter_by(id=category_id).all()
+    
+    return render_template('category.html', category=category)
 
 @app.route('/catalog/new/', methods=['GET', 'POST'])
 def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'])
+        newCategory = Category(name=request.form['name'], user_id=login_session['gplus_id'])
         session.add(newCategory)
         flash('New Category %s Successfully Created' % newCategory.name)
         session.commit()
@@ -64,21 +62,56 @@ def newCategory():
     else:
         return render_template('newCategory.html')
 
-@app.route('/catalog/edit/', methods=['GET', 'POST'])
-def editCategory():
-    #TODO: Implement
-    return
+@app.route('/catalog/<int:category_id>/edit/', methods=['GET', 'POST'])
+def editCategory(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    editedCategory = session.query(Category).filter_by(id=category_id).one()
+    if editedCategory.user_id != login_session['gplus_id']:
+        return "<script>function badUserAlert() { alert('You are not authorized to edit this category. Please create your own category and you will be able to delete it'); }</script><body onload='badUserAlert()'>"
+    if request.method == 'POST':
+        if request.form['name']:
+            editedCategory.name = request.form['name']
+            flash('Category Successfully Edited %s' % editedCategory.name)
+            return redirect(url_for('showCategory'))
+        else:
+            return render_template('editCategory.html', category=editedCategory)
 
-@app.route('/catalog/delete/', methods=['GET', 'POST'])
-def deleteCategory():
-    #TODO: Implement
-    return
+@app.route('/catalog/<int:category_id>/delete/', methods=['GET', 'POST'])
+def deleteCategory(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    categoryToDelete = session.query(Category).filter_by(id=category_id).one()
+    if categoryToDelete.user_id != login_session['gplus_id']:
+        return "<script>function badUserAlert() { alert('You are not authorized to delete this category. Please create your own category and you will be able to delete it'); }</script><body onload='badUserAlert()'>"
+    if request.method == 'POST':
+        session.delete(categoryToDelete)
+        flash('%s Successfully Deleted' % categoryToDelete.name)
+        session.commit()
+        return redirect(url_for('showMainPage'))
+    else:
+        return render_template('deleteCategory.html', category=categoryToDelete)
 
 # Catalog item addition
-@app.route('/catalog/items/new', methods=['GET', 'POST'])
-def newItem():
-    #TODO: Implement
-    return
+@app.route('/catalog/<int:category_id>/items/new', methods=['GET', 'POST'])
+def newItem(category_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        newItem = Item(name=request.form['name'], description=request.form['description'], catalog_id=category_id, user_id=category.user_id)
+        session.add(newItem)
+        session.commit()
+        flash('New %s Item Successfully Created' % (newItem.name))
+        return redirect(url_for('showCategory', category_id=category_id))
+    else:
+        return render_template('newItem.html', category_id=category_id)
+
+# Show item information
+@app.route('/catalog/<int:category_id>/items/<int:id>')
+def showItem(id):
+    item = session.query(Item).filter_by(name=item_name)
+    return render_template('item.html', id=id)
 
 # JSON APIs to view Items in a Category
 @app.route('/catalog/<string:catalog_name>')
@@ -88,10 +121,10 @@ def catalogJSON(catalog_name):
     return jsonify(MenuItems=[i.serialize for i in items])
 
 # View details of an item in a category
-@app.route('/catalog/<string:catalog_name>/<string:item_name>/')
-def showItem(item_name):
-    item = session.query(Item).filter_by(name=item_name)
-    return jsonify(item)
+#@app.route('/catalog/<string:catalog_name>/<string:item_name>/')
+#def showItem(item_name):
+#    item = session.query(Item).filter_by(name=item_name)
+#    return jsonify(item)
 
 # USER LOGIN SYSTEM
 
@@ -159,7 +192,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    login_session['credentials'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
     
     # Get user info
@@ -224,7 +257,7 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
     
-    access_token = credentials.access_token
+    access_token = login_session.get('credentials')
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]

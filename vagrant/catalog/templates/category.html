@@ -13,7 +13,7 @@
 <div class="row banner main">
     <div class="col-md-1"></div>
     <div class="col-md-11 padding-none">
-        <h1>{{self.name}}</h1>
+        <h1>{{category.name}}</h1>
     </div>
 </div>
 
@@ -34,24 +34,37 @@
  -->
 <div class="row padding-top padding-bottom">
     <div class="col-md-1"></div>
-    <div class="col-md-10 padding-none">
+    <div class="col-md-10 padding-top padding-bottom">
         {%if 'username' not in session %}
         You must login to edit categories
         {% else %}
-        <dv>
-        <a href="{{url_for('editCategory')}}">
+        <div>
+        <a href="{{url_for('editCategory', category_id = category.id)}}">
             <button class="btn btn-default" id="edit-category">
                 <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Edit
             </button>
         </a>
-        <a href="{{url_for('deleteCategory')}}">
+        <a href="{{url_for('deleteCategory', category_id = category.id)}}">
             <button class="btn btn-default" id="delete-category">
                 <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Delete
             </button>
         </a>
         </div>
         <div>
-            <a href="{{url_for('newItem')}}">
+        {% for item in items %}
+        <a href = "{{url_for('showCategory', category_id = category.id)}}">
+            <div class="row">
+                <div class="col-md-1"></div>
+                <div class="col-md-10 restaurant-list">
+                    <h3>{{item.name}}</h3>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </a>
+        {% endfor %}
+        </div>
+        <div>
+            <a href="{{url_for('newItem', category_id = category.id)}}">
                 <button class="btn btn-default" id="new-item">
                     <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Item
                 </button>

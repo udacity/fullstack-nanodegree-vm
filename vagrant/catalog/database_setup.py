@@ -27,15 +27,15 @@ class Category(Base):
     __tablename__ = 'catalog'
     
     id = Column(Integer, primary_key=True)
-    #user_id = Column(Integer, ForeignKey('user.id'))
+    user_id = Column(Integer, ForeignKey('user.id'))
     name = Column(String(250), nullable=False)
+    user = relationship(User)
 
     @property
     def serialize(self):
         """Return object data in easily serializeable format"""
         return {
             'name'         : self.name,
-            #'user_id'      : self.user_id,
             'id'           : self.id,
         }
  
@@ -48,8 +48,7 @@ class Item(Base):
     description = Column(String(250))
     price = Column(String(8))
     course = Column(String(250))
-    category_name = Column(String,ForeignKey('catalog.name'))
-    #catalog_id = Column(Integer,ForeignKey('catalog.id'))
+    catalog_id = Column(Integer,ForeignKey('catalog.id'))
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
     user = relationship(User)
