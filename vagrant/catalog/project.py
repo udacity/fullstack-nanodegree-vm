@@ -43,7 +43,7 @@ def showCategory(category_id):
     categories = session.query(Category).order_by(asc(Category.name))
     
     category = session.query(Category).filter_by(id=category_id).one()
-    creator = getUserInfo(category.user_id)
+    #creator = getUserInfo(category.user_id)
     
     items = session.query(Category).filter_by(id=category_id).all()
     
