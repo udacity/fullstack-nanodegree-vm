@@ -16,6 +16,7 @@ session = DBSession()
 
 
 def get_all_puppies_name_asc():
+    # Select all puppies name and order them by asc
     allPuppy = session.query(Puppy.name).order_by(Puppy.name.asc()).all()
 
     for p in allPuppy:
@@ -23,6 +24,7 @@ def get_all_puppies_name_asc():
 
 
 def get_youngest_puppies():
+    # Select all puppies name and date of birth (dob), where puppies not older then 6 months and order them by desc
     today = datetime.date.today()
     deltaSixMonths = today - datetime.timedelta(days=182)
 
@@ -34,6 +36,7 @@ def get_youngest_puppies():
 
 
 def get_puppies_weight_asc():
+    # Select all puppies name and their weight, order them by asc
     allPuppiesWeightAsc = session.query(Puppy.name, Puppy.weight).order_by(Puppy.weight.asc()).all()
 
     for p in allPuppiesWeightAsc:
@@ -41,6 +44,7 @@ def get_puppies_weight_asc():
 
 
 def get_puppies_shelter():
+    # Select all shelters and their puppies
     allPuppiesShelter = session.query(Shelter, func.count(Puppy.id)).join(Puppy).group_by(Shelter.id).all()
 
     for p in allPuppiesShelter:
