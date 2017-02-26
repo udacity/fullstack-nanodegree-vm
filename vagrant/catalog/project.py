@@ -73,9 +73,9 @@ def editCategory(category_id):
         if request.form['name']:
             editedCategory.name = request.form['name']
             flash('Category Successfully Edited %s' % editedCategory.name)
-            return redirect(url_for('showCategory'))
-        else:
-            return render_template('editCategory.html', category=editedCategory)
+            return redirect(url_for('showCategory', category_id=category_id))
+    else:
+        return render_template('editCategory.html', category=editedCategory)
 
 @app.route('/catalog/<int:category_id>/delete/', methods=['GET', 'POST'])
 def deleteCategory(category_id):
