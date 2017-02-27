@@ -110,8 +110,8 @@ def newItem(category_id):
 # Show item information
 @app.route('/catalog/<int:category_id>/items/<int:id>')
 def showItem(id):
-    item = session.query(Item).filter_by(name=item_name)
-    return render_template('item.html', id=id)
+    item = session.query(Item).filter_by(id = id)
+    return render_template('item.html', item=item)
 
 # JSON APIs to view Items in a Category
 @app.route('/catalog/<int:category_id>/items/JSON')
