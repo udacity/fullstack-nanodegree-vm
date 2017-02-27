@@ -47,7 +47,7 @@ def showCategory(category_id):
     
     items = session.query(Item).filter_by(catalog_id=category_id).all()
     
-    return render_template('category.html', category=category)
+    return render_template('category.html', category=category, items=items)
 
 @app.route('/catalog/new/', methods=['GET', 'POST'])
 def newCategory():
