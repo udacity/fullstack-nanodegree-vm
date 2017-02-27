@@ -46,8 +46,6 @@ class Item(Base):
     name =Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
     description = Column(String(250))
-    price = Column(String(8))
-    course = Column(String(250))
     catalog_id = Column(Integer,ForeignKey('catalog.id'))
     category = relationship(Category)
     user_id = Column(Integer, ForeignKey('user.id'))
@@ -62,6 +60,7 @@ class Item(Base):
            'id'         : self.id,
            'price'         : self.price,
            'course'         : self.course,
+           'catalog_id'    : self.catalog_id,
        }
 
 
