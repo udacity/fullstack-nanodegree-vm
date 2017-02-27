@@ -31,6 +31,21 @@ session = DBSession()
 methods = ['GET', 'POST']
 
 # Helper functions
+def get_user_by_id(user_id):
+    """Function for getting a user object given the user id."""
+    return session.query(User).filter_by(id = user_id).one()
+
+def get_user_id_by_email(email):
+    """
+    Function for getting the user id for the given email. If the user
+    id cannot be found, returns None.
+    """
+    try:
+        user = session.query(User).filter_by(email = email).one()
+        return user.id
+    except:
+        return None
+
 def make_json_response(message, code):
     """
     Returns a json response with the given message and code.
@@ -40,6 +55,14 @@ def make_json_response(message, code):
     response = make_response(json.dumps(message), code)
     response.headers['Content-Type'] = 'application/json'
     return response
+
+def create_user(login_session):
+    new_user = User(name=login_session['username'],
+                    email=login_session['email'],
+                    picture=login_session['picture'])
+    session.add(new_user)
+    session.commit()
+    return get_user_id_by_email(login_session['email'])
 
 def login_or_create_user(login_session):
     """See if user exists, and create the user."""
@@ -229,10 +252,10 @@ def disconnect():
         del login_session['user_id']
         del login_session['provider']
         flash("You have successfully been logged out.")
-        return redirect(url_for('all_restaurants'))
+        return redirect(url_for('gamerater_home'))
     else:
         flash("You were not logged in to begin with!")
-        redirect(url_for('all_restaurants'))
+        redirect(url_for('gamerater_home'))
 
 @app.route('/login/')
 def show_login():
@@ -245,7 +268,7 @@ def show_login():
 @app.route('/')
 @app.route('/gamerater/')
 def gamerater_home():
-    return "Gamerater Home"
+    return render_template("gamerater_home.html")
 
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
