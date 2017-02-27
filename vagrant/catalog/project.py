@@ -114,11 +114,22 @@ def showItem(id):
     return render_template('item.html', id=id)
 
 # JSON APIs to view Items in a Category
-@app.route('/catalog/<string:catalog_name>')
+@app.route('/catalog/<int:category_id>/items/JSON')
+def catalogItemsJSON(category_id):
+    restaurant = session.query(Category).filter_by(category_id=category_id).one()
+    items = session.query(Item).filter_by(category_id=category_id).all()
+    return jsonify(Items=[i.serialize for i in items])
+
+
+@app.route('/catalog/<int:category_id>/items/<int:id>/JSON')
+def itemJSON(restaurant_id, menu_id):
+    item = session.query(Item).filter_by(id=menu_id).one()
+    return jsonify(item=Item.serialize)
+
+@app.route('/catalog/JSON')
 def catalogJSON(catalog_name):
-    catalog = session.query(Category).filter_by(name=catalog_name).one()
-    items = session.query(Item).filter_by(category_name=catalog_name).all()
-    return jsonify(MenuItems=[i.serialize for i in items])
+    categories = session.query(Category).all()
+    return jsonify(categories=[c.serialize for c in categories])
 
 # View details of an item in a category
 #@app.route('/catalog/<string:catalog_name>/<string:item_name>/')
