@@ -24,7 +24,7 @@ class User(Base):
     @property
     def serialize(self):
         """Returns object data in easily serializable format."""
-        games = Game.get_games_by_id(self.id)
+        games = UsersGames.get_users_games(self.id)
         return {
             'name' : self.name,
             'email' : self.email,
@@ -45,19 +45,14 @@ class Game(Base):
     id = Column(Integer, primary_key = True)
     category = Column(String(40))
     description = Column(String(255))
-    link = Column(String(255)) # Metacritic link
     avg_rating = Column(Float)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
-
-    # Set table relationships
-    user = relationship(User)
 
     @classmethod
     def get_games_by_id(cls, id_list):
         """
         Returns the games with the given ids.
 
-        >>>get_games_by_id((1,2,3))
+        >>>get_games_by_id((1, 2, 3))
         Mass Effect, Nioh, Tomb Raider
         """
         games = []
@@ -76,8 +71,7 @@ class Game(Base):
             'category' : self.category,
             'description' : self.description,
             'id' : self.id,
-            'link' : self.link,
-            'rating' : self.rating
+            'avg_rating' : self.avg_rating
         }
 
 
@@ -89,17 +83,34 @@ class UsersGames(Base):
 
 
     # create columns
+    id = Column(Integer, primary_key = True)
     user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
     game_id = Column(Integer, ForeignKey('game.id'), nullable = False)
+    rating = Column(Integer)
 
     # set table relationships
     user = relationship(User)
     game = relationship(Game)
 
     @classmethod
-    def get_users_games(cls, user_id):
-        """Returns a list of games for the given user_id."""
+    def get_games_by_user(cls, user_id):
+        """
+        Returns a list of games for the given user_id.
+
+        >>> get_users_games(1)
+        (Mass Effect, Nioh, Tomb Raider)
+        """
         return session.query(cls).filter_by(user_id = user_id).all()
+
+    @classmethod
+    def get_users_by_game(cls, game_id):
+        """
+        Return a list of user_ids for the given game.
+
+        >>> get_games_users(1)
+        (32, 24, 6)
+        """
+        return session.query(cls).filter_by(game_id = game_id).all()
 
         
 
