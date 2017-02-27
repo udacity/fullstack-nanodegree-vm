@@ -45,7 +45,7 @@ def showCategory(category_id):
     category = session.query(Category).filter_by(id=category_id).one()
     #creator = getUserInfo(category.user_id)
     
-    items = session.query(Category).filter_by(id=category_id).all()
+    items = session.query(Item).filter_by(catalog_id=category_id).all()
     
     return render_template('category.html', category=category)
 
