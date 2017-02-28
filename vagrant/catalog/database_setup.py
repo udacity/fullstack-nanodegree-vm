@@ -1,6 +1,6 @@
 import sys
 
-from sqlalchemy import Column, ForeignKey, Integer, String, Float
+from sqlalchemy import Column, ForeignKey, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
 from sqlalchemy import create_engine
@@ -46,6 +46,7 @@ class Game(Base):
     category = Column(String(40))
     description = Column(String(255))
     avg_rating = Column(Float)
+    modified = Column(DateTime)
 
     @classmethod
     def get_games_by_id(cls, id_list):
@@ -71,7 +72,8 @@ class Game(Base):
             'category' : self.category,
             'description' : self.description,
             'id' : self.id,
-            'avg_rating' : self.avg_rating
+            'avg_rating' : self.avg_rating,
+            'last modified' : self.modified
         }
 
 
