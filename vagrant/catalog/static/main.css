@@ -71,6 +71,22 @@ pre {
     white-space: pre-wrap;
 }
 
+table {
+    border: 3px solid black;
+}
+
+th {
+    border: 2px solid black;
+    background-color: gray;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+td {
+    border: 1px solid black;
+    font-size: 16px;
+}
+
 .icon {
     margin: 1%;
     max-height: 100px;
@@ -141,4 +157,76 @@ pre {
 
 .center {
     text-align: center;
+}
+
+.comments-heading {
+    font-size: 20px;
+    font-weight: bold;
+    border-width: 1px;
+    border-bottom-style: solid;
+    margin-bottom: 10px;
+}
+
+.user-small {
+    margin-bottom: 20px;
+    border: black;
+    border-width: 1px;
+    border-right-style: solid;
+    border-bottom-style: solid;
+    padding-right: 5px;
+}
+
+.all-users {
+    height: 250px;
+    margin: auto;
+    margin-bottom: 20px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+    overflow: hidden;
+}
+
+.user-small-name {
+    font-size: 26pt;
+    font-weight: bold;
+    margin-left: 10px;
+}
+
+.user-icon {
+    max-height: 46px;
+    max-width: 46px;
+    padding: 3px;
+}
+
+.user-small-head {
+    font-size: 18pt;
+    font-weight: bold;
+}
+
+.user-small-content {
+    font-size: 16pt;
+    overflow: hidden;
+    max-height: 60px;
+    padding-right: 15px;
+}
+
+/* iconicfill */
+[class*="iconicfill-"]:before {
+  font-family: 'IconicFill', sans-serif;
+}
+
+/* zocial */
+[class*="zocial-"]:before {
+  font-family: 'zocial', sans-serif;
+}
+
+.social-links {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 30px;
+}
+
+.contact-me {
+    font-size: 18px;
+    text-align: center;
+    margin: auto;
 }
