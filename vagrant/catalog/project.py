@@ -113,6 +113,42 @@ def showItem(category_id, id):
     item = session.query(Item).filter_by(id = id)
     return render_template('item.html', item=item)
 
+# Edit item
+@app.route('/catalog/<int:category_id>/items/<int:id>/edit', methods=['GET', 'POST'])
+def editItem(category_id, id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    editedItem = session.query(Item).filter_by(id=id).one()
+    category = session.query(Category).filter_by(id=category_id).one()
+    if request.method == 'POST':
+        if request.form['name']:
+            editedItem.name = request.form['name']
+        if request.form['description']:
+            editedItem.description = request.form['description']
+        session.add(editedItem)
+        session.commit()
+        flash('Item Successfully Edited')
+        return redirect(url_for('showCategory', category_id=category_id))
+    else:
+        return render_template('editItem.html', category_id=category_id, id=id, item=editedItem)
+
+
+# Delete a menu item
+@app.route('/catalog/<int:category_id>/items/<int:id>/delete', methods=['GET', 'POST'])
+def deleteItem(category_id, id):
+    if 'username' not in login_session:
+        return redirect('/login')
+    category = session.query(Category).filter_by(id=category_id).one()
+    itemToDelete = session.query(Item).filter_by(id=id).one()
+    if request.method == 'POST':
+        session.delete(itemToDelete)
+        session.commit()
+        flash('Item Successfully Deleted')
+        return redirect(url_for('showCategory', category_id=category_id))
+    else:
+        return render_template('deleteItem.html', item=itemToDelete)
+
+
 # JSON APIs to view Items in a Category
 @app.route('/catalog/<int:category_id>/items/JSON')
 def catalogItemsJSON(category_id):
