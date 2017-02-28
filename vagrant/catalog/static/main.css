@@ -209,6 +209,8 @@ td {
     padding-right: 15px;
 }
 
+@import url(http://weloveiconfonts.com/api/?family=zocial);
+
 /* iconicfill */
 [class*="iconicfill-"]:before {
   font-family: 'IconicFill', sans-serif;
