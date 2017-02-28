@@ -19,6 +19,7 @@ h1 {
     margin-top: 0px;
     margin-bottom: 5px;
     height: 8.333%;
+    font-family: 'Kelly Slab', cursive;
 }
 
 h2 {
@@ -26,6 +27,7 @@ h2 {
     margin: 0.1%;
     font-weight: bold;
     font-size: 36pt;
+    font-family: 'Kelly Slab', cursive;
 }
 
 textarea {

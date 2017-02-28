@@ -7,6 +7,7 @@
   <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
   <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
   <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Kelly+Slab" rel="stylesheet">
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
 </head>
@@ -18,15 +19,20 @@
   <h1>Gamerater</h1>
 </div>
 <div class="row">
-  <div class="col-xs-2">
+  <div class="col-xs-offset-3 col-xs-3 center">
     {% if 'username' not in session %}
-      <a href="{{ url_for('show_login') }}">Login</a>      
+      <a class="header-link" href="{{ url_for('show_login') }}">Login</a>      
     {% else %}
-      <a href="{{ url_for('disconnect') }}">Logout</a>
+      <a class="header-link" href="{{ url_for('disconnect') }}">Logout</a>
     {% endif %}
   </div>
+  <div class="col-xs-3 center">
+    <a class="header-link" href="/most_popular">Most Popular Games</a>    
+  </div>
+  <div class="col-xs-3 center">
+    <a class="header-link" href="/newest">Newest Ratings</a>
+  </div>
 </div>
-<br>
 <hr class="heading-rule">
 <br>
 
