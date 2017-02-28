@@ -50,19 +50,20 @@
             </button>
         </a>
         </div>
+        {% endif %}
         <div>
-        {% for item in items %}
-        <a href = "{{url_for('showItem', category_id = category.id, id = item.id)}}">
-            <div class="row">
-                <div class="col-md-1"></div>
-                <div class="col-md-10 restaurant-list">
-                    <h3>{{item.name}}</h3>
-                    <p>{{item.description}}</p>
+            {% for item in items %}
+            <a href = "{{url_for('showItem', category_id = category.id, id = item.id)}}">
+                <div class="row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 restaurant-list">
+                        <h3>{{item.name}}</h3>
+                        <p>{{item.description}}</p>
+                    </div>
+                    <div class="col-md-1"></div>
                 </div>
-                <div class="col-md-1"></div>
-            </div>
-        </a>
-        {% endfor %}
+            </a>
+            {% endfor %}
         </div>
         <div>
             <a href="{{url_for('newItem', category_id = category.id)}}">
@@ -71,7 +72,6 @@
                 </button>
             </a>
         </div>
-        {% endif %}
     </div>
     <div class="col-md-1"></div>
 </div>
