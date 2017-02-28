@@ -89,6 +89,7 @@ class UsersGames(Base):
     user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
     game_id = Column(Integer, ForeignKey('game.id'), nullable = False)
     rating = Column(Integer)
+    modified = Column(DateTime)
 
     # set table relationships
     user = relationship(User)
