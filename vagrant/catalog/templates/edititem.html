@@ -29,7 +29,7 @@
                     
                     <button type="submit" class="btn btn-default" id="submit" type="submit">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
-                    <a href = '{{url_for('showItem', category_id = item.catalog_id, id = item.id)}}'>
+                    <a href = '{{url_for('showItem', category_name = category_name, item_name = item.name)}}'>
                         <button class="btn btn-default delete">
                             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
                     </a>

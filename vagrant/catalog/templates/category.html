@@ -39,12 +39,12 @@
         You must login to edit categories
         {% else %}
         <div>
-        <a href="{{url_for('editCategory', category_id = category.id)}}">
+        <a href="{{url_for('editCategory', category_name = category.name)}}">
             <button class="btn btn-default" id="edit-category">
                 <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Edit
             </button>
         </a>
-        <a href="{{url_for('deleteCategory', category_id = category.id)}}">
+        <a href="{{url_for('deleteCategory', category_name = category.name)}}">
             <button class="btn btn-default" id="delete-category">
                 <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Delete
             </button>
@@ -54,7 +54,7 @@
         <div>
             {% if items|length > 0 %}
             {% for item in items %}
-            <a href = "{{url_for('showItem', category_id = category.id, id = item.id)}}">
+            <a href = "{{url_for('showItem', category_name = category.name, item_name = item.name)}}">
                 <div class="row">
                     <div class="col-md-1"></div>
                     <div class="col-md-10 restaurant-list">
@@ -70,7 +70,7 @@
             {% endif %}
         </div>
         <div>
-            <a href="{{url_for('newItem', category_id = category.id)}}">
+            <a href="{{url_for('newItem', category_name = category.name)}}">
                 <button class="btn btn-default" id="new-item">
                     <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Add Item
                 </button>

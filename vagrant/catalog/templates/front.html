@@ -48,7 +48,7 @@
     <div class="col-md-1"></div>
 </div>
 {% for category in categories %}
-<a href = "{{url_for('showCategory', category_id = category.id)}}">
+<a href = "{{url_for('showCategory', category_name = category.name)}}">
     <div class="row">
         <div class="col-md-1"></div>
         <div class="col-md-10 restaurant-list">

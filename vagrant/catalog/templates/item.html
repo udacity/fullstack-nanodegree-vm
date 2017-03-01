@@ -36,12 +36,12 @@
     You must login to edit this item
     {% else %}
     <div>
-        <a href="{{url_for('editItem', category_id = item.catalog_id, id = item.id)}}">
+        <a href="{{url_for('editItem', category_name = category_name, item_name = item.name)}}">
             <button class="btn btn-default" id="edit-category">
                 <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Edit
             </button>
         </a>
-        <a href="{{url_for('deleteItem', category_id = item.catalog_id, id = item.id)}}">
+        <a href="{{url_for('deleteItem', category_name = category_name, item_name = item.name)}}">
             <button class="btn btn-default" id="delete-category">
                 <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Delete
             </button>
