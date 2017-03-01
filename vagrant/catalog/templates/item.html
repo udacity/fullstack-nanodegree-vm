@@ -33,7 +33,7 @@
 
 <div class="col-md-10 padding-top padding-bottom">
     {%if 'username' not in session %}
-    You must login to edit categories
+    You must login to edit this item
     {% else %}
     <div>
         <a href="{{url_for('editItem', category_id = item.catalog_id, id = item.id)}}">
