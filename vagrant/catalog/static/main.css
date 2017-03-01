@@ -11,6 +11,12 @@ body {
     padding: 0;
 }
 
+footer {
+    max-width: 960px;
+    padding-right: 15px;
+    padding-left: 15px;
+}
+
 h1 {
     text-align: right;
     font-size: 60pt;
@@ -69,10 +75,14 @@ a {
 
 pre {
     white-space: pre-wrap;
+    padding-left: 15px;
+    padding-right: 15px;
 }
 
 table {
     border: 3px solid black;
+    margin-left: 5px;
+    margin-right: 5px;
 }
 
 th {
@@ -85,6 +95,10 @@ th {
 td {
     border: 1px solid black;
     font-size: 16px;
+}
+
+tr {
+    text-align: center;
 }
 
 .icon {
@@ -207,6 +221,58 @@ td {
     overflow: hidden;
     max-height: 60px;
     padding-right: 15px;
+}
+
+.user-page-icon {
+    height: 100%;
+    padding: 0;
+    padding-left: 5px;
+}
+
+.user-page-name {
+    font-size: 52pt;
+    padding-right: 5px;
+}
+
+.user-title {
+    max-height: 54px;
+}
+
+.favorite-game-title {
+    font-weight: bold;
+    text-align: right;
+}
+
+.favorite-game {    
+    font-size: 26pt;
+}
+
+.favorite-game-border {
+    border-left: 1pt solid black;
+
+}
+
+.favorite-game-stat {
+    text-align: right;
+    font-size: 14pt;
+    padding-right: 5px;
+    margin-right: 5px;
+}
+
+.favorite-game-data {
+    text-align: left;
+    font-size: 14pt;
+    border-left: 1pt solid black;
+    padding-left: 5px; 
+}
+
+.user-all-games-title {
+    font-weight: bold;
+    text-align: right;
+}
+
+.user-read-more {
+    padding-left: 15px;
 }
 
 @import url(http://weloveiconfonts.com/api/?family=zocial);

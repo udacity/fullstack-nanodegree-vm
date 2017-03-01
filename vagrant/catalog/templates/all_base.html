@@ -12,25 +12,24 @@
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
   <script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
 </head>
-<body>
-
-<div class="container">
-  
+<body class="container">
 <div class="row">
-  <h1>Gamerater</h1>
+  <a href="{{ url_for('gamerater_home') }}">
+    <img class="col-md-offset-8 col-md-4 col-xs-offset-4 col-xs-8 img-responsive" src="{{ url_for('static', filename='img/logo.png') }}">
+  </a>
 </div>
 <div class="row">
-  <div class="col-xs-offset-3 col-xs-3 center">
+  <div class="col-md-offset-3 col-xs-4 col-md-3 center">
     {% if 'username' not in session %}
       <a class="header-link" href="{{ url_for('show_login') }}">Login</a>      
     {% else %}
       <a class="header-link" href="{{ url_for('disconnect') }}">Logout</a>
     {% endif %}
   </div>
-  <div class="col-xs-3 center">
+  <div class="col-xs-4 col-md-3 center">
     <a class="header-link" href="/most_popular">Most Popular Games</a>    
   </div>
-  <div class="col-xs-3 center">
+  <div class="col-xs-4 col-md-3 center">
     <a class="header-link" href="/newest">Newest Ratings</a>
   </div>
 </div>
@@ -40,19 +39,20 @@
   {% block content %}
   {% endblock %}
 
-</div>
 </body>
 <br>
-<hr class="heading-rule">
-    <footer>
-        <div class="row">
-            <p class="col-md-12 contact-me">Contact Paul at: </p>
-        </div>
-        <div class="row">
-            <a class="zocial-gmail col-md-3 col-xs-6 social-links" href="mailto:paul.d.castillo@gmail.com"> Email</a>
-            <a class="zocial-github col-md-3 col-xs-6 social-links" href="https://github.com/pauldcastillo">hub</a>
-            <a class="zocial-facebook col-md-3 col-xs-6 social-links" href="https://www.facebook.com/paul.castillo.9843499"> Facebook</a>
-            <a class="zocial-googleplus col-md-3 col-xs-6 social-links" href="https://plus.google.com/u/0/101131724289875077751"> Google+</a>
-        </div>
-    </footer>
+<footer>
+  <div class="row">
+    <hr class="heading-rule">
+  </div>
+  <div class="row">
+    <p class="col-md-12 contact-me">Contact Paul at: </p>
+  </div>
+  <div class="row">
+    <a class="zocial-gmail col-md-3 col-xs-6 social-links" href="mailto:paul.d.castillo@gmail.com"> Email</a>
+    <a class="zocial-github col-md-3 col-xs-6 social-links" href="https://github.com/pauldcastillo">hub</a>
+    <a class="zocial-facebook col-md-3 col-xs-6 social-links" href="https://www.facebook.com/paul.castillo.9843499"> Facebook</a>
+    <a class="zocial-googleplus col-md-3 col-xs-6 social-links" href="https://plus.google.com/u/0/101131724289875077751"> Google+</a>
+  </div>
+</footer>
 </html>
