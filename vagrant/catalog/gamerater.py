@@ -276,7 +276,7 @@ def game_info(game_id):
 
 @app.route('/gamerater/user/<int:user_id>/')
 def user_info(user_id):
-    return render_template("gamerater_user.html")
+    return render_template("user.html")
 
 @app.route('/gamerater/add-game')
 def add_game():
