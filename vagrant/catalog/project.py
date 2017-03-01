@@ -303,7 +303,7 @@ def gdisconnect():
         return response
     
     access_token = login_session.get('credentials')
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % access_token
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['credentials']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
