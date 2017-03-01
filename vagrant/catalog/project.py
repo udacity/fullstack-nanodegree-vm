@@ -310,7 +310,7 @@ def gdisconnect():
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
 
-    if result['status'] == '200':
+    if result.status == '200':
         # Reset the user's sesson.
         del login_session['credentials']
         del login_session['gplus_id']
