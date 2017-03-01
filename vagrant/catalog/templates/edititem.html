@@ -18,6 +18,14 @@
                     
                     <label for="description">Description:</label>
                     <textarea class="form-control" maxlength="250" rows="3" name="description">{{item.description}}</textarea>
+                    <h4>Category</h4>
+                    {% for category in categories %}
+                    <div class="radio">
+                        <label>
+                            <input type="radio" name="{{category.name}}" id="{{category.name}}" value="{{category.name}}" {% if item.course == 'Dessert'%}checked{%endif%}>{{category.name}}
+                                </label>
+                    </div>
+                    {% endfor %}
                     
                     <button type="submit" class="btn btn-default" id="submit" type="submit">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>

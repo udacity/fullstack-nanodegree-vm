@@ -52,6 +52,7 @@
         </div>
         {% endif %}
         <div>
+            {% if items|length > 0 %}
             {% for item in items %}
             <a href = "{{url_for('showItem', category_id = category.id, id = item.id)}}">
                 <div class="row">
@@ -64,6 +65,9 @@
                 </div>
             </a>
             {% endfor %}
+            {% else %}
+            <h4>This category is empty, click the button below to add something to it.</h4>
+            {% endif %}
         </div>
         <div>
             <a href="{{url_for('newItem', category_id = category.id)}}">

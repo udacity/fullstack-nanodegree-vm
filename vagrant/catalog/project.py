@@ -119,6 +119,7 @@ def editItem(category_id, id):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Item).filter_by(id=id).one()
+    categories = session.query(Category).order_by(asc(Category.name))
     category = session.query(Category).filter_by(id=category_id).one()
     if request.method == 'POST':
         if request.form['name']:
@@ -130,7 +131,7 @@ def editItem(category_id, id):
         flash('Item Successfully Edited')
         return redirect(url_for('showCategory', category_id=category_id))
     else:
-        return render_template('editItem.html', category_id=category_id, id=id, item=editedItem)
+        return render_template('editItem.html', category_id=category_id, id=id, item=editedItem, categories=categories)
 
 
 # Delete a menu item
