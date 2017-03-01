@@ -268,7 +268,7 @@ def show_login():
 @app.route('/')
 @app.route('/gamerater/')
 def gamerater_home():
-    return render_template("gamerater_home.html")
+    return render_template("home.html")
 
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
@@ -276,7 +276,7 @@ def game_info(game_id):
 
 @app.route('/gamerater/user/<int:user_id>/')
 def user_info(user_id):
-    return "User info page for user %s" % user_id
+    return render_template("gamerater_user.html")
 
 @app.route('/gamerater/add-game')
 def add_game():
