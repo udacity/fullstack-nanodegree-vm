@@ -156,7 +156,7 @@ def deleteItem(category_name, item_name):
 @app.route('/catalog/<string:category_name>/JSON')
 def catalogItemsJSON(category_name):
     category = session.query(Category).filter_by(name=category_name).one()
-    items = session.query(Item).filter_by(category_id=category.id).all()
+    items = session.query(Item).filter_by(catalog_id=category.id).all()
     return jsonify(Items=[i.serialize for i in items])
 
 # Overiew of all items information in JSON
@@ -165,7 +165,7 @@ def itemJSON(category_name, item_name):
     item = session.query(Item).filter_by(name=item_name).one()
     return jsonify(item=Item.serialize)
 
-# Overview of all categories in JSON
+# Overview of all items in catalog in JSON
 @app.route('/catalog/JSON')
 def catalogJSON():
     categories = session.query(Category).all()

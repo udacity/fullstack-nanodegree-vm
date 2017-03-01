@@ -53,6 +53,7 @@
         <div class="col-md-1"></div>
         <div class="col-md-10 restaurant-list">
             <h3>{{category.name}}</h3>
+            <h6>(<a href="{{url_for('catalogItemsJSON', category_name=category.name)}}">JSON</a>)</h6>
         </div>
         <div class="col-md-1"></div>
     </div>

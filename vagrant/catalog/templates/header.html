@@ -3,6 +3,8 @@
 		<a href="{{url_for('showMainPage')}}">
 			<span class="glyphicon glyphicon-home" aria-hidden="true"></span>Show All Categories
 		</a>
+        &nbsp;
+        (<a href="{{url_for('catalogJSON')}}">JSON</a>)
 	</div>
 	<div class="col-md-6 text-right">
         {%if 'username' not in session %}
