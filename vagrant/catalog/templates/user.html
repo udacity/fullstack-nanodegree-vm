@@ -14,16 +14,9 @@
 <div class="col-md-offset-1 col-md-10 col-xs-12">    
   <div class="row">
     <p class="col-xs-6 col-md-4 favorite-game favorite-game-title">Favorite Game</p>
-    <p class="col-xs-6 col-md-8 favorite-game favorite-game-border">Final Fantasy Tactics: War of the Lions</p>
   </div>
-  <div class="row">
-    <p class="col-xs-2 col-md-offset-1 favorite-game-title favorite-game-stat">Rating</p><p class="favorite-game-data col-xs-1">9</p>
-    <p class="col-md-2 col-xs-3 favorite-game-title favorite-game-stat">Category</p><p class="favorite-game-data col-xs-4">Strategy RPG</p>
-  </div>
-  <div class="row">
-    <pre>Final Fantasy Tactics is set in a fictional medieval-inspired kingdom called Ivalice created by Yasumi Matsuno. The game's story follows Ramza Beoulve, a highborn cadet who finds himself thrust into the middle of an intricate military conflict known as The Lion War, where two opposing noble factions are coveting the throne of the kingdom. As the story progresses, Ramza and his allies discover a sinister plot behind the war.</pre>
-    <a class="user-read-more" href="/gamerater/game/1">Read more</a>
-  </div>
+  {% include 'game_details.html' %}
+  <a class="user-read-more" href="/gamerater/game/1">Read more</a>
 </div>
 </div>
 <br>
@@ -43,22 +36,22 @@
       <tr>
         <td>Nioh</td>
         <td>Action</td>        
-        <td class="game-rating">9.5 <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a></td>
+        <td class="game-rating">9.5{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
       </tr>
       <tr>
         <td>Vagrant Story</td>
         <td>Action/ RPG</td>
-        <td class="game-rating">9.5 <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a></td>
+        <td class="game-rating">9.5{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
       </tr>
       <tr>
         <td>Dark Souls III</td>
         <td>Action</td>
-        <td class="game-rating">9.5 <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a></td>
+        <td class="game-rating">9{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
       </tr>
       <tr>
         <td>Mass Effect 3</td>
         <td>Shooter RPG</td>
-        <td class="game-rating">9.5 <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a></td>
+        <td class="game-rating">9{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
       </tr>
     </table>
   </div>
