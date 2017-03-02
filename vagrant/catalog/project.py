@@ -54,7 +54,7 @@ def newCategory():
     if 'username' not in login_session:
         return redirect('/login')
     if request.method == 'POST':
-        newCategory = Category(name=request.form['name'], user_id=login_session['gplus_id'])
+        newCategory = Category(name=request.form['name'], user_id=login_session['user_id'])
         session.add(newCategory)
         flash('New Category %s Successfully Created' % newCategory.name)
         session.commit()
@@ -67,8 +67,8 @@ def editCategory(category_name):
     if 'username' not in login_session:
         return redirect('/login')
     editedCategory = session.query(Category).filter_by(name=category_name).one()
-    if editedCategory.user_id != login_session['gplus_id']:
-        return "<script>function badUserAlert() { alert('You are not authorized to edit this category. Please create your own category and you will be able to delete it'); }</script><body onload='badUserAlert()'>"
+    if editedCategory.user_id != login_session['user_id']:
+        return "<script>function badUserAlert() { alert('You are not authorized to edit this category. Please create your own category and you will be able to edit it'); }</script><body onload='badUserAlert()'>"
     if request.method == 'POST':
         if request.form['name']:
             editedCategory.name = request.form['name']
@@ -82,7 +82,7 @@ def deleteCategory(category_name):
     if 'username' not in login_session:
         return redirect('/login')
     categoryToDelete = session.query(Category).filter_by(name=category_name).one()
-    if categoryToDelete.user_id != login_session['gplus_id']:
+    if categoryToDelete.user_id != login_session['user_id']:
         return "<script>function badUserAlert() { alert('You are not authorized to delete this category. Please create your own category and you will be able to delete it'); }</script><body onload='badUserAlert()'>"
     if request.method == 'POST':
         session.delete(categoryToDelete)
@@ -99,13 +99,13 @@ def newItem(category_name):
         return redirect('/login')
     category = session.query(Category).filter_by(name=category_name).one()
     if request.method == 'POST':
-        newItem = Item(name=request.form['name'], description=request.form['description'], catalog_id=category.id, user_id=category.user_id)
+        newItem = Item(name=request.form['name'], description=request.form['description'], catalog_id=category.id, user_id=login_session['user_id'])
         session.add(newItem)
         session.commit()
         flash('New %s Item Successfully Created' % (newItem.name))
         return redirect(url_for('showCategory', category_name=category_name))
     else:
-        return render_template('newItem.html', category_id=category.id)
+        return render_template('newItem.html', category_name=category_name)
 
 # Show item information
 @app.route('/catalog/<string:category_name>/<string:item_name>')
@@ -119,6 +119,8 @@ def editItem(category_name, item_name):
     if 'username' not in login_session:
         return redirect('/login')
     editedItem = session.query(Item).filter_by(name=item_name).one()
+    if editedItem.user_id != login_session['user_id']:
+        return "<script>function badUserAlert() { alert('You are not authorized to edit this item. Please create your own item and you will be able to edit it'); }</script><body onload='badUserAlert()'>"
     categories = session.query(Category).order_by(asc(Category.name))
     category = session.query(Category).filter_by(name=category_name).one()
     if request.method == 'POST':
@@ -141,6 +143,8 @@ def deleteItem(category_name, item_name):
         return redirect('/login')
     category = session.query(Category).filter_by(name=category_name).one()
     itemToDelete = session.query(Item).filter_by(name=item_name).one()
+    if editedItem.user_id != login_session['user_id']:
+        return "<script>function badUserAlert() { alert('You are not authorized to delete this item. Please create your own item and you will be able to delete it'); }</script><body onload='badUserAlert()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
         session.commit()
@@ -255,7 +259,7 @@ def gconnect():
     user_id = getUserID(login_session['email'])
     if not user_id:
         user_id = createUser(login_session)
-        login_session['gplus_id'] = user_id
+        login_session['user_id'] = user_id
     
     output = ''
     output += '<h1>Welcome, '
