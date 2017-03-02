@@ -1,0 +1,55 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+
+<div class="row">
+<div class="col-md-offset-1 col-md-10 col-xs-12">    
+  <div class="row">
+    <h1>Final Fantasy Tactics: War of the Lions</h1> 
+  </div>
+  <div class="row">
+    <p class="col-xs-3 favorite-game-title favorite-game-stat">Average Rating</p><p class="favorite-game-data col-xs-1">9.5</p>
+    <p class="col-md-2 col-xs-3 favorite-game-title favorite-game-stat">Category</p><p class="favorite-game-data col-xs-4">Strategy RPG</p>
+  </div>
+  <div class="row">
+    <pre>Final Fantasy Tactics is set in a fictional medieval-inspired kingdom called Ivalice created by Yasumi Matsuno. The game's story follows Ramza Beoulve, a highborn cadet who finds himself thrust into the middle of an intricate military conflict known as The Lion War, where two opposing noble factions are coveting the throne of the kingdom. As the story progresses, Ramza and his allies discover a sinister plot behind the war.</pre>
+  </div>
+</div>
+</div>
+<br>
+<hr class="col-xs-offset-2 col-xs-8">
+<br>
+<div class="row">
+  <div class="row">
+    <p class="col-md-offset-1 col-xs-8 favorite-game user-all-games-title">Users Who Have Rated This Game</p>
+  </div>
+  <div class="row">
+    <table class="col-xs-offset-1 col-xs-10">
+      <tr>
+        <th>User</th>
+        <th>Rating</th>
+      </tr>
+      <tr>
+        <td>
+          <a href="{{ url_for('user_info', user_id = 1) }}">Paul</a>
+        </td>
+        <td>9.5</td>
+      </tr>
+      <tr>
+        <td>Katrina</td>
+        <td>9.5</td>
+      </tr>
+      <tr>
+        <td>Paul</td>
+        <td>8.5</td>
+      </tr>
+      <tr>
+        <td>Katrina</td>
+        <td>8.5</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
