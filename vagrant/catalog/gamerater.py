@@ -272,7 +272,7 @@ def gamerater_home():
 
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
-    return "Game info page for game %s" % game_id
+    return render_template("game.html")
 
 @app.route('/gamerater/user/<int:user_id>/')
 def user_info(user_id):

@@ -69,10 +69,10 @@ class Game(Base):
         """Returns object data in easily serializable format."""
         return {
             'name' : self.name,
-            'category' : self.category,
-            'description' : self.description,
             'id' : self.id,
+            'category' : self.category,
             'avg_rating' : self.avg_rating,
+            'description' : self.description,
             'last modified' : self.modified
         }
 
