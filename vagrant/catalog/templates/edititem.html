@@ -27,11 +27,12 @@
                     </div>
                     {% endfor %}
                     
-                    <button type="submit" class="btn btn-default" id="submit" type="submit">
+                    <button type="submit" class="btn btn-default" id="submit">
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
                     <a href = '{{url_for('showItem', category_name = category_name, item_name = new_name.value)}}'>
-                        <button class="btn btn-default delete">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+                        <button class="btn btn-default delete" type="button">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <a href = "{{url_for('showItem', category_name = category.name, item_name = item.name)}}">Cancel</a>
+                        </button>
                     </a>
                     </div>
         </form>

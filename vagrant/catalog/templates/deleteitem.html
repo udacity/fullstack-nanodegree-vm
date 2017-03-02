@@ -5,11 +5,13 @@
 
 <form action="#" method = 'post'>
     
-    <button type="submit" class="btn btn-default delete" id="submit" type="submit">
+    <button type="submit" class="btn btn-default delete" id="submit">
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete</button>
     <a href = '{{url_for('showCategory', category_name=category_name)}}'>
-        <button class="btn btn-default delete">
-            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+        <button class="btn btn-default delete" type="button">
+            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+            <a href = "{{url_for('showItem', category_name = category.name, item_name = item.name)}}">Cancel</a>
+        </button>
     </a>
     
 </form>

@@ -143,7 +143,7 @@ def deleteItem(category_name, item_name):
         return redirect('/login')
     category = session.query(Category).filter_by(name=category_name).one()
     itemToDelete = session.query(Item).filter_by(name=item_name).one()
-    if editedItem.user_id != login_session['user_id']:
+    if itemToDelete.user_id != login_session['user_id']:
         return "<script>function badUserAlert() { alert('You are not authorized to delete this item. Please create your own item and you will be able to delete it'); }</script><body onload='badUserAlert()'>"
     if request.method == 'POST':
         session.delete(itemToDelete)
