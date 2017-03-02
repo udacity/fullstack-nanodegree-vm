@@ -151,7 +151,7 @@ def deleteItem(category_name, item_name):
         flash('Item Successfully Deleted')
         return redirect(url_for('showCategory', category_name=category_name))
     else:
-        return render_template('deleteItem.html', item=itemToDelete)
+        return render_template('deleteItem.html', item=itemToDelete, category_name=category_name)
 
 
 # JSON APIs to view items in a Category

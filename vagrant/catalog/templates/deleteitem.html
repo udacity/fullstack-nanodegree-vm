@@ -1,7 +1,7 @@
 {% extends "main.html" %}
 {% block content %}
 {% include "header.html" %}
-<h2> Are you sure you want to delete {{item.name}}? </h2>
+<h2> Are you sure you want to delete {{item.name}} from <a href = "{{url_for('showCategory', category_name = category_name)}}">{{category_name}}</a>? </h2>
 
 <form action="#" method = 'post'>
     
@@ -10,7 +10,7 @@
     <a href = '{{url_for('showCategory', category_name=category_name)}}'>
         <button class="btn btn-default delete" type="button">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            <a href = "{{url_for('showItem', category_name = category.name, item_name = item.name)}}">Cancel</a>
+            <a href = "{{url_for('showItem', category_name = category_name, item_name = item.name)}}">Cancel</a>
         </button>
     </a>
     

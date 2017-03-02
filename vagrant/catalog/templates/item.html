@@ -13,6 +13,7 @@
     <div class="col-md-1"></div>
     <div class="col-md-11 padding-none">
         <h1>{{item.name}}</h1>
+        <h4>In <a href = "{{url_for('showCategory', category_name = category_name)}}">{{category_name}}</a></h4>
         <h3>{{item.description}}</h3>
         <h6>(<a href="{{url_for('itemJSON', category_name=category_name, item_name=item.name)}}">JSON</a>)</h6>
     </div>

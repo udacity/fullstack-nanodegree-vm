@@ -6,7 +6,7 @@
 </div>
 <div class="row banner menu">
     <div class="col-md-11 col-md-offset-1 padding-none">
-        <h1>Edit Menu Item</h1>
+        <h1>Edit Menu Item In <a href = "{{url_for('showCategory', category_name = category_name)}}">{{category_name}}</a></h1>
     </div>
 </div>
 <div class="row">
@@ -31,7 +31,7 @@
                         <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
                     <a href = '{{url_for('showItem', category_name = category_name, item_name = new_name.value)}}'>
                         <button class="btn btn-default delete" type="button">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <a href = "{{url_for('showItem', category_name = category.name, item_name = item.name)}}">Cancel</a>
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <a href = "{{url_for('showItem', category_name = category_name, item_name = item.name)}}">Cancel</a>
                         </button>
                     </a>
                     </div>
