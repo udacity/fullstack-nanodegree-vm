@@ -73,7 +73,7 @@ def editCategory(category_name):
         if request.form['name']:
             editedCategory.name = request.form['name']
             flash('Category Successfully Edited %s' % editedCategory.name)
-            return redirect(url_for('showCategory', category_name=category_name))
+            return redirect(url_for('showCategory', category_name=editedCategory.name))
     else:
         return render_template('editCategory.html', category=editedCategory)
 
@@ -133,7 +133,7 @@ def editItem(category_name, item_name):
         flash('Item Successfully Edited')
         return redirect(url_for('showCategory', category_name=category_name))
     else:
-        return render_template('editItem.html', category_name=category_name, item_name=item_name, item=editedItem, categories=categories)
+        return render_template('editItem.html', category_name=category_name, item_name=editedItem.name, item=editedItem, categories=categories)
 
 
 # Delete a menu item
