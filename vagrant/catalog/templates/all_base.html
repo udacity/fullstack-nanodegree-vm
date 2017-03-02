@@ -19,17 +19,22 @@
   </a>
 </div>
 <div class="row">
-  <div class="col-md-offset-3 col-xs-4 col-md-3 center">
+  <div class="col-xs-6 col-md-3 center">
     {% if 'username' not in session %}
       <a class="header-link" href="{{ url_for('show_login') }}">Login</a>      
     {% else %}
       <a class="header-link" href="{{ url_for('disconnect') }}">Logout</a>
     {% endif %}
   </div>
-  <div class="col-xs-4 col-md-3 center">
+  {% if 'username' in session %}
+    <div class="col-xs-6 col-md-3 center">
+      <a class="header-link" href="{{ url_for('rate_game') }}">Rate Game</a>      
+    </div>
+  {% endif %}
+  <div class="col-xs-6 col-md-3 center">
     <a class="header-link" href="{{ url_for('gamerater_home') }}">Newest Ratings</a>
   </div>
-  <div class="col-xs-4 col-md-3 center">
+  <div class="col-xs-6 col-md-3 center">
     <a class="header-link" href="{{ url_for('gamerater_popular') }}">Most Popular Games</a>    
   </div>
 </div>
@@ -43,7 +48,7 @@
 <br>
 <footer>
   <div class="row">
-    <hr class="heading-rule">
+    <hr class="heading-rule heading-rule-bot">
   </div>
   <div class="row">
     <p class="col-md-12 contact-me">Contact Paul at: </p>

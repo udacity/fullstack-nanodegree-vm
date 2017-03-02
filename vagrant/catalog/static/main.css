@@ -281,12 +281,13 @@ tr {
     margin-bottom: 2%;
 }
 
-.text-field {
-    padding-left:0;
-}
-
 .text-input {
     margin-left: 0;
+}
+
+.add-game-explanation {
+    padding-left: 15px;
+    font-size: 14pt;
 }
 
 @import url(http://weloveiconfonts.com/api/?family=zocial);

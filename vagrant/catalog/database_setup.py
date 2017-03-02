@@ -44,7 +44,7 @@ class Game(Base):
     name = Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
     category = Column(String(40))
-    description = Column(String(255))
+    description = Column(String(1020))
     avg_rating = Column(Float)
     modified = Column(DateTime)
 

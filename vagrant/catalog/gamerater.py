@@ -283,10 +283,10 @@ def user_info(user_id):
     return render_template("user.html")
 
 @app.route('/gamerater/add-game')
-def add_game():
-    return "This is where you will add a game."
+def add_game(game_name=None, rating=None):
+    return render_template("add_game.html", game_name = "Final Fantasy VII")
 
-@app.route('/gamerater/rate-game')
+@app.route('/gamerater/rate-game', methods=methods)
 def rate_game(game_id=None):
     return render_template("rate_game.html", game_id=game_id)
 
