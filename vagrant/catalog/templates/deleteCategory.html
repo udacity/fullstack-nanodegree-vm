@@ -7,10 +7,10 @@
     
     <button type="submit" class="btn btn-default delete" id="submit"type="button">
         <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete</button>
-    <a href = '{{url_for('showMainPage')}}'>
+    <a href = "{{url_for('showCategory', category_name = category.name)}}">
         <button class="btn btn-default delete" type="button">
             <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-            <a href = "{{url_for('showCategory', category_name = category.name)}}">Cancel</a>
+            Cancel
         </button>
     </a>
     

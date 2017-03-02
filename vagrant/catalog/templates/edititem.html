@@ -15,26 +15,25 @@
             <div class="form-group">
                 <label for="new_name">Name:</label>
                 <input type ="text" maxlength="100" class="form-control" name="name" value="{{item.name }}">
-                    
-                    <label for="description">Description:</label>
-                    <textarea class="form-control" maxlength="250" rows="3" name="description">{{item.description}}</textarea>
-                    <h4>Category</h4>
-                    {% for category in categories %}
-                    <div class="radio">
-                        <label>
-                            <input type="radio" name="{{category.name}}" id="{{category.name}}" value="{{category.name}}" {% if item.course == 'Dessert'%}checked{%endif%}>{{category.name}}
-                                </label>
-                    </div>
-                    {% endfor %}
-                    
-                    <button type="submit" class="btn btn-default" id="submit">
-                        <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save</button>
-                    <a href = '{{url_for('showItem', category_name = category_name, item_name = item_name)}}'>
-                        <button class="btn btn-default delete" type="button">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> <a href = "{{url_for('showItem', category_name = category_name, item_name = item.name)}}">Cancel</a>
-                        </button>
-                    </a>
-                    </div>
+            
+                <label for="description">Description:</label>
+                <textarea class="form-control" maxlength="250" rows="3" name="description">{{item.description}}</textarea>
+                <label for="category">Category:</label>
+                <select>
+                {% for category in categories %}
+                    <option value ="{{category.name}}" {% if item.catalog_id == 'category.id' %}selected{% endif %}>{{category.name}}</option>
+                {% endfor %}
+                </select>
+                <div class="padding-bottom"></div>
+                <button type="submit" class="btn btn-default" id="submit">
+                    <span class="glyphicon glyphicon-ok" aria-hidden="true"></span>Save
+                </button>
+                <a href = "{{url_for('showItem', category_name = category_name, item_name = item.name)}}">
+                    <button class="btn btn-default delete" type="button">
+                        <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
+                    </button>
+                </a>
+            </div>
         </form>
     </div>
 </div>
