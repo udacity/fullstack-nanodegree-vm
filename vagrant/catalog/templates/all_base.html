@@ -27,10 +27,10 @@
     {% endif %}
   </div>
   <div class="col-xs-4 col-md-3 center">
-    <a class="header-link" href="/most_popular">Most Popular Games</a>    
+    <a class="header-link" href="{{ url_for('gamerater_home') }}">Newest Ratings</a>
   </div>
   <div class="col-xs-4 col-md-3 center">
-    <a class="header-link" href="/newest">Newest Ratings</a>
+    <a class="header-link" href="{{ url_for('gamerater_popular') }}">Most Popular Games</a>    
   </div>
 </div>
 <hr class="heading-rule">

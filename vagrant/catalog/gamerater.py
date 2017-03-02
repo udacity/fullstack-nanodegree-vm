@@ -270,6 +270,10 @@ def show_login():
 def gamerater_home():
     return render_template("home.html")
 
+@app.route('/gamerater/popular/')
+def gamerater_popular():
+    return render_template("popular.html")
+
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
     return render_template("game.html")
