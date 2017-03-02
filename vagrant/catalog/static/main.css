@@ -240,6 +240,14 @@ tr {
     max-height: 54px;
 }
 
+.rate-this-game-td {
+    border-left: 0;
+}
+
+.game-rating {
+    border-right: 0;
+}
+
 .favorite-game-title {
     font-weight: bold;
     text-align: right;
