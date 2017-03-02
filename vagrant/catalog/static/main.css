@@ -34,6 +34,7 @@ h2 {
     font-weight: bold;
     font-size: 36pt;
     font-family: 'Kelly Slab', cursive;
+    padding-left: 15px;
 }
 
 textarea {
@@ -44,7 +45,7 @@ textarea {
 }
 
 input {
-    font-size: 20px;
+    font-size: 24px;
     padding: 2px;
     font-family: monospace;
     margin:10px;
@@ -167,6 +168,7 @@ tr {
     width: 100%;
     background: darkgray;
     font-color: black;
+    padding: 2px;
 }
 
 .center {
@@ -273,6 +275,18 @@ tr {
 
 .user-read-more {
     padding-left: 15px;
+}
+
+.rate-game-title {
+    margin-bottom: 2%;
+}
+
+.text-field {
+    padding-left:0;
+}
+
+.text-input {
+    margin-left: 0;
 }
 
 @import url(http://weloveiconfonts.com/api/?family=zocial);

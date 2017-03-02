@@ -39,7 +39,7 @@
           if (result) {
             $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
             setTimeout(function() {
-              window.location.href = '/gamerater';
+              window.location.href = '/gamerater/my-games';
             }, 4000);
           } else if (authResult['error']) {
             console.log('There was an error: ' + authResult['error']);
@@ -93,7 +93,7 @@
           if (result) {
             $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
             setTimeout(function() {
-              window.location.href = "/gamerater";
+              window.location.href = "/gamerater/my-games";
             }, 4000);
           } else {
             $('#result').html('Failed to make a server-side call. Check your configuration and console.');

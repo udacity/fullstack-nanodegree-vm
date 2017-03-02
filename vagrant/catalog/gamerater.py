@@ -287,8 +287,8 @@ def add_game():
     return "This is where you will add a game."
 
 @app.route('/gamerater/rate-game')
-def rate_game():
-    return 'This is where you will rate games.'
+def rate_game(game_id=None):
+    return render_template("rate_game.html", game_id=game_id)
 
 @app.route('/gamerater/my-games')
 def my_games():
