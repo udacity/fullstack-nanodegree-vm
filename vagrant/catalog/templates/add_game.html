@@ -3,7 +3,11 @@
 {% block content %}
 
 <div class="row">
-  <h2 class="rate-game-title">Add {{ game_name }}</h2>
+  {% if game_name %}
+    <h2 class="rate-game-title">Add {{ game_name }}</h2>
+  {% else %}
+    <h2 class="rate-game-title">Add Game</h2>
+  {% endif %}
 <div class="row">
   <div class="col-xs-offset-1">
     <p class="add-game-explanation">Sorry, we don't have that game yet! Please add details here.</p>
@@ -23,17 +27,26 @@
   </div>
 </div>
 <form action="{{ url_for('add_game') }}" method="POST">
-  <input type="hidden" name="rating" value="{{ rating }}">
   <div class="row">  
     <div class="col-md-offset-1 col-md-6 col-xs-10">
       <label>Name</label>
-      <input class="text-input" type="text" name="name" maxlength="80" placeholder="{{ game_name }}" value="{{ game_name }}">
+      <input class="text-input" type="text" name="name" maxlength="80" placeholder="Final Fantasy VII" value="{{ game_name }}">
     </div>
     <div class="col-md-4 col-xs-10">
       <label>Category</label>
       <input class="text-input" type="text" name="category" maxlength="40" placeholder="RPG" value="{{ category }}">
     </div>
   </div>
+  {% if rating %}
+    <input type="hidden" name="rating" value="{{ rating }}">
+  {% else %}
+    <div class="row">
+      <div class="col-xs-2 col-md-offset-1">        
+        <label>Rating</label>
+        <input class="text-input" type="text" name="rating" placeholder="1 - 10" value="{{ rating }}">
+      </div>
+    </div>
+  {% endif %}
   <div class="row">
     <div class="col-xs-offset-1 col-xs-10">
       <label>Description</label>

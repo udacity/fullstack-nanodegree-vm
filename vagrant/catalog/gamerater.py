@@ -312,12 +312,13 @@ def add_game():
         game_name = request.form['name']
         category = request.form['category']
         description = request.form['description']
-        rating = int(request.form['rating'])
+        rating = request.form['rating']
         
         # Double check if the game actually exists
         try:
             existing_game = session.query(Game).filter_by(
                 name = game_name).one()
+            flash("That game already exists! Please add a rating.")
             return redirect(url_for('rate_game',
                                     game_name = game_name,
                                     rating = rating))
@@ -330,12 +331,27 @@ def add_game():
                                        category = category,
                                        description = description,
                                        rating = rating)
+
+            # If the rating is not an integer between 0 and 10 return
+            # an error
+            try:
+                rating_int = int(rating)
+                if rating_int > 10 or rating_int < 0:
+                    flash('Please ensure the rating is a number from 1 to 10.')
+                    return render_template('rate_game.html',
+                                           game_name = game_name,
+                                           rating = rating)
+            except:
+                flash('Please ensure the rating is a number from 1 to 10.')
+                return render_template('rate_game.html',
+                                        game_name = game_name,
+                                        rating = rating)
             
             # Add new game and new rating
             new_game = Game(name = game_name,
                             category=category,
                             description=description,
-                            avg_rating=rating,
+                            avg_rating=rating_int,
                             modified=datetime.now())
             session.add(new_game)
             session.commit()
@@ -343,7 +359,7 @@ def add_game():
                 name = new_game.name).one()
             new_rating = UsersGames(user_id = login_session['user_id'],
                                     game_id = game_to_rate.id,
-                                    rating = rating,
+                                    rating = rating_int,
                                     modified = datetime.now())
             session.add(new_rating)
             session.commit()
@@ -352,10 +368,16 @@ def add_game():
     else:
         game_name = request.args.get('game_name')
         rating = request.args.get('rating')
-        return render_template("add_game.html", game_name = game_name, rating = rating)
+        if not game_name:
+            game_name = ""
+        if not rating:
+            rating = ""
+        return render_template("add_game.html",
+                               game_name = game_name,
+                               rating = rating)
 
 @app.route('/gamerater/rate-game', methods=methods)
-def rate_game(game_id=None, rating=None):
+def rate_game():
     # Require the user to be logged in
     if 'username' not in login_session:
             return redirect('/login')
@@ -399,6 +421,8 @@ def rate_game(game_id=None, rating=None):
             return redirect(url_for('add_game',
                                     game_name = game_name,
                                     rating = rating))
+
+        # Check if there's an existing rating. Update if so.
         try:
             existing_rating = session.query(UsersGames).filter(
                 UsersGames.user_id == login_session['user_id'],
@@ -409,7 +433,7 @@ def rate_game(game_id=None, rating=None):
             flash("The rating for %s has been updated with %s!" % (
                 existing_game.name, existing_rating.rating))
         except:
-            print "New rating."
+            # Create a new rating if there isn't an existing one
             new_rating = UsersGames(user_id = login_session['user_id'],
                                     game_id = existing_game.id,
                                     rating = rating_int,
@@ -418,10 +442,7 @@ def rate_game(game_id=None, rating=None):
             session.commit()
             flash("%s has been rated." % existing_game.name)
 
-        all_ratings = session.query(UsersGames).all()
-        count = 1
         # Get the existing ratings, then divide by num ratings
-        print "store average rating"
         existing_ratings = session.query(UsersGames).filter_by(
             game_id = existing_game.id)
         ratings_count = existing_ratings.count()
@@ -435,7 +456,16 @@ def rate_game(game_id=None, rating=None):
         session.commit()
         return redirect(url_for('my_games'))
 
-    return render_template("rate_game.html", game_id = game_id)
+    
+    game_name = request.args.get('game_name')
+    rating = request.args.get('rating')
+    if not game_name:
+        game_name = ""
+    if not rating:
+        rating = ""
+    return render_template("rate_game.html",
+                           game_name = game_name,
+                           rating = rating)
 
 @app.route('/gamerater/my-games')
 def my_games():
