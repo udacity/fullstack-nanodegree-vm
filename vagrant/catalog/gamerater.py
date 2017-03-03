@@ -66,7 +66,7 @@ def create_user(login_session):
     return get_user_id_by_email(login_session['email'])
 
 def login_or_create_user(login_session):
-    """See if user exists, and create the user."""
+    """See if user exists, and create the user if not."""
     user_id = get_user_id_by_email(login_session['email'])
     if not user_id:
         user_id = create_user(login_session)
@@ -304,7 +304,6 @@ def add_game():
             return redirect('/login')
 
     if request.method == 'POST':
-        print "in post"
 
         # Redirect home if you press Cancel
         if request.form['submit'] == 'Cancel':
@@ -349,7 +348,7 @@ def add_game():
             session.add(new_rating)
             session.commit()
             flash('%s has been rated!' % game_to_rate.name)
-            return redirect('my_games')
+            return redirect(url_for('my_games'))
     else:
         game_name = request.args.get('game_name')
         rating = request.args.get('rating')
@@ -370,7 +369,7 @@ def rate_game(game_id=None, rating=None):
         rating = request.form['rating']
 
         # If either were not sent return an error
-        if not game_name or not rating:
+        if not (game_name and rating):
             flash('Please enter both a game name and rating.')
             return render_template('rate_game.html',
                                    game_name = game_name,
@@ -379,17 +378,13 @@ def rate_game(game_id=None, rating=None):
         # If the rating is not an integer between 0 and 10 return
         # an error
         try:
-            print "Trying to make rating an integer."
             rating_int = int(rating)
-            print rating_int
             if rating_int > 10 or rating_int < 0:
-                print rating_int, " is not between 0 and 11."
                 flash('Please ensure the rating is a number from 1 to 10.')
                 return render_template('rate_game.html',
                                        game_name = game_name,
                                        rating = rating)
         except:
-            print "hit exception"
             flash('Please ensure the rating is a number from 1 to 10.')
             return render_template('rate_game.html',
                                    game_name = game_name,
@@ -400,36 +395,45 @@ def rate_game(game_id=None, rating=None):
         try:
             existing_game = session.query(Game).filter_by(
                 name = game_name).one()
-            if existing_game:
-                new_rating = UsersGames(user_id = login_session['user_id'],
-                                        game_id = existing_game.id,
-                                        rating = rating_int,
-                                        modified = datetime.now())
-
-                # Get the existing ratings, then divide by num ratings
-                existing_ratings = session.query(UsersGames).filter_by(
-                    existing_game.id).all()
-                print existing_ratings
-                ratings_count = session.query(UsersGames).filter_by(
-                    existing_game.id).count()
-                print ratings_count
-                all_ratings = []
-                for rating in existing_ratings:
-                    all_ratings.append(rating.rating)
-                print all_ratings
-                avg_rating = sum(all_ratings) / ratings_count
-                print avg_rating
-                existing_game.avg_rating = avg_rating
-                existing_game.modified = datetime.now()
-                session.add(new_rating)
-                session.add(existing_game)
-                session.commit()
-                flash('%s has been rated!' % existing_game.name)
-                return redirect('my_games')
         except:
             return redirect(url_for('add_game',
                                     game_name = game_name,
                                     rating = rating))
+        try:
+            existing_rating = session.query(UsersGames).filter(
+                UsersGames.user_id == login_session['user_id'],
+                UsersGames.game_id == existing_game.id).one()
+            existing_rating.rating = rating_int
+            session.add(existing_rating)
+            session.commit()
+            flash("The rating for %s has been updated with %s!" % (
+                existing_game.name, existing_rating.rating))
+        except:
+            print "New rating."
+            new_rating = UsersGames(user_id = login_session['user_id'],
+                                    game_id = existing_game.id,
+                                    rating = rating_int,
+                                    modified = datetime.now())
+            session.add(new_rating)
+            session.commit()
+            flash("%s has been rated." % existing_game.name)
+
+        all_ratings = session.query(UsersGames).all()
+        count = 1
+        # Get the existing ratings, then divide by num ratings
+        print "store average rating"
+        existing_ratings = session.query(UsersGames).filter_by(
+            game_id = existing_game.id)
+        ratings_count = existing_ratings.count()
+        all_ratings = []
+        for rating in existing_ratings.all():
+            all_ratings.append(rating.rating)
+        avg_rating = float(sum(all_ratings)) / ratings_count
+        existing_game.avg_rating = avg_rating
+        existing_game.modified = datetime.now()
+        session.add(existing_game)
+        session.commit()
+        return redirect(url_for('my_games'))
 
     return render_template("rate_game.html", game_id = game_id)
 
