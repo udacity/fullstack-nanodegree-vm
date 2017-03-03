@@ -14,10 +14,10 @@ session = DBSession()
 
 
 @app.route('/')
-@app.route('/hello')
-def restaurantMenu():
-    restaurant = session.query(Restaurant).first()
-    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
+@app.route('/restaurants/<int:restaurant_id>/')
+def restaurantMenu(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant_id)
 
     output = ''
 
@@ -30,6 +30,21 @@ def restaurantMenu():
         output += '</br></br></br>'
 
     return output
+
+
+@app.route('/restaurants/<int:restaurant_id>/new-menu-item/')
+def newMenuItem(restaurant_id):
+    return "Create a new menu item"
+
+
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit/')
+def editMenuItem(restaurant_id, menu_id):
+    return "Edit the menu item"
+
+
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete/')
+def deleteMenuItem(restaurant_id, menu_id):
+    return "Delete the menu item"
 
 
 if __name__ == '__main__':
