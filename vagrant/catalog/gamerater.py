@@ -297,20 +297,66 @@ def game_info(game_id):
 def user_info(user_id):
     return render_template("user.html")
 
-@app.route('/gamerater/add-game')
-def add_game(game_name=None, rating=None):
+@app.route('/gamerater/add-game', methods = methods)
+def add_game():
     # Require the user to be logged in
     if 'username' not in login_session:
             return redirect('/login')
 
     if request.method == 'POST':
-        pass
+        print "in post"
 
+        # Redirect home if you press Cancel
+        if request.form['submit'] == 'Cancel':
+            return redirect('/')
 
-    return render_template("add_game.html", game_name = "Final Fantasy VII")
+        game_name = request.form['name']
+        category = request.form['category']
+        description = request.form['description']
+        rating = int(request.form['rating'])
+        
+        # Double check if the game actually exists
+        try:
+            existing_game = session.query(Game).filter_by(
+                name = game_name).one()
+            return redirect(url_for('rate_game',
+                                    game_name = game_name,
+                                    rating = rating))
+        except:
+            # If any fields are missing return an error
+            if not (game_name and category and description):
+                flash('Please enter text in each field.')
+                return render_template('add_game.html',
+                                       game_name = game_name,
+                                       category = category,
+                                       description = description,
+                                       rating = rating)
+            
+            # Add new game and new rating
+            new_game = Game(name = game_name,
+                            category=category,
+                            description=description,
+                            avg_rating=rating,
+                            modified=datetime.now())
+            session.add(new_game)
+            session.commit()
+            game_to_rate = session.query(Game).filter_by(
+                name = new_game.name).one()
+            new_rating = UsersGames(user_id = login_session['user_id'],
+                                    game_id = game_to_rate.id,
+                                    rating = rating,
+                                    modified = datetime.now())
+            session.add(new_rating)
+            session.commit()
+            flash('%s has been rated!' % game_to_rate.name)
+            return redirect('my_games')
+    else:
+        game_name = request.args.get('game_name')
+        rating = request.args.get('rating')
+        return render_template("add_game.html", game_name = game_name, rating = rating)
 
 @app.route('/gamerater/rate-game', methods=methods)
-def rate_game(game_id=None):
+def rate_game(game_id=None, rating=None):
     # Require the user to be logged in
     if 'username' not in login_session:
             return redirect('/login')
@@ -330,7 +376,8 @@ def rate_game(game_id=None):
                                    game_name = game_name,
                                    rating = rating)
 
-        # If the rating is not an integer between 0 and 10 return an error
+        # If the rating is not an integer between 0 and 10 return
+        # an error
         try:
             print "Trying to make rating an integer."
             rating_int = int(rating)
@@ -348,6 +395,8 @@ def rate_game(game_id=None):
                                    game_name = game_name,
                                    rating = rating)
 
+        # Try getting the existing game. If it doesn't exist,
+        # redirect the user to add_game
         try:
             existing_game = session.query(Game).filter_by(
                 name = game_name).one()
@@ -356,6 +405,8 @@ def rate_game(game_id=None):
                                         game_id = existing_game.id,
                                         rating = rating_int,
                                         modified = datetime.now())
+
+                # Get the existing ratings, then divide by num ratings
                 existing_ratings = session.query(UsersGames).filter_by(
                     existing_game.id).all()
                 print existing_ratings
@@ -369,6 +420,7 @@ def rate_game(game_id=None):
                 avg_rating = sum(all_ratings) / ratings_count
                 print avg_rating
                 existing_game.avg_rating = avg_rating
+                existing_game.modified = datetime.now()
                 session.add(new_rating)
                 session.add(existing_game)
                 session.commit()
@@ -378,10 +430,6 @@ def rate_game(game_id=None):
             return redirect(url_for('add_game',
                                     game_name = game_name,
                                     rating = rating))
-            
-
-
-
 
     return render_template("rate_game.html", game_id = game_id)
 

@@ -41,8 +41,8 @@ class Game(Base):
     __tablename__ = 'game'
 
     # create columns
-    name = Column(String(80), nullable = False)
     id = Column(Integer, primary_key = True)
+    name = Column(String(80), nullable = False)
     category = Column(String(40))
     description = Column(String(1020))
     avg_rating = Column(Float)
