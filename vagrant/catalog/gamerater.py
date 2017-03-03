@@ -7,6 +7,7 @@ from database_setup import Base, Game, UsersGames, User
 
 from flask import session as login_session
 import random, string
+from datetime import datetime
 
 from oauth2client.client import flow_from_clientsecrets
 from oauth2client.client import FlowExchangeError
@@ -84,7 +85,7 @@ def login_or_create_user(login_session):
     return output
 
 
-
+# Route handling functions
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     """Logs the user in using Google third party authentication."""
@@ -268,6 +269,20 @@ def show_login():
 @app.route('/')
 @app.route('/gamerater/')
 def gamerater_home():
+    # Get the 10 most recent games
+    #recent_ten_ratings = session.query(UsersGames).order_by(
+    #    UsersGames.modified).limit(10)
+    #recent_games_dict_list = []
+    #for users_game in recent_ten_games:
+    #    game = session.query(Game).filter_by(id = users_game.game_id).one()
+    #    user = session.query(User).filter_by(id = users_game.user_id).one()
+    #    recent_game = {
+    #        "username" : user.name,
+    #        "game" : game.name,
+    #        "rating" : users_game.rating,
+    #        "modified" : users_game.modified
+    #    }
+    #    recent_games_dict_list.append(recent_game)
     return render_template("home.html")
 
 @app.route('/gamerater/popular/')
@@ -284,11 +299,91 @@ def user_info(user_id):
 
 @app.route('/gamerater/add-game')
 def add_game(game_name=None, rating=None):
+    # Require the user to be logged in
+    if 'username' not in login_session:
+            return redirect('/login')
+
+    if request.method == 'POST':
+        pass
+
+
     return render_template("add_game.html", game_name = "Final Fantasy VII")
 
 @app.route('/gamerater/rate-game', methods=methods)
 def rate_game(game_id=None):
-    return render_template("rate_game.html", game_id=game_id)
+    # Require the user to be logged in
+    if 'username' not in login_session:
+            return redirect('/login')
+
+    if request.method == 'POST':
+        if request.form['submit'] == 'Cancel':
+            return redirect('/')
+
+        # Get post data
+        game_name = request.form['name']
+        rating = request.form['rating']
+
+        # If either were not sent return an error
+        if not game_name or not rating:
+            flash('Please enter both a game name and rating.')
+            return render_template('rate_game.html',
+                                   game_name = game_name,
+                                   rating = rating)
+
+        # If the rating is not an integer between 0 and 10 return an error
+        try:
+            print "Trying to make rating an integer."
+            rating_int = int(rating)
+            print rating_int
+            if rating_int > 10 or rating_int < 0:
+                print rating_int, " is not between 0 and 11."
+                flash('Please ensure the rating is a number from 1 to 10.')
+                return render_template('rate_game.html',
+                                       game_name = game_name,
+                                       rating = rating)
+        except:
+            print "hit exception"
+            flash('Please ensure the rating is a number from 1 to 10.')
+            return render_template('rate_game.html',
+                                   game_name = game_name,
+                                   rating = rating)
+
+        try:
+            existing_game = session.query(Game).filter_by(
+                name = game_name).one()
+            if existing_game:
+                new_rating = UsersGames(user_id = login_session['user_id'],
+                                        game_id = existing_game.id,
+                                        rating = rating_int,
+                                        modified = datetime.now())
+                existing_ratings = session.query(UsersGames).filter_by(
+                    existing_game.id).all()
+                print existing_ratings
+                ratings_count = session.query(UsersGames).filter_by(
+                    existing_game.id).count()
+                print ratings_count
+                all_ratings = []
+                for rating in existing_ratings:
+                    all_ratings.append(rating.rating)
+                print all_ratings
+                avg_rating = sum(all_ratings) / ratings_count
+                print avg_rating
+                existing_game.avg_rating = avg_rating
+                session.add(new_rating)
+                session.add(existing_game)
+                session.commit()
+                flash('%s has been rated!' % existing_game.name)
+                return redirect('my_games')
+        except:
+            return redirect(url_for('add_game',
+                                    game_name = game_name,
+                                    rating = rating))
+            
+
+
+
+
+    return render_template("rate_game.html", game_id = game_id)
 
 @app.route('/gamerater/my-games')
 def my_games():
