@@ -21,7 +21,7 @@
                 <label for="category">Category:</label>
                 <select>
                 {% for category in categories %}
-                    <option value ="{{category.name}}" {% if item.catalog_id == 'category.id' %}selected{% endif %}>{{category.name}}</option>
+                    <option value ="{{category.name}}" {% if item.catalog_id == category.id %}selected{% endif %}>{{category.name}}</option>
                 {% endfor %}
                 </select>
                 <div class="padding-bottom"></div>

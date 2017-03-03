@@ -43,7 +43,6 @@ def showCategory(category_name):
     categories = session.query(Category).order_by(asc(Category.name))
     
     category = session.query(Category).filter_by(name=category_name).one()
-    #creator = getUserInfo(category.user_id)
     
     items = session.query(Item).filter_by(catalog_id=category.id).all()
     
@@ -167,7 +166,7 @@ def catalogItemsJSON(category_name):
 @app.route('/catalog/<string:category_name>/<string:item_name>/JSON')
 def itemJSON(category_name, item_name):
     item = session.query(Item).filter_by(name=item_name).one()
-    return jsonify(item=Item.serialize)
+    return jsonify(item=item.serialize)
 
 # Overview of all items in catalog in JSON
 @app.route('/catalog/JSON')

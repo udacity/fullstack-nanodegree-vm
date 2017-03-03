@@ -148,7 +148,7 @@ a {
 }
 .banner.main {
     height: 150px;
-    background: url("/static/top-banner.jpg");
+    background: url("/static/top-banner.png");
     background-position: right;
     background-repeat: no-repeat;
     background-size: cover;
