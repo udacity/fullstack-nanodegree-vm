@@ -14,8 +14,6 @@
     <div class="col-md-1"></div>
     <div class="col-md-11 padding-none">
         <h1>{{item.name}}</h1>
-        <h4>In <a href = "{{url_for('showCategory', category_name = category_name)}}">{{category_name}}</a></h4>
-        <h3>{{item.description}}</h3>
     </div>
 </div>
 
@@ -36,27 +34,41 @@
  -->
 <div class="row padding-top padding-bottom">
     <div class="col-md-1"></div>
-    <div class="col-md-10 padding-top padding-bottom">
+    <div class="col-md-10 padding-none">
         {%if 'username' not in session %}
-        You must login to edit this item
+        You must login to edit this category
         {% else %}
         <div>
             <a href="{{url_for('editItem', category_name = category_name, item_name = item.name)}}">
-                <button class="btn btn-default" id="edit-category">
-                    <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Edit
+                <button class="btn btn-default edit" id="edit-category">
+                    <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>Edit Item
                 </button>
             </a>
             <a href="{{url_for('deleteItem', category_name = category_name, item_name = item.name)}}">
-                <button class="btn btn-default" id="delete-category">
-                    <span class="glyphicon glyphicon-cutlery" aria-hidden="true"></span>Delete
+                <button class="btn btn-default delete" id="delete-category">
+                    <span class="glyphicon glyphicon-trash" aria-hidden="true"></span>Delete
                 </button>
             </a>
         </div>
         {% endif %}
+    </div>
+    <div class="col-md-1"></div>
+</div>
+
+
+<div class="row padding-top padding-bottom">
+    <div class="col-md-1"></div>
+    <div class="col-md-10 padding-none">
+        <div>
+            <h5>In <a href = "{{url_for('showCategory', category_name = category_name)}}">{{category_name}}</a></h5>
+        </div>
+        <div>
+            <p>{{item.description}}</p>
+        </div>
         <div>
             <h6>(<a href="{{url_for('itemJSON', category_name=category_name, item_name=item.name)}}">JSON</a>)</h6>
         </div>
     </div>
     <div class="col-md-1"></div>
-</divZ
+</div>
 {% endblock %}
