@@ -64,6 +64,21 @@ def get_ratings_by_user_id(user_id):
     return session.query(UsersGames).filter_by(
         user_id = user_id).order_by(UsersGames.rating).all()
 
+def get_top_game_by_user_id(user_id):
+    """
+    Returns the game with the highest rating by the user with
+    id user_id.
+    """
+    top_rating = session.query(UsersGames).filter_by(
+        user_id = user_id).order_by(UsersGames.rating).one()
+    return get_game_by_id(top_rating.game_id)
+
+def get_latest_game_by_user_id(user_id):
+    """Returns the game most recently rated by the given user_id."""
+    latest_rating = session.query(UsersGames).filter_by(
+        user_id = user_id).order_by(UsersGames.modified).one()
+    return get_game_by_id(latest_rating.game_id)
+
 def make_json_response(message, code):
     """
     Returns a json response with the given message and code.
@@ -287,20 +302,34 @@ def show_login():
 @app.route('/gamerater/')
 def gamerater_home():
     # Get the 10 most recent games
-    #recent_ten_ratings = session.query(UsersGames).order_by(
-    #    UsersGames.modified).limit(10)
-    #recent_games_dict_list = []
-    #for users_game in recent_ten_games:
-    #    game = session.query(Game).filter_by(id = users_game.game_id).one()
-    #    user = session.query(User).filter_by(id = users_game.user_id).one()
-    #    recent_game = {
-    #        "username" : user.name,
-    #        "game" : game.name,
-    #        "rating" : users_game.rating,
-    #        "modified" : users_game.modified
-    #    }
-    #    recent_games_dict_list.append(recent_game)
-    return render_template("home.html")
+    recent_ten_ratings = session.query(UsersGames).order_by(
+        UsersGames.modified).limit(10)
+    recent_games = []
+    for rating in recent_ten_ratings:
+        recent_game = {
+            "user" : get_user_by_id(rating.user_id),
+            "game" : get_game_by_id(rating.game_id),
+            "rating" : rating.rating,
+            "modified" : rating.modified
+        }
+        recent_games.append(recent_game)
+
+    # Get all users
+    all_users = session.query(User).all()
+
+    users = []
+
+    for user in all_users:
+        user_data = {
+            'user' : user,
+            'favorite_game' : get_top_game_by_user_id(user.id).name,
+            'latest_game' : get_latest_game_by_user_id(user.id).name
+        }
+        users.append(user_data)
+
+    return render_template("home.html",
+                           recent_games = recent_games,
+                           users = users)
 
 @app.route('/gamerater/popular/')
 def gamerater_popular():

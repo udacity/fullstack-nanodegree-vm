@@ -25,106 +25,18 @@
           <th>Rating</th>
           <th>Updated</th>
       </tr>
-      <tr class="center">
+      {% for game in recent_games %}
+        <tr class="center">
           <td>
-            <a href="{{ url_for('user_info', user_id = 1 )}}">Paul</a>
+            <a href="{{ url_for('user_info', user_id = game['user'].id) }}">{{ game['user'].name }}</a>
           </td>
           <td>
-            <a href="/game/nioh">Nioh</a>
+            <a href="{{ url_for('game_info', game_id = game['game'].id) }}">{{ game['game'].name }}</a>
           </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
+          <td>{{ game['rating'] }}</td>
+          <td>{{ game['modified'] }}</td>
       </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Nioh</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
-      <tr class="center">
-          <td>
-            <a href="/user/paul">Paul Castillo</a>
-          </td>
-          <td>
-            <a href="/game/nioh">Final Fantasy Tactics: War of the Lion</a>
-          </td>
-          <td>8</td>
-          <td>9:46 p.m. 02/26/2017</td>
-      </tr>
+      {% endfor %}
   </table>    
 </div>
 <br>
@@ -133,12 +45,11 @@
 <div>
 <h2>All Users</h2>
 <br>
-{% include 'user_small.html' %}
-{% include 'user_small.html' %}
-{% include 'user_small.html' %}
-{% include 'user_small.html' %}
-{% include 'user_small.html' %}
-{% include 'user_small.html' %}
+<div class="row">
+  {% for user in users %}
+    {% include 'user_small.html' %}
+  {% endfor %}
+</div>
 </div>
 
 
