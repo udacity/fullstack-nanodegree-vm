@@ -5,9 +5,9 @@
 <div class="row">
   <div class="user-title">
     <div class="col-md-1 col-xs-4 user-page-icon">
-      <img class="img-responsive" src="{{ url_for('static', filename='img/zero.png') }}">
+      <img class="img-responsive" src="{{ user.picture }}">
     </div>
-    <h2 class="user-page-name col-xs-6">Paul Castillo</h2>
+    <h2 class="user-page-name col-xs-6">{{ user.name }}</h2>
   </div>
 </div>
 <div class="row">
@@ -16,7 +16,7 @@
     <p class="col-xs-10 col-md-4 favorite-game favorite-game-title">Favorite Game</p>
   </div>
   {% include 'game_details.html' %}
-  <a class="user-read-more" href="/gamerater/game/1">Read more</a>
+  <a class="user-read-more" href="{{ url_for('game_info', game_id = game.id) }}">Read more</a>
 </div>
 </div>
 <br>
@@ -35,8 +35,8 @@
       </tr>
       {% for rating in ratings %}
       <tr>
-        <td>{{ rating['game'].name }}</td>
-        <td>{{ rating['game'].category }}</td>        
+        <td><a href="{{ url_for('game_info', game_id = rating['game'].id) }}">{{ rating['game'].name }}</a></td>
+        <td>{{ rating['game'].category }}</td>
         <td class="game-rating">{{ rating['rating'] }}{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
       </tr>
       {% endfor %}
