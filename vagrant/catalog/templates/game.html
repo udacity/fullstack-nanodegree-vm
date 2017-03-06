@@ -16,24 +16,14 @@
         <th>User</th>
         <th>Rating</th>
       </tr>
+      {% for rating in ratings %}
       <tr>
         <td>
-          <a href="{{ url_for('user_info', user_id = 1) }}">Paul</a>
+          <a href="{{ url_for('user_info', user_id = rating['user'].id) }}">{{ rating['user'].name }}</a>
         </td>
-        <td>9.5</td>
+        <td>{{ rating['rating'] }}</td>
       </tr>
-      <tr>
-        <td>Katrina</td>
-        <td>9.5</td>
-      </tr>
-      <tr>
-        <td>Paul</td>
-        <td>8.5</td>
-      </tr>
-      <tr>
-        <td>Katrina</td>
-        <td>8.5</td>
-      </tr>
+      {% endfor %}
     </table>
   </div>
 </div>

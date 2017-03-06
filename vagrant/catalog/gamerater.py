@@ -47,6 +47,18 @@ def get_user_id_by_email(email):
     except:
         return None
 
+def get_game_by_id(game_id):
+    """Returns a game object with the given game_id."""
+    return session.query(Game).filter_by(id = game_id).one()
+
+def get_game_by_name(game_name):
+    """Returns a game object with the given game_id."""
+    return session.query(Game).filter_by(name = game_name).one()
+
+def get_ratings_by_game_id(game_id):
+    """Returns the ratings with the given game_id."""
+    return session.query(UsersGames).filter_by(game_id = game_id).all()
+
 def make_json_response(message, code):
     """
     Returns a json response with the given message and code.
@@ -291,7 +303,21 @@ def gamerater_popular():
 
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
-    return render_template("game.html")
+    try:
+        game = get_game_by_id(game_id)        
+    except:
+        flash("We're sorry, that's not a valid game id!")
+        return redirect(url_for('gamerater_home'))
+    rating_data = get_ratings_by_game_id(game_id=game_id)
+    ratings = []
+    for rating in rating_data:
+        user_rating = {
+            "user" : get_user_by_id(rating.user_id),
+            "user_id" : rating.user_id,
+            "rating" : rating.rating
+        }
+        ratings.append(user_rating)
+    return render_template("game.html", game = game, ratings = ratings)
 
 @app.route('/gamerater/user/<int:user_id>/')
 def user_info(user_id):
@@ -316,8 +342,7 @@ def add_game():
         
         # Double check if the game actually exists
         try:
-            existing_game = session.query(Game).filter_by(
-                name = game_name).one()
+            existing_game = get_game_by_name(name=name)
             flash("That game already exists! Please add a rating.")
             return redirect(url_for('rate_game',
                                     game_name = game_name,
@@ -355,8 +380,7 @@ def add_game():
                             modified=datetime.now())
             session.add(new_game)
             session.commit()
-            game_to_rate = session.query(Game).filter_by(
-                name = new_game.name).one()
+            game_to_rate = get_game_by_name(name=name)
             new_rating = UsersGames(user_id = login_session['user_id'],
                                     game_id = game_to_rate.id,
                                     rating = rating_int,
@@ -415,8 +439,7 @@ def rate_game():
         # Try getting the existing game. If it doesn't exist,
         # redirect the user to add_game
         try:
-            existing_game = session.query(Game).filter_by(
-                name = game_name).one()
+            existing_game = get_game_by_name(name=name)
         except:
             return redirect(url_for('add_game',
                                     game_name = game_name,
@@ -469,7 +492,7 @@ def rate_game():
 
 @app.route('/gamerater/my-games')
 def my_games():
-    return 'This is where the user will be able to see their own games.'
+    return render_template('my_games.html')
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
