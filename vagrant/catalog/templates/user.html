@@ -13,7 +13,7 @@
 <div class="row">
 <div class="col-md-offset-1 col-md-10 col-xs-12">    
   <div class="row">
-    <p class="col-xs-6 col-md-4 favorite-game favorite-game-title">Favorite Game</p>
+    <p class="col-xs-10 col-md-4 favorite-game favorite-game-title">Favorite Game</p>
   </div>
   {% include 'game_details.html' %}
   <a class="user-read-more" href="/gamerater/game/1">Read more</a>
@@ -33,26 +33,13 @@
         <th>Category</th>
         <th>Rating</th>
       </tr>
+      {% for rating in ratings %}
       <tr>
-        <td>Nioh</td>
-        <td>Action</td>        
-        <td class="game-rating">9.5{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
+        <td>{{ rating['game'].name }}</td>
+        <td>{{ rating['game'].category }}</td>        
+        <td class="game-rating">{{ rating['rating'] }}{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
       </tr>
-      <tr>
-        <td>Vagrant Story</td>
-        <td>Action/ RPG</td>
-        <td class="game-rating">9.5{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
-      </tr>
-      <tr>
-        <td>Dark Souls III</td>
-        <td>Action</td>
-        <td class="game-rating">9{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
-      </tr>
-      <tr>
-        <td>Mass Effect 3</td>
-        <td>Shooter RPG</td>
-        <td class="game-rating">9{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
-      </tr>
+      {% endfor %}
     </table>
   </div>
 </div>

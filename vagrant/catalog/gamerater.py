@@ -59,6 +59,11 @@ def get_ratings_by_game_id(game_id):
     """Returns the ratings with the given game_id."""
     return session.query(UsersGames).filter_by(game_id = game_id).all()
 
+def get_ratings_by_user_id(user_id):
+    """Returns the ratings for user with the given id."""
+    return session.query(UsersGames).filter_by(
+        user_id = user_id).order_by(UsersGames.rating).all()
+
 def make_json_response(message, code):
     """
     Returns a json response with the given message and code.
@@ -303,12 +308,17 @@ def gamerater_popular():
 
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
+    # Try getting the game info. If an exception occurs, return error
     try:
-        game = get_game_by_id(game_id)        
+        game = get_game_by_id(game_id)
     except:
         flash("We're sorry, that's not a valid game id!")
         return redirect(url_for('gamerater_home'))
+    
+    # Get the ratings info
     rating_data = get_ratings_by_game_id(game_id=game_id)
+    
+    # Set up data for the page
     ratings = []
     for rating in rating_data:
         user_rating = {
@@ -321,7 +331,38 @@ def game_info(game_id):
 
 @app.route('/gamerater/user/<int:user_id>/')
 def user_info(user_id):
-    return render_template("user.html")
+    # Get the user info
+    try:
+        user = get_user_by_id(user_id)
+    except:
+        flash("We're sorry, that user id does not exist.")
+        return redirect(url_for('gamerater_home'))
+
+    # Get the user's ratings
+    try:
+        users_ratings = get_ratings_by_user_id(user.id)
+    except:
+        users_ratings = None
+
+    # Setup the ratings for the page
+    if users_ratings:
+        ratings = []
+        for rating in users_ratings:
+            new_rating = {
+                'rating' : rating.rating,
+                'game' : get_game_by_id(rating.game_id)
+            }
+            ratings.append(new_rating)
+
+    # Get the user's top rating
+    top_rating = session.query(UsersGames).filter_by(
+        user_id = user_id).order_by(UsersGames.rating).one()
+    game = get_game_by_id(top_rating.game_id)
+
+    return render_template("user.html",
+                           user = user,
+                           ratings = ratings,
+                           game = game)
 
 @app.route('/gamerater/add-game', methods = methods)
 def add_game():
