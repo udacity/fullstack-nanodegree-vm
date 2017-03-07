@@ -357,13 +357,8 @@ def gamerater_home():
         recent_games.append(recent_game)
 
     # Get the 10 highest ratings
-    top_ten_games = session.query(Game).order_by(desc(Game.avg_rating)).limit(10)
-
-    print top_ten_games
-
-    for game in top_ten_games:
-        print ""
-        print game.name
+    top_ten_games = session.query(Game).order_by(
+        desc(Game.avg_rating)).limit(10)
 
     # Get all users
     all_users = session.query(User).all()
