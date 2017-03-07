@@ -4,12 +4,13 @@
 
 <div class="row">
   <div class="user-title">
-    <div class="col-md-1 col-xs-4 user-page-icon">
+    <div class="col-md-1 col-xs-2 user-page-icon">
       <img class="img-responsive" src="{{ user.picture }}">
     </div>
     <h2 class="user-page-name col-xs-6">{{ user.name }}</h2>
   </div>
 </div>
+  {% include 'messages.html' %}
 <div class="row">
 <div class="col-md-offset-1 col-md-10 col-xs-12">    
   <div class="row">
@@ -31,7 +32,7 @@
     <p class="col-md-4 col-md-offset-1 col-xs-8 favorite-game user-all-games-title">All Games</p>
   </div>
   <div class="row">
-    {% if rating %}
+    {% if ratings %}
       <table class="col-xs-offset-1 col-xs-10">
         <tr>
           <th>Game</th>
@@ -42,7 +43,7 @@
           <tr>
             <td><a href="{{ url_for('game_info', game_id = rating['game'].id) }}">{{ rating['game'].name }}</a></td>
             <td>{{ rating['game'].category }}</td>
-            <td class="game-rating">{{ rating['rating'] }}{% if 'username' in session %} <a href="{{ url_for('rate_game', game_id = 1) }}">Rate This Game</a> {% endif %}</td>
+            <td class="game-rating">{{ rating['rating'] }}{% if 'username' in session %} <a href="{{ url_for('rate_game', game_name = rating['game'].name) }}">Rate This Game</a> {% endif %}</td>
           </tr>
         {% endfor %}
       </table>

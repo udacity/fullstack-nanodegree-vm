@@ -1,7 +1,7 @@
 from flask import Flask, render_template, url_for, redirect, request, flash, jsonify
 app = Flask(__name__)
 
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, desc
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Game, UsersGames, User
 
@@ -95,15 +95,21 @@ def create_user(login_session):
                     picture=login_session['picture'])
     session.add(new_user)
     session.commit()
-    return get_user_id_by_email(login_session['email'])
+    return new_user
 
 def login_or_create_user(login_session):
     """See if user exists, and create the user if not."""
     user_id = get_user_id_by_email(login_session['email'])
     if not user_id:
-        user_id = create_user(login_session)
+        user = create_user(login_session)
+    else:
+        user = get_user_by_id(user_id)
 
-    login_session['user_id'] = user_id
+    login_session['user_id'] = user.id
+
+    if user.name:
+        login_session['username'] = user.name
+
 
     output = ''
     output += '<h1>Welcome, '
@@ -304,16 +310,13 @@ def update_user():
         return redirect(url_for('show_login'))
 
     if request.method == 'POST':
-        print "in post"
 
         # If the user submitted cancel, redirect home
         if request.form['submit'] == 'Cancel':
-            "print clicked cancel"
             return redirect(url_for('gamerater_home'))
 
         # Get the user's entry
         username = request.form['username']
-        print "user entered: ", username
 
         # Check if username and email both were submitted
         if not username:
@@ -322,7 +325,6 @@ def update_user():
                 'update_user.html', username = username)
 
         # Get the user and update
-        print "getting user"
         user = session.query(User).filter_by(
             id = login_session['user_id']).one()
 
@@ -333,7 +335,6 @@ def update_user():
 
         login_session['username'] = username
 
-        print "redirecting to my games"
         return redirect(url_for('my_games'))
 
     return render_template(
@@ -436,7 +437,7 @@ def user_info(user_id):
     # Get the user's top rating
     try:
         top_rating = session.query(UsersGames).filter_by(
-            user_id = user_id).order_by(UsersGames.rating).one()
+            user_id = user_id).order_by(desc(UsersGames.rating)).one()
         game = get_game_by_id(top_rating.game_id)
     except:
         game = None
@@ -645,10 +646,15 @@ def my_games():
 
     # Get the user's top rating
     try:
+        print "trying top rating"
         top_rating = session.query(UsersGames).filter_by(
-            user_id = user_id).order_by(UsersGames.rating).one()
-        game = get_game_by_id(top_rating.game_id)
+            user_id = user_id).order_by(desc(UsersGames.rating)).limit(1)
+        print top_rating
+        for item in top_rating:
+            game = get_game_by_id(item.game_id)
+        print game.name
     except:
+        print "top rating failed"
         game = None
 
     return render_template("my_games.html",
