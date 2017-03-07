@@ -297,6 +297,47 @@ def show_login():
     login_session['state'] = state
     return render_template('login.html', STATE=state)
 
+@app.route('/update_user', methods = methods)
+def update_user():
+    # If the user isn't logged in, redirect to login
+    if not login_session:
+        return redirect(url_for('show_login'))
+
+    if request.method == 'POST':
+        print "in post"
+
+        # If the user submitted cancel, redirect home
+        if request.form['submit'] == 'Cancel':
+            "print clicked cancel"
+            return redirect(url_for('gamerater_home'))
+
+        # Get the user's entry
+        username = request.form['username']
+        print "user entered: ", username
+
+        # Check if username and email both were submitted
+        if not username:
+            flash("Please enter a username.")
+            return render_template(
+                'update_user.html', username = username)
+
+        # Get the user and update
+        print "getting user"
+        user = session.query(User).filter_by(
+            id = login_session['user_id']).one()
+
+        print "adding username to session"
+        user.name = username
+        session.add(user)
+        session.commit()
+
+        login_session['username'] = username
+
+        print "redirecting to my games"
+        return redirect(url_for('my_games'))
+
+    return render_template(
+        'update_user.html', username = login_session['username'])
 
 @app.route('/')
 @app.route('/gamerater/')
@@ -320,10 +361,17 @@ def gamerater_home():
     users = []
 
     for user in all_users:
+        try:
+            favorite_game = get_top_game_by_user_id(user.id).name
+            latest_game = get_latest_game_by_user_id(user.id).name
+        except:
+            favorite_game = "This user does not have a rating yet."
+            latest_game = "This user does not have a rating yet."
+
         user_data = {
             'user' : user,
-            'favorite_game' : get_top_game_by_user_id(user.id).name,
-            'latest_game' : get_latest_game_by_user_id(user.id).name
+            'favorite_game' : favorite_game,
+            'latest_game' : latest_game
         }
         users.append(user_data)
 
@@ -382,11 +430,16 @@ def user_info(user_id):
                 'game' : get_game_by_id(rating.game_id)
             }
             ratings.append(new_rating)
+    else:
+        ratings = None
 
     # Get the user's top rating
-    top_rating = session.query(UsersGames).filter_by(
-        user_id = user_id).order_by(UsersGames.rating).one()
-    game = get_game_by_id(top_rating.game_id)
+    try:
+        top_rating = session.query(UsersGames).filter_by(
+            user_id = user_id).order_by(UsersGames.rating).one()
+        game = get_game_by_id(top_rating.game_id)
+    except:
+        game = None
 
     return render_template("user.html",
                            user = user,
@@ -403,7 +456,7 @@ def add_game():
 
         # Redirect home if you press Cancel
         if request.form['submit'] == 'Cancel':
-            return redirect('/')
+            return redirect(url_for('gamerater_home'))
 
         game_name = request.form['name']
         category = request.form['category']
@@ -412,7 +465,7 @@ def add_game():
         
         # Double check if the game actually exists
         try:
-            existing_game = get_game_by_name(name=name)
+            existing_game = get_game_by_name(game_name=game_name)
             flash("That game already exists! Please add a rating.")
             return redirect(url_for('rate_game',
                                     game_name = game_name,
@@ -450,7 +503,7 @@ def add_game():
                             modified=datetime.now())
             session.add(new_game)
             session.commit()
-            game_to_rate = get_game_by_name(name=name)
+            game_to_rate = get_game_by_name(game_name=game_name)
             new_rating = UsersGames(user_id = login_session['user_id'],
                                     game_id = game_to_rate.id,
                                     rating = rating_int,
@@ -509,7 +562,7 @@ def rate_game():
         # Try getting the existing game. If it doesn't exist,
         # redirect the user to add_game
         try:
-            existing_game = get_game_by_name(name=name)
+            existing_game = get_game_by_name(game_name=game_name)
         except:
             return redirect(url_for('add_game',
                                     game_name = game_name,
@@ -562,7 +615,46 @@ def rate_game():
 
 @app.route('/gamerater/my-games')
 def my_games():
-    return render_template('my_games.html')
+    # If the user isn't logged in redirect to login
+    if 'username' not in login_session:
+            return redirect(url_for('show_login'))
+
+    if not login_session['username']:
+        return redirect(url_for('update_user'))
+
+    user_id = login_session['user_id']
+    user = get_user_by_id(user_id)
+
+    # Get the user's ratings
+    try:
+        users_ratings = get_ratings_by_user_id(user_id)
+    except:
+        users_ratings = None
+
+    # Setup the ratings for the page
+    if users_ratings:
+        ratings = []
+        for rating in users_ratings:
+            new_rating = {
+                'rating' : rating.rating,
+                'game' : get_game_by_id(rating.game_id)
+            }
+            ratings.append(new_rating)
+    else:
+        ratings = None
+
+    # Get the user's top rating
+    try:
+        top_rating = session.query(UsersGames).filter_by(
+            user_id = user_id).order_by(UsersGames.rating).one()
+        game = get_game_by_id(top_rating.game_id)
+    except:
+        game = None
+
+    return render_template("my_games.html",
+                           user = user,
+                           ratings = ratings,
+                           game = game)
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
