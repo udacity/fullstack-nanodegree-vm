@@ -70,13 +70,13 @@ def get_top_game_by_user_id(user_id):
     id user_id.
     """
     top_rating = session.query(UsersGames).filter_by(
-        user_id = user_id).order_by(UsersGames.rating).one()
+        user_id = user_id).order_by(desc(UsersGames.rating)).limit(1).one()
     return get_game_by_id(top_rating.game_id)
 
 def get_latest_game_by_user_id(user_id):
     """Returns the game most recently rated by the given user_id."""
     latest_rating = session.query(UsersGames).filter_by(
-        user_id = user_id).order_by(UsersGames.modified).one()
+        user_id = user_id).order_by(desc(UsersGames.modified)).limit(1).one()
     return get_game_by_id(latest_rating.game_id)
 
 def make_json_response(message, code):
