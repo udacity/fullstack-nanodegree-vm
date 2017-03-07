@@ -356,6 +356,15 @@ def gamerater_home():
         }
         recent_games.append(recent_game)
 
+    # Get the 10 highest ratings
+    top_ten_games = session.query(Game).order_by(desc(Game.avg_rating)).limit(10)
+
+    print top_ten_games
+
+    for game in top_ten_games:
+        print ""
+        print game.name
+
     # Get all users
     all_users = session.query(User).all()
 
@@ -378,11 +387,8 @@ def gamerater_home():
 
     return render_template("home.html",
                            recent_games = recent_games,
+                           top_ten_games = top_ten_games,
                            users = users)
-
-@app.route('/gamerater/popular/')
-def gamerater_popular():
-    return render_template("popular.html")
 
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
