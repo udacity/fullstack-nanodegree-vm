@@ -7,7 +7,9 @@
     <div class="col-md-1 col-xs-2 user-page-icon">
       <img class="img-responsive" src="{{ user.picture }}">
     </div>
-    <h2 class="user-page-name col-xs-6">{{ user.name }}</h2>
+    <h2 class="user-page-name col-xs-9">{{ user.name }}</h2>
+    <h3 class="col-xs-6 col-md-4 center"><a href="{{ url_for('rate_game') }}">Rate A Game</a></h3>
+    <h3 class="col-xs-6 col-md-4 center"><a href="{{ url_for('update_user') }}">Edit My Name</a></h3>    
   </div>
 </div>
   {% include 'messages.html' %}
@@ -43,7 +45,7 @@
           <tr>
             <td><a href="{{ url_for('game_info', game_id = rating['game'].id) }}">{{ rating['game'].name }}</a></td>
             <td>{{ rating['game'].category }}</td>
-            <td class="game-rating">{{ rating['rating'] }}{% if 'username' in session %} <a href="{{ url_for('rate_game', game_name = rating['game'].name) }}">Rate This Game</a> {% endif %}</td>
+            <td class="game-rating">{{ rating['rating'] }}{% if 'username' in session %} <a href="{{ url_for('rate_game', game_name = rating['game'].name) }}">Edit</a> {% endif %}</td>
           </tr>
         {% endfor %}
       </table>

@@ -438,7 +438,7 @@ def user_info(user_id):
     # Get the user's top rating
     try:
         top_rating = session.query(UsersGames).filter_by(
-            user_id = user_id).order_by(desc(UsersGames.rating)).one()
+            user_id=user_id).order_by(desc(UsersGames.rating)).limit(1).one()
         game = get_game_by_id(top_rating.game_id)
     except:
         game = None
@@ -647,15 +647,10 @@ def my_games():
 
     # Get the user's top rating
     try:
-        print "trying top rating"
         top_rating = session.query(UsersGames).filter_by(
-            user_id = user_id).order_by(desc(UsersGames.rating)).limit(1)
-        print top_rating
-        for item in top_rating:
-            game = get_game_by_id(item.game_id)
-        print game.name
+            user_id=user_id).order_by(desc(UsersGames.rating)).limit(1).one()
+        game = get_game_by_id(top_rating.game_id)
     except:
-        print "top rating failed"
         game = None
 
     return render_template("my_games.html",
