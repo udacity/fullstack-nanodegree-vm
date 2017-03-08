@@ -1,5 +1,7 @@
 import sys
 
+from time import mktime
+
 from sqlalchemy import Column, ForeignKey, Integer, String, Float, DateTime
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship, sessionmaker
@@ -24,13 +26,19 @@ class User(Base):
     @property
     def serialize(self):
         """Returns object data in easily serializable format."""
-        games = UsersGames.get_users_games(self.id)
+        unjson_ratings = UsersGames.get_games_by_user_id(self.id)
+
+        if unjson_ratings:
+            ratings = [rating.serialize for rating in unjson_ratings]
+        else:
+            ratings = "No ratings"
+
         return {
             'name' : self.name,
             'email' : self.email,
             'picture' : self.picture,
             'id' : self.id,
-            'games' : games
+            'ratings' : ratings
         }
 
 
@@ -73,7 +81,7 @@ class Game(Base):
             'category' : self.category,
             'avg_rating' : self.avg_rating,
             'description' : self.description,
-            'last modified' : self.modified
+            'last modified' : int(mktime(self.modified.timetuple()))
         }
 
 
@@ -96,7 +104,7 @@ class UsersGames(Base):
     game = relationship(Game)
 
     @classmethod
-    def get_games_by_user(cls, user_id):
+    def get_games_by_user_id(cls, user_id):
         """
         Returns a list of games for the given user_id.
 
@@ -106,7 +114,7 @@ class UsersGames(Base):
         return session.query(cls).filter_by(user_id = user_id).all()
 
     @classmethod
-    def get_users_by_game(cls, game_id):
+    def get_users_by_game_id(cls, game_id):
         """
         Return a list of user_ids for the given game.
 
@@ -114,6 +122,17 @@ class UsersGames(Base):
         (32, 24, 6)
         """
         return session.query(cls).filter_by(game_id = game_id).all()
+
+    @property
+    def serialize(self):
+        """Returns object data in easily serializable format."""
+        return {
+            'id' : self.id,
+            'user_id' : self.user_id,
+            'game_id' : self.game_id,
+            'last modified' : int(mktime(self.modified.timetuple())),
+            'rating' : self.rating
+        }
 
         
 

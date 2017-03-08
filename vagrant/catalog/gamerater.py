@@ -410,6 +410,26 @@ def gamerater_home():
                            top_ten_games = top_ten_games,
                            users = users)
 
+@app.route('/gamerater/json/')
+def gamerater_home_json():
+    # Get the 10 most recent games
+    recent_ten_ratings = session.query(UsersGames).order_by(
+        desc(UsersGames.modified)).limit(10)
+
+
+    # Get the 10 highest ratings
+    top_ten_games = session.query(Game).order_by(
+        desc(Game.avg_rating)).limit(10)
+
+    # Get all users
+    all_users = session.query(User).all()
+
+    return jsonify(
+        UsersGames=[rating.serialize for rating in recent_ten_ratings],
+        Game=[game.serialize for game in top_ten_games],
+        User=[user.serialize for user in all_users])
+
+
 @app.route('/gamerater/game/<int:game_id>/')
 def game_info(game_id):
     # Try getting the game info. If an exception occurs, return error
@@ -432,6 +452,18 @@ def game_info(game_id):
         }
         ratings.append(user_rating)
     return render_template("game.html", game = game, ratings = ratings)
+
+@app.route('/gamerater/game/<int:game_id>/json/')
+def game_info_json(game_id):
+    # Try getting the game info. If an exception occurs, return error
+    try:
+        game = get_game_by_id(game_id)
+    except:
+        flash("We're sorry, that's not a valid game id!")
+        return redirect(url_for('gamerater_home'))
+
+    return jsonify(game.serialize)
+
 
 @app.route('/gamerater/user/<int:user_id>/')
 def user_info(user_id):
@@ -470,6 +502,24 @@ def user_info(user_id):
                            user = user,
                            ratings = ratings,
                            game = game)
+
+@app.route('/gamerater/user/<int:user_id>/json/')
+def user_info_json(user_id):
+    # Get the user info
+    try:
+        user = get_user_by_id(user_id)
+    except:
+        flash("We're sorry, that user id does not exist.")
+        return redirect(url_for('gamerater_home'))
+
+    # Get the user's top rating
+    try:
+        game = get_top_game_by_user_id(user_id=user_id)
+        return jsonify(user=user.serialize, favorite_game=game.serialize)
+    except:
+        return jsonify(user.serialize)
+
+
 
 @app.route('/gamerater/add-game', methods = methods)
 def add_game():
@@ -599,6 +649,7 @@ def rate_game():
                 user_id = login_session['user_id'],
                 game_id = existing_game.id)
             existing_rating.rating = rating_int
+            existing_rating.modified = datetime.now()
             session.add(existing_rating)
             session.commit()
             flash("The rating for %s has been updated with %s!" % (
@@ -713,6 +764,27 @@ def my_games():
                            user = user,
                            ratings = ratings,
                            game = game)
+
+@app.route('/gamerater/my-games/json/')
+def my_games_json():
+    # If the user isn't logged in redirect to login
+    if 'username' not in login_session:
+            return redirect(url_for('show_login'))
+
+    # Get the user
+    user_id = login_session['user_id']
+    user = get_user_by_id(user_id)
+
+    # Get the top rating
+    try:
+        top_rating = session.query(UsersGames).filter_by(
+            user_id=user_id).order_by(desc(UsersGames.rating)).limit(1).one()
+        game = get_game_by_id(top_rating.game_id)
+        return jsonify(user=user.serialize, top_game=game.serialize)
+    except:
+        return jsonify(user.serialize)
+
+
 
 if __name__ == '__main__':
     app.secret_key = 'super_secret_key'
