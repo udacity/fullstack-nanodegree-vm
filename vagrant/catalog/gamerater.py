@@ -87,6 +87,9 @@ def get_latest_game_by_user_id(user_id):
 def update_game_avg_rating(game_id):
     """Refreshes the average rating for game_id."""
 
+    # Get the game for the game ID
+    existing_game = get_game_by_id(game_id)
+
     # Get the existing game ratings, then divide by num ratings
     existing_ratings = session.query(UsersGames).filter_by(
         game_id = existing_game.id)
@@ -611,7 +614,7 @@ def rate_game():
             flash("%s has been rated." % existing_game.name)
 
         # Update the game's average rating
-        update_game_avg_rating(game_id=game_id)
+        update_game_avg_rating(game_id=existing_game.id)
 
         return redirect(url_for('my_games'))
 
@@ -662,7 +665,7 @@ def delete_rating(game_id):
 
         # Update the game's average rating
         update_game_avg_rating(game_id=game.id)
-        
+
         flash("Your rating for %s has been deleted." % game.name)
         return redirect(url_for('my_games'))
 
