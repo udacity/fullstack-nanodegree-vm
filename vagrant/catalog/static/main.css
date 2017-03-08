@@ -167,7 +167,7 @@ tr {
     border-width: medium;
     width: 100%;
     background: darkgray;
-    font-color: black;
+    color: black;
     padding: 2px;
 }
 
@@ -296,6 +296,10 @@ tr {
 .add-game-explanation {
     padding-left: 15px;
     font-size: 14pt;
+}
+
+.delete-rating-title {
+    font-family: "Cabin", sans-serif;
 }
 
 @import url(http://weloveiconfonts.com/api/?family=zocial);

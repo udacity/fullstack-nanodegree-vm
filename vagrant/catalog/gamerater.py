@@ -62,7 +62,12 @@ def get_ratings_by_game_id(game_id):
 def get_ratings_by_user_id(user_id):
     """Returns the ratings for user with the given id."""
     return session.query(UsersGames).filter_by(
-        user_id = user_id).order_by(UsersGames.rating).all()
+        user_id = user_id).order_by(desc(UsersGames.rating)).all()
+
+def get_rating_by_user_and_game(user_id, game_id):
+    """Returns the rating with the given user_id and game_id."""
+    return session.query(UsersGames).filter(
+        UsersGames.user_id == user_id, UsersGames.game_id == game_id).one()
 
 def get_top_game_by_user_id(user_id):
     """
@@ -78,6 +83,23 @@ def get_latest_game_by_user_id(user_id):
     latest_rating = session.query(UsersGames).filter_by(
         user_id = user_id).order_by(desc(UsersGames.modified)).limit(1).one()
     return get_game_by_id(latest_rating.game_id)
+
+def update_game_avg_rating(game_id):
+    """Refreshes the average rating for game_id."""
+
+    # Get the existing game ratings, then divide by num ratings
+    existing_ratings = session.query(UsersGames).filter_by(
+        game_id = existing_game.id)
+    ratings_count = existing_ratings.count()
+    all_ratings = []
+    for rating in existing_ratings.all():
+        all_ratings.append(rating.rating)
+    avg_rating = float(sum(all_ratings)) / ratings_count
+    existing_game.avg_rating = avg_rating
+    existing_game.modified = datetime.now()
+    session.add(existing_game)
+    session.commit()
+
 
 def make_json_response(message, code):
     """
@@ -345,7 +367,7 @@ def update_user():
 def gamerater_home():
     # Get the 10 most recent games
     recent_ten_ratings = session.query(UsersGames).order_by(
-        UsersGames.modified).limit(10)
+        desc(UsersGames.modified)).limit(10)
     recent_games = []
     for rating in recent_ten_ratings:
         recent_game = {
@@ -437,9 +459,7 @@ def user_info(user_id):
 
     # Get the user's top rating
     try:
-        top_rating = session.query(UsersGames).filter_by(
-            user_id=user_id).order_by(desc(UsersGames.rating)).limit(1).one()
-        game = get_game_by_id(top_rating.game_id)
+        game = get_top_game_by_user_id(user_id=user_id)
     except:
         game = None
 
@@ -572,9 +592,9 @@ def rate_game():
 
         # Check if there's an existing rating. Update if so.
         try:
-            existing_rating = session.query(UsersGames).filter(
-                UsersGames.user_id == login_session['user_id'],
-                UsersGames.game_id == existing_game.id).one()
+            existing_rating = get_rating_by_user_and_game(
+                user_id = login_session['user_id'],
+                game_id = existing_game.id)
             existing_rating.rating = rating_int
             session.add(existing_rating)
             session.commit()
@@ -590,18 +610,9 @@ def rate_game():
             session.commit()
             flash("%s has been rated." % existing_game.name)
 
-        # Get the existing ratings, then divide by num ratings
-        existing_ratings = session.query(UsersGames).filter_by(
-            game_id = existing_game.id)
-        ratings_count = existing_ratings.count()
-        all_ratings = []
-        for rating in existing_ratings.all():
-            all_ratings.append(rating.rating)
-        avg_rating = float(sum(all_ratings)) / ratings_count
-        existing_game.avg_rating = avg_rating
-        existing_game.modified = datetime.now()
-        session.add(existing_game)
-        session.commit()
+        # Update the game's average rating
+        update_game_avg_rating(game_id=game_id)
+
         return redirect(url_for('my_games'))
 
     
@@ -614,6 +625,48 @@ def rate_game():
     return render_template("rate_game.html",
                            game_name = game_name,
                            rating = rating)
+
+@app.route('/gamerater/delete_rating/<int:game_id>/', methods=methods)
+def delete_rating(game_id):
+    # If the user isn't logged in redirect to login
+    if 'username' not in login_session:
+            return redirect(url_for('show_login'))
+
+    # Get the game for the rating
+    # Redirect to add game if it doesn't exist
+    try:
+        game = get_game_by_id(game_id)
+    except:
+        flash("Sorry, we don't have a game with that id. "
+              "Would you like to add a game?")
+        return redirect(url_for('add_game'))
+
+    # Get the rating. Redirect to rate game if it doesn't exist
+    try:
+        rating_to_delete = get_rating_by_user_and_game(
+            user_id = login_session['user_id'],
+            game_id = game.id)
+    except:
+        flash("Sorry, it looks like you haven't rated that game yet."
+              "Would you like to?")
+        return redirect(url_for('rate_game'))
+
+    if request.method == 'POST':
+        if "No" in request.form['submit']:
+            print "No was in submit \n"
+            return redirect(url_for('my_games'))
+
+        # Delete the rating
+        session.delete(rating_to_delete)
+        session.commit()
+
+        # Update the game's average rating
+        update_game_avg_rating(game_id=game.id)
+        
+        flash("Your rating for %s has been deleted." % game.name)
+        return redirect(url_for('my_games'))
+
+    return render_template('delete_rating.html', game = game)
 
 @app.route('/gamerater/my-games')
 def my_games():
