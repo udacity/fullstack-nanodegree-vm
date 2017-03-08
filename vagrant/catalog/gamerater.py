@@ -521,7 +521,7 @@ def user_info_json(user_id):
 
 
 
-@app.route('/gamerater/add-game', methods = methods)
+@app.route('/gamerater/add-game/', methods = methods)
 def add_game():
     # Require the user to be logged in
     if 'username' not in login_session:
@@ -598,7 +598,7 @@ def add_game():
                                game_name = game_name,
                                rating = rating)
 
-@app.route('/gamerater/rate-game', methods=methods)
+@app.route('/gamerater/rate-game/', methods=methods)
 def rate_game():
     # Require the user to be logged in
     if 'username' not in login_session:
@@ -722,7 +722,7 @@ def delete_rating(game_id):
 
     return render_template('delete_rating.html', game = game)
 
-@app.route('/gamerater/my-games')
+@app.route('/gamerater/my-games/')
 def my_games():
     # If the user isn't logged in redirect to login
     if 'username' not in login_session:
