@@ -1,8 +1,10 @@
 apt-get -qqy update
 apt-get -qqy install postgresql python-psycopg2
 apt-get -qqy install python-flask python-sqlalchemy
-wget https://bootstrap.pypa.io/get-pip.py
-python ./get-pip.py
+apt-get -qqy install python-pip
+pip install packaging
+pip install appdirs
+pip install -U six
 pip install bleach
 pip install oauth2client
 pip install requests
