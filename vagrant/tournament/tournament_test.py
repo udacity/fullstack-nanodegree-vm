@@ -21,7 +21,7 @@ def testCount():
         raise TypeError(
             "countPlayers should return numeric zero, not string '0'.")
     if c != 0:
-        raise ValueError("After deletion, countPlayers should return zero.")
+        raise ValueError("After deletion, countPlayers should return zero. %s %s" % (c, type(c)))
     print "1. countPlayers() returns 0 after initial deletePlayers() execution."
     registerPlayer("Chandra Nalaar")
     c = countPlayers()
@@ -68,6 +68,7 @@ def testStandingsBeforeMatches():
                          "even if they have no matches played.")
     print "6. Newly registered players appear in the standings with no matches."
 
+
 def testReportMatches():
     """
     Test that matches are reported properly.
@@ -102,6 +103,7 @@ def testReportMatches():
         if w != 0:
             raise ValueError("After deleting matches, players should have zero wins recorded.")
     print "8. After match deletion, player standings are properly reset.\n9. Matches are properly deleted."
+
 
 def testPairings():
     """
@@ -148,6 +150,7 @@ def testPairings():
 
 
 if __name__ == '__main__':
+    connect()
     testCount()
     testStandingsBeforeMatches()
     testReportMatches()

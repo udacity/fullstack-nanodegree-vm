@@ -1,0 +1,31 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+    <h1>Choose a Park</h1>
+    
+    <!-- notify user of any changes -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li><strong>{{ message }}</strong></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+    
+    {% if user.user_id %}
+        <a href="{{ url_for('addPark') }}">Add new Park</a>
+    {% endif %}
+    
+    {% for park in parks %}
+    
+    <div>
+        <hr>
+        <h3><a href="{{ url_for('park', park_id=park.id) }}">{{park.name}}</a></h3>
+        <br>
+    </div>
+
+    {% endfor %}
+{% endblock %}

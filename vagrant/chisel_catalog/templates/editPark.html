@@ -1,0 +1,16 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+    <form method="post" action="{{ url_for('editPark', park_id=park.id) }}">
+        <h1>Edit {{ park.name }}</h1>
+        <input type="text" name="name" value="{{park.name}}">
+        <input type="text" name="lat" value="{{park.lat}}">
+        <input type="text" name="lon" value="{{park.lon}}">
+        <input type="textarea" name="description" value="{{park.description}}"> 
+    
+        <input type="submit" value="Edit">
+        <a href="{{ url_for('parks') }}">Cancel</a>
+    </form>
+
+{% endblock %}

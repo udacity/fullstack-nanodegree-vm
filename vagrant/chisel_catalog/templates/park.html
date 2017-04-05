@@ -1,0 +1,42 @@
+{% extends "header.html" %}
+
+{% block content %}
+
+    <h1>{{park.name}}</h1>
+    
+    <!-- notify user of any changes -->
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <ul>
+            {% for message in messages %}
+                <li><strong>{{ message }}</strong></li>
+            {% endfor %}
+            </ul>
+        {% endif %}
+    {% endwith %}
+
+    <p>{{ park.description }}</p>
+    
+    {% if user.user_id %}
+        <a href="{{ url_for('deletePark', park_id=park.id) }}">Delete</a>
+        <a href="{{ url_for('editPark', park_id=park.id) }}">Edit</a>
+        <a href="{{ url_for('addTrail', park_id=park.id) }}">Add a trail</a>
+    {% endif %}
+    
+    {% if trails %}
+        {% for trail in trails %}
+        
+        <div>
+            <hr>
+            <p><a href="{{ url_for('trail', park_id=park.id, trail_id=trail.id) }}">{{ trail.name }}</a></p>
+            <br>
+        </div>
+
+        {% endfor %}
+    {% else %}
+
+        <p>No trails here, please add some.</p>
+    
+    {% endif %}
+
+{% endblock %}
