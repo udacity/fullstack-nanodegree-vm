@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang='pt'>
+    <head> <title>Menu</title>
+    <link href="{{url_for('static', filename='css/bootstrap.css')}}" rel='stylesheet'>
+</head>
+<body>
+
+<h1>Restaurante {{restaurant.name}}</h1>
+
+<!--MESSAGE FLASHING EXAMPLE -->
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+
+<ul>
+{% for message in messages %}
+  <li><strong>{{message}}</strong></li>
+  {% endfor %}
+</ul>
+{% endif %}
+{% endwith %}
+<a href="{{url_for('newMenuItem', restaurant_id= restaurant.id)}}">Adicionar prato</a>
+
+{% for i in items %}
+<div>
+<p>{{i.name}}</p>
+<p>{{i.description}}................{{i.price}} </p>
+<a href=' {{ url_for('editMenuItem', restaurant_id = i.restaurant_id, menu_id= i.id) }} ' >Edit</a><br>
+<a href=' {{ url_for('deleteMenuItem', restaurant_id = i.restaurant_id, menu_id= i.id) }} '>Delete</a><br>
+</div>
+
+
+{% endfor %}
+</body>
+
+</html>
