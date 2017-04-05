@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+		<meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="css/style.css">
+		<title>Jordan's Valley Grub Map</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+  </head>
+
+  <body>
+		<div class="search" id="search">
+			<input class="search-box" id="search-box" data-bind="textInput: searchTerm, valueUpdate: 'afterkeydown'" />
+		</div>
+
+		<div class="app" id="app">
+			<div class="list" id="list">
+				<ul class="results" id="results" data-bind="foreach: filteredList">
+					<li class="place" id="place" data-bind="text: name, click: bounce"></li>
+				</ul>
+			</div>
+			<div class="map" id="map"></div>
+		</div>
+
+		<script src='js/libs/knockout-3.4.1.js'></script>
+		<script src='js/libs/jquery.min.js'></script>
+    <script src="js/script.js"></script>
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAZ5yVg7R7t-EIoOZjknLawcl2jSMjtxh0&callback=startApp" onerror="googleError()"></script>
+  </body>
+
+</html>
