@@ -3,3 +3,7 @@ This is a sample text file
 <waifu>
 	Trash like 4
 </waifu>
+
+<waifu>
+	This waifu is still yours and still trash. kys
+</waifu>
