@@ -14,6 +14,6 @@ postgresql to store swiss tournament data.
 3. run vagrant up
 4. run vagrant ssh
 5. cd to tournament folder
-6. run python tounament_test.py
+6. run python tournament_test.py
 
 Common code for the Relational Databases and Full Stack Fundamentals courses
