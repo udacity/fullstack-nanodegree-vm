@@ -10,7 +10,7 @@ postgresql to store swiss tournament data.
 
 ## How to run
 1. Clone this repo or download zip
-2. Browse to the folder
+2. cd to downloaded folder and then cd to vagrant
 3. run vagrant up
 4. run vagrant ssh
 5. cd to tournament folder
