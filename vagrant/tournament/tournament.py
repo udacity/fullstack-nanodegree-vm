@@ -110,7 +110,7 @@ def swissPairings():
     """
     db = connect()
     cur = db.cursor()
-    cur.execute("select * from swiss;")
+    cur.execute("select * from swiss_pair")
     res = cur.fetchall()
     db.commit()
     db.close()
