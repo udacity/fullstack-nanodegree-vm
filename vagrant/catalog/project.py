@@ -12,10 +12,19 @@ app = Flask(__name__)
 
 
 @app.route('/')
-@app.route('/hello')
+@app.route('/catalog/')
 def HelloWorld():
     return 'Welcome to catalog app!'
 
+
+@app.route('/catalog/<category>/items/')
+def items(category):
+    return 'Welcome to ' + category + ' items!'
+
+
+@app.route('/catalog/<category>/<item>/')
+def item(category, item):
+    return 'Welcome %s - %s ' % (category, item)
 
 if __name__ == '__main__':
     app.debug = True
