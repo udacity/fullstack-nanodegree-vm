@@ -13,7 +13,7 @@ app = Flask(__name__)
 
 @app.route('/')
 @app.route('/catalog/')
-def HelloWorld():
+def index():
     return 'Welcome to catalog app!'
 
 
@@ -25,6 +25,22 @@ def items(category):
 @app.route('/catalog/<category>/<item>/')
 def item(category, item):
     return 'Welcome %s - %s ' % (category, item)
+
+
+@app.route('/catalog/<category>/<item>/add')
+def add_item():
+    return 'Add an item'
+
+
+@app.route('/catalog/<category>/<item>/edit')
+def edit_item():
+    return 'Edit an item'
+
+
+@app.route('/catalog/<category>/<item>/delete')
+def delete_item():
+    return 'Delete an item'
+
 
 if __name__ == '__main__':
     app.debug = True
