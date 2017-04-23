@@ -17,9 +17,9 @@ Vagrant.configure("2") do |config|
     pip3 install sqlalchemy flask-sqlalchemy psycopg2 bleach
 
     apt-get -qqy install python python-pip
-    pip install --upgrade pip
-    pip install flask packaging oauth2client redis passlib flask-httpauth
-    pip install sqlalchemy flask-sqlalchemy psycopg2 bleach
+    pip2 install --upgrade pip
+    pip2 install flask packaging oauth2client redis passlib flask-httpauth
+    pip2 install sqlalchemy flask-sqlalchemy psycopg2 bleach
 
     su postgres -c 'createuser -dRS ubuntu'
     su ubuntu -c 'createdb'
