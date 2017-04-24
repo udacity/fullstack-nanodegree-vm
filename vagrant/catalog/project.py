@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from database_setup import Base, Category, Item
 
-engine = create_engine('sqlite:///catalog.db')
+engine = create_engine('postgresql://vagrant:password@localhost:5432/catalogs')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -14,7 +14,12 @@ app = Flask(__name__)
 @app.route('/')
 @app.route('/catalog/')
 def index():
-    return 'Welcome to catalog app!'
+    cat = session.query(Category)
+    output = ''
+    for c in cat.all():
+        output += c.name
+        output += '<br>'
+    return output
 
 
 @app.route('/catalog/<category>/items/')
@@ -44,4 +49,4 @@ def delete_item():
 
 if __name__ == '__main__':
     app.debug = True
-    app.run(port=4000)
+    app.run(host='0.0.0.0')
