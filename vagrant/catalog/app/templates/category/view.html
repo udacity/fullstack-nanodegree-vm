@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="header">
+    <h1>{{category.name}}</h1>
+    <h2>{{category.description}}</h2>
+    {% if 'username' in session and session['user_id'] == category.author_id %}
+    <a class="pure-button" href="{{url_for('category_edit', category_name=category.name)}}">Edit category</a>
+    <a class="pure-button" href="{{url_for('item_create', category_name=category.name)}}">Add new item</a>
+    {% endif %}
+</div>
+
+<div class="content">
+    <div class="pure-g">
+        {% for i in category.items %}
+            <div class="pure-u card">
+                <a href="{{url_for('item_view', category_name=category.name,item_name=i.name)}}">
+                    <img class="pure-img" src="{{static('uploads/' + i.image_name)}}" />
+                    <h3 class="text-center">{{i.name}}</h3>
+                </a>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

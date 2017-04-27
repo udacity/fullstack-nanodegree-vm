@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>{% block title %}{% endblock %}</title>
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width">
+
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="{{static('css/layouts/side-menu-old-ie.css')}}">
+    <![endif]-->
+    <!--[if gt IE 8]><!-->
+        <link rel="stylesheet" href="{{static('css/layouts/side-menu.css')}}">
+    <!--<![endif]-->
+    <link rel="stylesheet" href="{{static('css/main.css')}}">
+
+    <!--LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
+    <script src="https://apis.google.com/js/client:platform.js" async defer></script>
+    <!--END LOAD PRE-REQUISITES FOR GOOGLE SIGN IN -->
+</head>
+<body>
+    <!--[if lt IE 7]>
+        <p class="chromeframe">You are using an outdated browser. <a href="http://browsehappy.com/">Upgrade your browser today</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to better experience this site.</p>
+    <![endif]-->
+    <div id="layout">
+        <!-- Menu toggle -->
+        <a href="#menu" id="menuLink" class="menu-link">
+            <!-- Hamburger icon -->
+            <span></span>
+        </a>
+
+        <div id="menu">
+            <div class="pure-menu">
+                <a class="pure-menu-heading" href="/">Catalogs</a>
+                <ul class="pure-menu-list">
+                {% for c in categories %}
+                <li class="pure-menu-item {{ 'pure-menu-selected' if category and c.name == category.name }}">
+                    <a class="pure-menu-link" href="{{url_for('category_view',category_name=c.name)}}">{{c.name}}</a>
+                </li>
+                {% endfor %}
+                {% if 'username' not in session %}
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{url_for('login')}}">Login</a>
+                </li>
+                {% else %}
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{url_for('category_create')}}">Add category</a>
+                </li>
+                <li class="pure-menu-item">
+                    <a class="pure-menu-link" href="{{url_for('gdisconnect')}}">Logout</a>
+                </li>
+                {% endif %}
+                </ul>
+            </div>
+        </div>
+
+        <div id="main">
+        {% block body %}
+        {% endblock %}
+        </div>
+    </div>
+
+    <script src="{{static('js/ui.js')}}"></script>
+    <script type="text/javascript">
+        function signInCallback(authResult) {
+            if (authResult['code']) {
+                // Hide the sign-in button now that the user is authorized
+                $('#signinButton').attr('style', 'display: none');
+                // Send the one-time-use code to the server, if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page
+                $.ajax({
+                    type: 'POST',
+                    url: '/gconnect?state={{STATE}}',
+                    processData: false,
+                    data: authResult['code'],
+                    contentType: 'application/octet-stream; charset=utf-8',
+                    success: function(result) {
+                        // Handle or verify the server response if necessary.
+                        if (result) {
+                            $("#result").html('Login Successful!</br>' + result + '</br>Redirecting...')
+                            setTimeout(function() {
+                                window.location.href = "/";
+                            }, 4000);
+
+                        } else if (authResult['error']) {
+                            console.log('There was an error: ' + authResult['error']);
+                        } else {
+                            $("#result").html('Failed to make a server-side call. Check your configuration and console.');
+                        }
+                    }
+
+                });
+            }
+        }
+    </script>
+</body>
+</html>

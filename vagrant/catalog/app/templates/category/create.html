@@ -1,0 +1,29 @@
+{% extends 'base_form.html' %}
+
+{% block header_div %}
+    <h1>Category Creation</h1>
+    <h2>It is place where you can create new catalog</h2>
+{% endblock %}
+
+{% block form %}
+	<form class="pure-form pure-form-aligned" 
+			action="{{url_for('category_store')}}" 
+			method="POST">
+	    <fieldset>
+	    	{{form.hidden_tag()}}
+	        <div class="pure-control-group">
+	            <label for="name">Name</label>
+	            {{form.name()}}
+	        </div>
+
+	        <div class="pure-control-group">
+	            <label for="name">Description</label>
+	            {{form.description()}}
+	        </div>
+
+	        <div class="pure-controls">
+	            <button type="submit" class="pure-button pure-button-primary">Submit</button>
+	        </div>
+	    </fieldset>
+	</form>
+{% endblock %}

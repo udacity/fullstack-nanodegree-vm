@@ -1,0 +1,35 @@
+{% extends 'base_form.html' %}
+
+{% block header_div %}
+    <h1>Item Creation</h1>
+    <h2>It is place where you can create new item in {{category_name}}</h2>
+{% endblock %}
+
+{% block form %}
+	<form class="pure-form pure-form-aligned" 
+			action="{{url_for('item_store', category_name=category_name)}}" 
+			method="POST"
+			enctype="multipart/form-data">
+	    <fieldset>
+	    	{{form.hidden_tag()}}
+	        <div class="pure-control-group">
+	            <label for="name">Name</label>
+	            {{form.name()}}
+	        </div>
+
+	        <div class="pure-control-group">
+	            <label for="name">Description</label>
+	            {{form.description()}}
+	        </div>
+
+	        <div class="pure-control-group">
+	            <label for="name">Image</label>
+	            {{form.image()}}
+	        </div>
+
+	        <div class="pure-controls">
+	            <button type="submit" class="pure-button pure-button-primary">Submit</button>
+	        </div>
+	    </fieldset>
+	</form>
+{% endblock %}

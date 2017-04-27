@@ -1,0 +1,32 @@
+{% extends 'base_form.html' %}
+
+{% block header_div %}
+    <h1>{{category.name}}</h1>
+    <form class="pure-form pure-form-aligned" action="{{url_for('category_delete', category_name=category.name)}}" method="post" onsubmit="return confirm('Do you really want to delete the category?');">
+        {{delete_form.hidden_tag()}}
+        <button type="submit" class="pure-button pure-button-error">Delete</button>
+    </form>
+{% endblock %}
+
+{% block form %}
+<form class="pure-form pure-form-aligned" 
+        action="{{url_for('category_update', category_name=category.name)}}" 
+        method="POST">
+    <fieldset>
+        {{form.hidden_tag()}}
+        <div class="pure-control-group">
+            <label for="name">Name</label>
+            {{form.name()}}
+        </div>
+
+        <div class="pure-control-group">
+            <label for="name">Description</label>
+            {{form.description()}}
+        </div>
+
+        <div class="pure-controls">
+            <button type="submit" class="pure-button pure-button-primary">Submit</button>
+        </div>
+    </fieldset>
+</form>
+{% endblock %}

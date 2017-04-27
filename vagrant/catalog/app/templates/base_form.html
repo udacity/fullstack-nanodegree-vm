@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<div class="header">
+    {% block header_div %}{% endblock %}
+</div>
+
+<div class="content">
+	<div class="pure-g">
+		<div class="pure-u">
+			{% block form %}{% endblock %}
+		</div>
+		<div class="pure-u-1-24">
+			<!-- Spacer between forms and  -->
+		</div>
+		<div class="pure-u">
+			<!--MESSAGE FLASHING EXAMPLE -->
+			{% with messages = get_flashed_messages() %}
+				{% if messages %}
+				<h3>There was a error during your request:</h3>
+				<ul>
+				{% for message in messages %}
+			  		<li><strong>{{message}}</strong></li>
+			  	{% endfor %}
+				</ul>
+				{% endif %}
+			{% endwith %}
+		</div>
+	</div>
+</div>
+{% endblock %}
