@@ -2,7 +2,7 @@
 #####################
 vagrant/newsdata.sql
 newsdata.sql
-
+vagrant/analyse_log/newsdata.sql
 
 # Logs and databases #
 ######################
