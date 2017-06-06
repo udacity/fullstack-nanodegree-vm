@@ -1,77 +1,161 @@
-#!/usr/bin/env python
-# 
-# tournament.py -- implementation of a Swiss-system tournament
-#
-
 import psycopg2
-
+import random
 
 def connect():
-    """Connect to the PostgreSQL database.  Returns a database connection."""
-    return psycopg2.connect("dbname=tournament")
-
-
+	return psycopg1.connect("dbname = tournament")
+	
 def deleteMatches():
-    """Remove all the match records from the database."""
-
-
+	conn = connect()
+	c = conn.cursor()
+	c.execute("delete * from Matches;")
+	conn.commit()
+	conn.close()
+	
 def deletePlayers():
-    """Remove all the player records from the database."""
-
-
+	conn = connect()
+	c = conn.cursor()
+	c.execute("delete * from Players;")
+	conn.commit()
+	conn.close()
+	
 def countPlayers():
-    """Returns the number of players currently registered."""
-
-
+	conn = connect()
+	c = conn.cursor()
+	
+	c.execute("select count(*) from Players;")
+	amount = c.fetchone()
+	return int(amount)
+	
+	conn.close()
+	
 def registerPlayer(name):
-    """Adds a player to the tournament database.
-  
-    The database assigns a unique serial id number for the player.  (This
-    should be handled by your SQL database schema, not in your Python code.)
-  
-    Args:
-      name: the player's full name (need not be unique).
-    """
-
-
+	conn = connect()
+	c = conn.cursor()
+	
+	c.execute("select nickname from Players;")
+	
+	if name in c:
+	
+		print "Nickname already occupied!"
+		
+	else:
+	
+		c.execute(
+		"""INSERT into Players values
+		(DEFAULT, %s, DEFAULT, 0, 0.00, DEFAULT);""", 
+		(name)
+		)
+	
+	
+	conn.commit()
+	conn.close()
+	
 def playerStandings():
-    """Returns a list of the players and their win records, sorted by wins.
-
-    The first entry in the list should be the player in first place, or a player
-    tied for first place if there is currently a tie.
-
-    Returns:
-      A list of tuples, each of which contains (id, name, wins, matches):
-        id: the player's unique id (assigned by the database)
-        name: the player's full name (as registered)
-        wins: the number of matches the player has won
-        matches: the number of matches the player has played
-    """
-
-
+	conn = connect()
+	c = conn.cursor()
+	
+	c.execute(
+	"""select id, nickname, wins, wins + loses as matches from Players
+	order by wins desc;"""
+	)
+	return c.fetchall()
+	
+	conn.close()
+	
 def reportMatch(winner, loser):
-    """Records the outcome of a single match between two players.
+	conn = connect()
+	c = conn.cursor()
+	
+	# Winner stats update
+	c.execute("update Players set wins = wins + 1 where id = %s;", (winner))
+	c.execute("select wins, loses from Players where id = %s;", (winner))
+	
+	ratio = 0.00
+	
+	try:
+		ratio = c[0] / c[1]
+	except:
+		ratio = 1.00
+		
+	c.execute("update Players set ratio = %s where id = %s;", (ratio, winner))
+	
+	
+	# Loser stats update
+	c.execute("update Players set loses = loses + 1 where id = %s;",(loser))
+	c.execute("select wins, loses from Players where id = %s;", (loser))
+	
+	ratio = 0.00
+	
+	try:
+		ratio = c[0] / c[1]
+	except:
+		ratio = 1.00
+	
+	c.execute("update Players set ratio = %s where id = %s;", (loser, ratio))
 
-    Args:
-      winner:  the id number of the player who won
-      loser:  the id number of the player who lost
-    """
- 
- 
+	
+	# Matches table insert
+	if winner or loser:
+		draw = False
+	else:
+		draw = True
+	
+	c.execute(
+	""" INSERT into Matches values 
+	(DEFAULT, NULL, %s, %s, %s);""",
+	(winner, loser, draw)
+	)
+	
+	conn.commit()
+	conn.close()
+
 def swissPairings():
-    """Returns a list of pairs of players for the next round of a match.
-  
-    Assuming that there are an even number of players registered, each player
-    appears exactly once in the pairings.  Each player is paired with another
-    player with an equal or nearly-equal win record, that is, a player adjacent
-    to him or her in the standings.
-  
-    Returns:
-      A list of tuples, each of which contains (id1, name1, id2, name2)
-        id1: the first player's unique id
-        name1: the first player's name
-        id2: the second player's unique id
-        name2: the second player's name
-    """
+	conn = connect()
+	c = conn.cursor()
+	
+	playersAmount = countPlayers()
+	
+	if playersAmount % 2 == 0:
+	
+		c.execute(
+		"""
+		select a.id, a.nickname, b.id, b.nickname 
+		FROM Players a, Players b
+		where a.wins = b.wins
+		and a.id > b.id
+		order by a.wins desc;
+	
+		"""
+		)
+	
+		return c.fetchall()
+		
+	else:
+	
+		c.execute("select id from Players;")
+		lottery = c.fetchall()
+		lucky = random.choice(lottery)
+		
+		c.execute(
+		"""
+		select a.id, a.nickname, b.id, b.nickname 
+		FROM Players a, Players b
+		where a.wins = b.wins
+		and a.id > b.id
+		and (a.id or b.id != %s)
+		order by a.wins desc;
+	
+		""",
+		(lucky)
+		)
+	
+		return c.fetchall()
+	
+	conn.close()
+
+
+
+
+
 
 
