@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <link rel="stylesheet" type=text/css href="{{ url_for('static', filename='bootstrap.min.css') }}">
+  <link rel="stylesheet" type=text/css href="{{url_for('static', filename='main.css')}}">
+  <link href="https://fonts.googleapis.com/css?family=Cabin:400,700" rel="stylesheet">
+  <title>{{ restaurant.name }}'s Menu</title>
+</head>
+<body>
+
+<div class="container">
+<div class="row">
+  <figure class="creator col-xs-2 icon">
+    <img class="img-responsive" src="{{ creator.picture }}">
+    <figcaption>from {{ creator.name }}</figcaption>
+  </figure>
+  <h1>{{restaurant.name}}</h1>
+</div>    
+    <div class="row">
+      <div class="col-xs-offset-10 col-xs-2">
+        {% if 'username' not in session %}
+          <a href="{{ url_for('show_login') }}">Login</a>      
+        {% else %}
+          <a href="{{ url_for('disconnect') }}">Logout</a>
+        {% endif %}
+      </div>
+    </div>
+<br>
+<hr class="heading-rule">
+<br>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <strong class="error important"> {{message}} </strong>
+      {% endfor %}
+      </ul>
+    {% endif %}
+  {% endwith %}
+
+  {% block content %}
+  {% endblock %}
+
+<br>
+<hr class="row heading-rule-bot">
+<br>
+<a href="{{ url_for('all_restaurants') }}">See all of our affiliated restaurants!</a>
+</div>
+</body>
+</html>

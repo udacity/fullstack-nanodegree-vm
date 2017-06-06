@@ -1,0 +1,35 @@
+<div class="user-small all-users col-md-4 col-xs-10 col-xs-offset-1">
+  <div class="row">
+    <div class="user-icon col-xs-2">
+        <img class="img-responsive" src="{{ user['user'].picture }}">
+    </div>
+    <div class="user-small-name">
+      {{ user['user'].name }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="user-small-head col-xs-offset-1">
+      Favorite Game:
+    </div>
+  </div>
+  <div class="row">
+    <div class="user-small-content col-xs-offset-2">
+      {{ user['favorite_game'] }}
+    </div>
+  </div>  
+  <div class="row">
+    <div class="user-small-head col-xs-offset-1">
+      Latest Game:          
+    </div>
+  </div>
+  <div class="row">
+    <div class="user-small-content col-xs-offset-2">      
+      {{ user['latest_game'] }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-offset-1">
+      <a href="{{ url_for('user_info', user_id = user['user'].id) }}">Check out more of this user's ratings</a>    
+    </div>
+  </div>
+</div>

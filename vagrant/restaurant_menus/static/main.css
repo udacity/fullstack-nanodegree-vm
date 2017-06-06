@@ -1,0 +1,142 @@
+* {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -ms-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+body {
+    max-width: 960px;
+    margin: auto;
+    padding: 0;
+}
+
+h1 {
+    text-align: right;
+    font-size: 60pt;
+    padding: 1%;
+    padding-bottom: 0.1%;
+    margin-top: 0px;
+    margin-bottom: 5px;
+    height: 8.333%;
+}
+
+h2 {
+    color: black;
+    margin: 0.1%;
+    font-weight: bold;
+    font-size: 36pt;
+}
+
+textarea {
+  width: 100%;
+  height: 400px;
+  font-size: 17px;
+  font-family: monospace;
+}
+
+input {
+    font-size: 20px;
+    padding: 2px;
+    font-family: monospace;
+    margin:10px;
+    width: 100%;
+}
+
+label {
+  display: block;
+  font-size: 20px;
+}
+
+label + label {
+    margin-top: 20px;
+}
+
+hr {
+    height: 3px;
+    background: #333;
+    margin-bottom: 10px;
+    margin-top: 10px;
+}
+
+a {
+    min-width: 46px;
+    min-height: 46px;
+    font-color: black;
+}
+
+pre {
+    white-space: pre-wrap;
+}
+
+.icon {
+    margin: 1%;
+    max-height: 100px;
+    max-width: 200px;
+}
+
+.heading-rule {
+    height: 2px;
+    color: darkgray;
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+.subtitle-heading {
+    height: 1px;
+    margin-bottom: 20px;
+}
+
+.heading-rule-bot {
+    margin-bottom: 20px;
+}
+
+.error {
+    color: red;
+    font-weight: bold;
+}
+
+.important {
+    font-size: 30px;
+}
+
+.container {
+    max-width: 960px;
+}
+
+.item-name {
+    font-size: 14pt;
+}
+
+.header-link {
+    font-size: 12pt;
+    text-align: center;
+    margin-top: 3px;
+    margin-bottom: 3px;
+}
+
+.description {
+    font-size: 10pt;
+    max-width: 960px;
+    max-height: 500px;
+    margin-bottom: 20px;
+}
+
+* {
+    font-family: "Cabin", sans-serif;
+}
+
+.button {
+    font-size: 20px;
+    margin: 20px;
+    font-weight: bold;
+    border-style: outset;
+    border-width: medium;
+    width: 100%;
+    background: darkgray;
+    font-color: black;
+}
+
+.center {
+    text-align: center;
+}

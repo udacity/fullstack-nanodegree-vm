@@ -1,0 +1,77 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+
+  {% include 'messages.html' %}
+
+<div class="row">
+  <h2>Recent updates</h2>
+</div>
+<br>
+<div class="row">
+  {% if recent_games %}
+  <table class="col-xs-offset-1 col-xs-10">
+      <tr>
+          <th>User</th>
+          <th>Game</th>
+          <th>Rating</th>
+          <th>Updated</th>
+      </tr>
+      {% for game in recent_games %}
+        <tr class="center">
+          <td>
+            <a href="{{ url_for('user_info', user_id = game['user'].id) }}">{{ game['user'].name }}</a>
+          </td>
+          <td>
+            <a href="{{ url_for('game_info', game_id = game['game'].id) }}">{{ game['game'].name }}</a>
+          </td>
+          <td>{{ game['rating'] }}</td>
+          <td>{{ game['modified'] }}</td>
+      </tr>
+      {% endfor %}
+  </table>
+  {% else %}
+  <h2 class="important error center">No recent ratings.</h2>
+  {% endif %}
+</div>
+{% if top_ten_games %}
+  <br>
+  <hr class="col-xs-offset-1 col-xs-10">
+  <br>
+  <div class="row">
+    <h2>Top Rated Games</h2>  
+  </div>
+  <div class="row">
+    <div>
+      <table class="col-xs-offset-1 col-xs-10">
+        <tr>
+          <th>Game</th>
+          <th>Category</th>
+          <th>Average Rating</th>
+        </tr>
+        {% for game in top_ten_games %} 
+          <tr>
+            <td><a href="{{ url_for('game_info', game_id = game.id) }}">{{ game.name }}</a></td>
+            <td>{{ game.category }}</td>
+            <td>{{ game.avg_rating }}  <a href="{{ url_for('rate_game', game_name = game.name) }}">Rate This Game</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    </div>
+</div>
+{% endif %}
+<br>
+<hr class="col-xs-offset-1 col-xs-10">
+<br>
+<div>
+<h2>All Users</h2>
+<br>
+<div class="row">
+  {% for user in users %}
+    {% include 'user_small.html' %}
+  {% endfor %}
+</div>
+</div>
+
+
+{% endblock %}

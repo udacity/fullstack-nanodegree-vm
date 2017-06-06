@@ -1,0 +1,36 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <h2 class="rate-game-title">Add User Info</h2>
+</div>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <strong class="error important"> {{message}} </strong>
+      {% endfor %}
+      </ul>
+      <br>
+    {% endif %}
+  {% endwith %}
+<form action="{{ url_for('update_user') }}" method="POST">
+  <div class="row">
+    <div class="col-xs-10 col-xs-offset-1">
+      <label>Name</label>
+      <input class="text-input" type="text" name="username" maxlength="80" placeholder="John Jackson" value="{{ username }}">
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-xs-4 col-xs-offset-1">
+      <input class="button" type="submit" name="submit" value="Submit">  
+    </div>
+    <div class="col-xs-4 col-xs-offset-1">
+      <input class="button" type="submit" name="submit" value="Cancel">        
+    </div>
+  </div>
+</form>
+
+
+{% endblock %}

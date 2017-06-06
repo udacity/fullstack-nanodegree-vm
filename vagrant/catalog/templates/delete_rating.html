@@ -1,0 +1,20 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+  <form action="{{ url_for('delete_rating', game_id = game.id) }}" method="POST">
+    <div class="row">
+      <h2 class="delete-rating-title center">Are you sure you want to delete your rating for {{ game.name }}?</h2>
+    </div>
+    <div class="row">
+      <p class="error important center">This will permanently delete your rating. You will not be able to recover it!</p>
+    </div>
+      <div class="row">
+        <div class="col-xs-12 col-md-offset-1 col-md-4">
+          <input class="button col-xs-12" type="submit" name="submit" value="Yes, delete my rating.">
+        </div>
+        <div class="col-xs-12 col-md-offset-2 col-md-4">
+          <input class="button col-xs-12" type="submit" name="submit" value="No, keep my rating.">
+        </div>
+      </div>        
+  </form>
+{% endblock %}

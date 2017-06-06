@@ -1,0 +1,10 @@
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <strong class="col-xs-10 error important"> {{message}} </strong>
+      {% endfor %}
+      </ul>
+      <br>
+    {% endif %}
+  {% endwith %}

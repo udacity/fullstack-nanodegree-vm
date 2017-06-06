@@ -1,0 +1,118 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+<div class="row">
+  <h2>Login</h2>
+</div>
+<br>
+ 
+<!-- GOOGLE PLUS SIGN IN-->
+
+<div class="row">
+  <div class="col-xs-offset-1 col-xs-2" id="signinButton">
+    <span class="g-signin"
+      data-scope="openid email"
+      data-clientid="779236190344-g6d37sej59pvp08o44j4c500dbiaa70l.apps.googleusercontent.com"
+      data-redirecturi="postmessage"
+      data-accesstype="offline"
+      data-cookiepolicy="single_host_origin"
+      data-callback="signInCallback"
+      data-approvalprompt="force">
+    </span>
+  </div>
+<div id="result"></div>
+
+
+<script>
+  function signInCallback(authResult) {
+    if (authResult['code']) {
+      // Hide the sign-in button now that the client has been authorized
+      $('#signinButton').attr('style', 'display: none');
+      // Send the one-time-use code to the server; if the server responds, write a 'login successful' message to the web page and then redirect back to the main restaurants page.
+      $.ajax({
+        type: 'POST',
+        url: '/gconnect?state={{STATE}}',
+        processData: false,
+        contentType: 'application/octet-stream; charset=utf-8',
+        data: authResult['code'],
+        success: function(result) {
+          if (result) {
+            $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+            setTimeout(function() {
+              window.location.href = '/restaurants';
+            }, 4000);
+          } else if (authResult['error']) {
+            console.log('There was an error: ' + authResult['error']);
+          }else {
+            $('#result').html('Failed to make a server side call. Check your configuration and console.');
+            }
+        }
+      });
+    }
+  }
+</script>
+
+<!-- END GOOGLE PLUS SIGN IN-->
+
+<script>
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId: '1794622000866320',
+      cookie: true, // enable cookies to allow the server to access
+                    // the session
+      xfbml: true, // parse social plugins on this page
+      version : 'v2.2' // user version 2.2
+    });
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id) {
+    var js, fjs = d.getElementsByTagName(s)[0];
+    if (d.getElementById(id)) return;
+    js = d.createElement(s); js.id = id;
+    js.src = "//connect.facebook.net/en_US/sdk.js";
+    fjs.parentNode.insertBefore(js, fjs);
+  }(document, 'script', 'facebook-jssdk'));
+
+  // Here we run a very simple test of the Graph API after login is
+  // successful. See statusChangeCallback() for when this call is made.
+  function sendTokenToServer() {
+    var access_token = FB.getAuthResponse()['accessToken'];
+    console.log(access_token)
+    console.log('Welcome! Fectching your information....');
+    FB.api('/me', function(response) {
+      console.log('Successful login for: ' + response.name);
+      $.ajax({
+        type: 'POST',
+        url: '/fbconnect?state={{STATE}}',
+        processData: false,
+        data: access_token,
+        contentType: 'application/octet-stream; charset=utf-8',
+        success: function(result) {
+          // Handle or verify the server response if neccesary.
+          if (result) {
+            $('#result').html('Login Successful!</br>'+ result + '</br>Redirecting...')
+            setTimeout(function() {
+              window.location.href = "/restaurants";
+            }, 4000);
+          } else {
+            $('#result').html('Failed to make a server-side call. Check your configuration and console.');
+          }
+        }
+      });
+    });
+  }
+  
+</script>
+<div class="col-xs-offset-1 col-xs-2">
+  <button>
+    <fb:login-button scope="public_profile,email" onlogin="sendTokenToServer();">
+      <a href="'javascript:sendTokenToServer()">Login With Facebook</a>
+  </button>
+</div>
+</div>
+<br>
+<hr class="row heading-rule-bot">
+<br>
+<a href="{{ url_for('all_restaurants') }}">See all of our affiliated restaurants!</a>
+{% endblock %}

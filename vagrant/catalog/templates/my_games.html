@@ -1,0 +1,58 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+
+<div class="row">
+  <div class="user-title">
+    <div class="col-md-1 col-xs-2 user-page-icon">
+      <img class="img-responsive" src="{{ user.picture }}">
+    </div>
+    <h2 class="user-page-name col-xs-9">{{ user.name }}</h2>
+    <h3 class="col-xs-6 col-md-4 center"><a href="{{ url_for('rate_game') }}">Rate A Game</a></h3>
+    <h3 class="col-xs-6 col-md-4 center"><a href="{{ url_for('update_user') }}">Edit My Name</a></h3>    
+  </div>
+</div>
+  {% include 'messages.html' %}
+<div class="row">
+<div class="col-md-offset-1 col-md-10 col-xs-12">    
+  <div class="row">
+    <p class="col-xs-10 col-md-4 favorite-game favorite-game-title">Favorite Game</p>
+  </div>
+  {% if game %}
+    {% include 'game_details.html' %}
+    <a class="user-read-more" href="{{ url_for('game_info', game_id = game.id) }}">Read more</a>
+  {% else %}
+    <h2 class="important error">This user doesn't have a favorite game yet.</h2>
+  {% endif %}
+</div>
+</div>
+<br>
+<hr class="col-xs-offset-2 col-xs-8">
+<br>
+<div class="row">
+  <div class="row">
+    <p class="col-md-4 col-md-offset-1 col-xs-8 favorite-game user-all-games-title">All Rated Games</p>
+  </div>
+  <div class="row">
+    {% if ratings %}
+      <table class="col-xs-offset-1 col-xs-10">
+        <tr>
+          <th>Game</th>
+          <th>Category</th>
+          <th>Rating</th>
+        </tr>
+        {% for rating in ratings %}
+          <tr>
+            <td><a href="{{ url_for('game_info', game_id = rating['game'].id) }}">{{ rating['game'].name }}</a></td>
+            <td>{{ rating['game'].category }}</td>
+            <td class="game-rating">{{ rating['rating'] }}   |   <a href="{{ url_for('rate_game', game_name = rating['game'].name) }}">Edit</a>   |   <a href="{{ url_for('delete_rating', game_id = rating['game'].id ) }}">Delete Rating</a></td>
+          </tr>
+        {% endfor %}
+      </table>
+    {% else %}
+      <h2 class="important error col-xs-offset-2">This user has not yet rated any games.</h2>
+    {% endif %}
+  </div>
+</div>
+
+{% endblock %}

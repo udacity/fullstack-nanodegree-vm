@@ -1,0 +1,39 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+<div class="row">
+  <h2 class="col-xs-12 center">Our Affiliated Restaurants</h2>
+</div>
+<div class="row">
+  <hr class="col-xs-8 col-xs-offset-2 subtitle-heading">
+</div>
+<br>
+  {% with messages = get_flashed_messages() %}
+    {% if messages %}
+      <ul>
+      {% for message in messages %}
+        <strong class="error important"> {{message}} </strong>
+      {% endfor %}
+      </ul>
+      <br>
+    {% endif %}
+  {% endwith %}
+<div class="row">
+  <div class="col-xs-3">
+    <a class="button col-xs-3" href="{{ url_for('new_restaurant') }}"> Add New Restaurant</a>
+  </div>
+</div>
+<br>
+{% if restaurants%}
+  <div class="row">    
+  {% for restaurant in restaurants %}
+      <h2 class="col-xs-6">   
+        <a href="{{ url_for('restaurant_menu', restaurant_id = restaurant.id) }}">{{ restaurant.name }}</a>
+      </h2>
+      <br>
+  {% endfor %}
+  </div>
+{% else %}
+  <h2>There are no restaurants!</h2>
+{% endif %}
+{% endblock %}

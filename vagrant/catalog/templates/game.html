@@ -1,0 +1,32 @@
+{% extends "all_base.html" %}
+
+{% block content %}
+
+{% include 'game_details.html' %}
+<br>
+<hr class="col-xs-offset-2 col-xs-8">
+<br>
+<div class="row">
+  <div class="row">
+    <p class="col-md-offset-1 col-xs-8 favorite-game user-all-games-title">Users Who Have Rated This Game</p>
+  </div>
+  <div class="row">
+    <table class="col-xs-offset-1 col-xs-10">
+      <tr>
+        <th>User</th>
+        <th>Rating</th>
+      </tr>
+      {% for rating in ratings %}
+      <tr>
+        <td>
+          <a href="{{ url_for('user_info', user_id = rating['user'].id) }}">{{ rating['user'].name }}</a>
+        </td>
+        <td>{{ rating['rating'] }}</td>
+      </tr>
+      {% endfor %}
+    </table>
+  </div>
+</div>
+
+
+{% endblock %}
