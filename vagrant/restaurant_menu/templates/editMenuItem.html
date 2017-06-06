@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+
+
+<form action="{{url_for('editMenuItem', restaurant_id=params['restaurant_id'], menu_id=params['menu_id'])}}" method="POST">
+    <h2>Restaurant {{params['name']}}:</h2>
+    <p>Edit Menu <i>{{params['menu_name']}}</i>:</p>
+    <input type="text" name="name" size="30" placeholder="{{params['name']}}">
+    <input type="submit" value="Create">
+</form>
+
+<a href="{{url_for('restaurantMenu', restaurant_id=params['restaurant_id'])}}"> cancel </a>
+
+</body>
+</html>
