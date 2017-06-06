@@ -10,17 +10,57 @@ def connect():
     """Connect to the PostgreSQL database.  Returns a database connection."""
     return psycopg2.connect("dbname=tournament")
 
+def commit_query(*query):
+    """
+    Opens a connection, executes the given query, commits the query,
+    then closes the connection.
+
+    Args:
+        query (str): a valid SQL query
+
+    Example:
+        commit_query("DELETE FROM players")
+    """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute(*query)
+    connection.commit()
+    connection.close()
+
+def fetch_query(*query):
+    """
+    Opens a connection, executes the given query, fetchs the result,
+    closes the connection, and returns the result.
+
+    Args:
+        query (str): a valid SQL query
+
+    Example:
+        fetch_query("SELECT id from Players")
+        ---> [query result]
+    """
+    connection = connect()
+    cursor = connection.cursor()
+    cursor.execute(*query)
+    result = cursor.fetchall()
+    connection.close()
+    return result
+
 
 def deleteMatches():
     """Remove all the match records from the database."""
+    commit_query("DELETE from Matches")
 
 
 def deletePlayers():
     """Remove all the player records from the database."""
+    commit_query("DELETE from Players")
 
 
 def countPlayers():
     """Returns the number of players currently registered."""
+    count = fetch_query("SELECT id from Players")
+    return len(count)
 
 
 def registerPlayer(name):
@@ -32,6 +72,7 @@ def registerPlayer(name):
     Args:
       name: the player's full name (need not be unique).
     """
+    commit_query("INSERT INTO players (name) values (%s)", (name,))
 
 
 def playerStandings():
@@ -47,6 +88,15 @@ def playerStandings():
         wins: the number of matches the player has won
         matches: the number of matches the player has played
     """
+    players = fetch_query(
+        "SELECT p.id, p.name, p.wins, temp.matches "
+        "FROM ("
+        "    SELECT id, SUM(wins + losses) as matches "
+        "    FROM players "
+        "    GROUP BY id"
+        "    ) temp JOIN players p ON p.id = temp.id "
+        "ORDER BY wins")
+    return players
 
 
 def reportMatch(winner, loser):
