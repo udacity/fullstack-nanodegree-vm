@@ -1,0 +1,8 @@
+<div class="col-xs-12 col-sm-6 col-md-8">
+  <div class="page-header category-header">
+    <h1>{{category}} <small>{{login_user}}{{ csrf_token() }}</small></h1>
+  </div>
+  <div id="grid-list" class="grid-item-container">
+    <showItem ng-repeat="item in items" item="item"></showItem>
+  </div>
+</div>
