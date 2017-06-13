@@ -11,9 +11,12 @@ DBSession = sessionmaker(bind = engine)
 
 session = DBSession()
 query_result = session.query(Restaurant)
+menu_result = session.query(MenuItem)
 restaurant = query_result.first()
+menus = menu_result.all()
 all = query_result.all()
 
-print(restaurant.name)
 for item in all:
     print item.name
+
+session.close()

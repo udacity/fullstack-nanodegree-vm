@@ -15,6 +15,7 @@ def add_restaurant_to_db(name):
     restaurant_name = Restaurant(name = name)
     session.add(restaurant_name)
     session.commit()
+    session.close()
     return restaurant_name
 
 
@@ -28,6 +29,7 @@ def add_menu_item_to_db(menu, description, price, course, restaurant):
     )
     session.add(menu_name)
     session.commit()
+    session.close()
 
 firstRestaurant = add_restaurant_to_db('restaurant_beta')
 add_menu_item_to_db(
