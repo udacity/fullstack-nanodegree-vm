@@ -5,7 +5,6 @@ import psycopg2, bleach
 DBNAME = "forum"
 
 def get_posts():
-  """Return all posts from the 'database', most recent first."""
   db = psycopg2.connect(database=DBNAME)
   c = db.cursor()
   c.execute("select content, time from posts order by time desc")
