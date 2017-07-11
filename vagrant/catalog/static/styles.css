@@ -1,3 +1,6 @@
+
+/* General Layout */
+
 .navbar-inner,
 .main-content {
   margin: 0 auto;
@@ -12,6 +15,21 @@
   }
 }
 
+.login-button {
+  float: right;
+  margin-top:7px;
+}
+
 .main-content {
   padding: 0 15px;
+}
+
+/* Main Page */
+
+.latest-item-category {
+  color: #999999; /* copied from flatly */
+}
+
+.add-item-button {
+  margin-bottom: 10px;
 }
