@@ -5,11 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.7/darkly/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="/static/styles.css" />
     <title>Document</title>
 </head>
 <body>
   <nav class="navbar navbar-inverse">
-    <div class="container-fluid">
+    <div class="container-fluid navbar-inner">
       <div class="navbar-header">
         <button type="button" class="collapsed navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-9" aria-expanded="false"> 
           <span class="sr-only">Toggle navigation</span> 
@@ -17,7 +18,7 @@
           <span class="icon-bar"></span>
           <span class="icon-bar"></span> 
         </button> 
-        <a href="#" class="navbar-brand">Brand</a> 
+        <a href="#" class="navbar-brand">Catalog App</a> 
       </div>
       <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-9"> 
         <ul class="nav navbar-nav"> 
@@ -30,6 +31,8 @@
       </div>
     </div>
   </nav>
-  {% block content %}{% endblock %}
+  <main class="main-content">
+    {% block content %}{% endblock %}
+  </main>
 </body>
 </html>
