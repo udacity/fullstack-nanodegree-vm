@@ -1,11 +1,14 @@
 from flask import Flask
 from flask import render_template
+from db import Category, DBSession
 
 app = Flask(__name__, static_url_path="/static")
 
 @app.route('/')
 def main():
-    return render_template('main.html')
+    session = DBSession()
+    categories = session.query(Category).order_by(Category.name).all()
+    return render_template('main.html', categories=categories)
 
 # @TODO - make sure accepts a category slug 
 @app.route('/category')
