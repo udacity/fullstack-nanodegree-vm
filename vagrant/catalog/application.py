@@ -18,7 +18,6 @@ def item():
     return render_template('item.html')
 
 
-
 if __name__ == '__main__':
     # @TODO - remove debug mode
     app.run(host='0.0.0.0', port=8000, debug=True)
