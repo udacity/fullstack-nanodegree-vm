@@ -33,3 +33,14 @@
 .add-item-button {
   margin-bottom: 10px;
 }
+
+/* Create Item */
+
+.form-group {
+  margin-top: 20px;
+}
+
+/* specific selector to override bootstrap */
+textarea.create-item-description {
+  height: 200px;
+}

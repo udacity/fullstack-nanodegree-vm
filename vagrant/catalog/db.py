@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String, ForeignKey, Text
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -14,7 +14,7 @@ DBSession = sessionmaker(bind=engine)
 class Category(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True)
-    name = Column(String)
+    name = Column(String, nullable=False)
 
     def __repr__(self):
         return "<Category(name='%s')>" % ( self.name )
@@ -22,8 +22,10 @@ class Category(Base):
 class Item(Base):
     __tablename__ = 'items'
     id = Column(Integer, primary_key=True)
-    category_id = Column(Integer, ForeignKey('categories.id'))
-    name = Column(String)
+    category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
+    name = Column(String, nullable=False)
+    # @TODO - add description column
+    description = Column(Text);
 
     def __repr__(self):
         return "<Item(name='%s', category_id='%s')>" % ( self.name, self.category_id )

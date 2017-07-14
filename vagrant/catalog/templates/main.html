@@ -4,7 +4,10 @@
   {% include 'category-list.html' %}
   <div class="col-sm-6">
     <h2 class="h3">Recently Added Items</h2>
-      <button class="btn btn-sm btn-primary add-item-button">Add an Item</button>
+    <!-- @TODO: only show to logged in users -->
+      <a href="/item/new">
+        <button class="btn btn-sm btn-primary add-item-button">Add an Item</button>
+      </a>
       <ul class="item-list">
         <li>Item 1 <span class="item-list-category">(Category)</span></li>
         <li>Item 2 <span class="item-list-category">(Category)</span></li>
