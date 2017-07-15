@@ -9,9 +9,9 @@
         <button class="btn btn-sm btn-primary add-item-button">Add an Item</button>
       </a>
       <ul class="item-list">
-        <li>Item 1 <span class="item-list-category">(Category)</span></li>
-        <li>Item 2 <span class="item-list-category">(Category)</span></li>
-        <li>Item 3 <span class="item-list-category">(Category)</span></li>
+        {% for item in items %}
+          <li>{{ item.name }}<span class="item-list-category"> ({{ item.category.name }})</span></li>
+        {% endfor %}
       </ul>
   </div>
 </div>
