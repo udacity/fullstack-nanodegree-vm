@@ -6,26 +6,30 @@ app = Flask(__name__, static_url_path="/static")
 session = DBSession()
 
 def get_all_categories():
-    categories = session.query(Category).order_by(Category.name).all()
-    return categories
+    return session.query(Category).order_by(Category.name).all()
 
 def get_recent_items():
-    items = session.query(Item).order_by(desc(Item.created_at)).all()
-    return items
+    return session.query(Item).order_by(desc(Item.created_at)).all()
+
+def get_category_by_id(id):
+    return session.query(Category).filter(Category.id == id).first()
+
+def get_item_by_id(id):
+    return session.query(Item).filter(Item.id == id).first()
+
 
 @app.route('/')
 def main():
     return render_template('main.html', categories=get_all_categories(), items=get_recent_items())
 
-# @TODO - make sure accepts a category slug 
-@app.route('/category')
-def category():
-    return render_template('category.html')
+# TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
+@app.route('/category/<int:category_id>')
+def category(category_id):
+    return render_template('category.html', categories=get_all_categories(), category=get_category_by_id(category_id))
 
-# @TODO - make sure accepts a item slug 
-@app.route('/item')
-def item():
-    return render_template('item.html')
+@app.route('/item/<int:item_id>')
+def item(item_id):
+    return render_template('item.html', item=get_item_by_id(item_id))
 
 @app.route('/item/new', methods=['GET', 'POST'])
 def create_item():

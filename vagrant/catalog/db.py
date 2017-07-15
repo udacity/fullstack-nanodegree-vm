@@ -16,6 +16,7 @@ class Category(Base):
     __tablename__ = "categories"
     id = Column(Integer, primary_key=True)
     name = Column(String, nullable=False)
+    items = relationship('Item', backref="items")
 
     def __repr__(self):
         return "<Category(name='%s')>" % ( self.name )

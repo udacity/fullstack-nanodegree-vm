@@ -10,7 +10,7 @@
       </a>
       <ul class="item-list">
         {% for item in items %}
-          <li>{{ item.name }}<span class="item-list-category"> ({{ item.category.name }})</span></li>
+          {% include 'item-list-item.html' %}
         {% endfor %}
       </ul>
   </div>

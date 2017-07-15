@@ -3,12 +3,21 @@
 <div class="row">
   {% include 'category-list.html' %}
   <div class="col-sm-6">
-    <h2 class="h3">Category Items (2 items)</h2>
+    <h2 class="h3">
+      {{category.name}} 
+      (
+        {{category.items|length}} 
+        {% if category.items|length == 1 %}
+          item
+        {% else %}
+          items
+        {% endif %}
+      )</h2>
       <button class="btn btn-sm btn-primary add-item-button">Add an Item to Category</button>
       <ul class="items-list">
-        <li>Item 1 <span class="item-list-category">(Category)</span></li>
-        <li>Item 2 <span class="item-list-category">(Category)</span></li>
-        <li>Item 3 <span class="item-list-category">(Category)</span></li>
+        {% for item in category.items %}
+          {% include 'item-list-item.html' %}
+        {% endfor %}
       </ul>
   </div>
 </div>

@@ -34,6 +34,20 @@
   margin-bottom: 10px;
 }
 
+/* Item page */
+.item-name-headline {
+  margin-bottom: 20px;
+}
+
+.item-description-headline {
+  margin-bottom: 5px;
+}
+
+.item-description {
+  white-space: pre-wrap;
+  margin-bottom: 20px;
+}
+
 /* Create Item */
 
 .form-group {
