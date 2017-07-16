@@ -7,29 +7,7 @@
   </div>
 </form>
 <script type="text/javascript">
-  (function() {
-    var form = document.getElementById('edit-form');
-    form.addEventListener('submit', function(e) {
-      var formData = new FormData(e.target);
-      var formAction = form.getAttribute('action');
-      fetch(formAction, {
-        method: 'PUT',
-        body: formData,
-      })
-        .then(function(response){
-          if (response.ok && response.redirected) {
-            window.location.href = response.url
-          } else {
-            // just makes sure to cascade to catch
-            throw new Error('general error');
-          }
-        })
-        .catch(function() {
-          alert('there was an error updating your item');
-        })
-      e.preventDefault();
-    })
-  })()
+  itemCatalog.setupItemForm('edit-form', 'PUT', 'updated');
 </script>
   
 {% endblock %}
