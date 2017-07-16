@@ -41,9 +41,3 @@ if not "categories" in inspector.get_table_names():
 
     session.commit()
     session.close()
-
-# create Session instance
-
-
-
-

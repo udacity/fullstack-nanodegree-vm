@@ -1,7 +1,8 @@
-import json
+import random, string
 from flask import Flask, render_template, request, redirect, jsonify
 from db import Category, Item, DBSession
 from sqlalchemy import desc
+from flask import session as login_session
 
 app = Flask(__name__, static_url_path="/static")
 session = DBSession()
@@ -17,7 +18,6 @@ def get_category_by_id(id):
 
 def get_item_by_id(id):
     return session.query(Item).filter(Item.id == id).first()
-
 
 @app.route('/')
 def main():
@@ -79,7 +79,19 @@ def delete_item(item_id):
     return redirect('/', code=303)
 
 
+# Create anti-forgery state token
+@app.route('/login')
+def showLogin():
+    state = ''.join(random.choice(string.ascii_uppercase + string.digits)
+                    for x in xrange(32))
+    login_session['state'] = state
+    return "The current session state is %s" % login_session['state']
+
+
 if __name__ == '__main__':
+    # @TODO change secret key
+    app.secret_key = 'super secret key'
+    app.config['SESSION_TYPE'] = 'filesystem'
     # @TODO - remove debug mode
     app.run(host='0.0.0.0', port=8000, debug=True)
 
