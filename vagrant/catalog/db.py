@@ -27,7 +27,6 @@ class Item(Base):
     category_id = Column(Integer, ForeignKey('categories.id'), nullable=False)
     category = relationship('Category', backref="categories")
     name = Column(String, nullable=False)
-    # @TODO - add description column
     description = Column(Text);
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 

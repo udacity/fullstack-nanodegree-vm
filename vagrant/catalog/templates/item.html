@@ -5,6 +5,6 @@
 <h3 class="h4 item-description-headline">Description:</h3>
 <div class="item-description">{{item.description}}
 </div>
-<button class="btn btn-primary">Edit</button>
+<a href="{{url_for('edit_item', item_id=item.id)}}"><button class="btn btn-primary">Edit</button></a>
 <button class="btn btn-danger">Delete</button>
 {% endblock %}

@@ -1,0 +1,33 @@
+ <div class="form-group">
+    <label for="name">Name</label>
+    <input class="form-control" type="text" name="name" id="name" 
+        {% if item is defined %}
+            value="{{item.name}}"
+        {% endif %}
+     />
+</div>
+<div class="form-group">
+    <label for="category">Category</label>
+    <select class="form-control" id="category" name="category">
+    <option>Select a Category</option>
+    {% for category in categories %}
+        <option 
+        value={{category.id}}
+        {% if item is defined and item.category.id == category.id %}
+            selected="selected"
+        {% endif %}
+        >
+          {{ category.name }} 
+        </option>
+    {% endfor %}
+    </select>
+</div>
+<div class="form-group">
+    <label id="description">Description</label>
+    <textarea 
+      class="form-control create-item-description" 
+      name="description" 
+      id="description"
+    >{% if item is defined %}{{item.description}}{% endif %}
+    </textarea>
+</div>

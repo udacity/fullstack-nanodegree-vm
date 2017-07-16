@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, redirect
+import json
+from flask import Flask, render_template, request, redirect, jsonify
 from db import Category, Item, DBSession
 from sqlalchemy import desc
 
@@ -21,6 +22,10 @@ def get_item_by_id(id):
 @app.route('/')
 def main():
     return render_template('main.html', categories=get_all_categories(), items=get_recent_items())
+
+@app.route('/catalog.json')
+def catalog_json():
+    return jsonify({'json will go here': 'yeah' })
 
 # TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
 @app.route('/category/<int:category_id>')
@@ -50,6 +55,9 @@ def create_item():
 
         return redirect('/', code=303)
 
+@app.route('/item/edit/<int:item_id>', methods=['GET', 'POST'])
+def edit_item(item_id):
+    return render_template('edit-item.html', categories=get_all_categories(), item=get_item_by_id(item_id))
 
 if __name__ == '__main__':
     # @TODO - remove debug mode
