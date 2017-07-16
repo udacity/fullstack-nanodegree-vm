@@ -32,8 +32,33 @@
       });
     }
 
+    function setupDeleteButton(id, name) {
+      alert('setting up');
+      document.getElementById('delete-button')
+        .addEventListener('click', function(){
+          if (confirm('Are you sure you want to delete "' + name + '"?')) {
+            fetch('/item/delete/' + id, {
+              method: 'DELETE',
+            })
+              .then(function(response){
+                if (response.ok && response.redirected) {
+                  alert(name + ' successfully deleted');
+                  window.location.href = response.url
+                } else {
+                  // just makes sure to cascade to catch
+                  throw new Error('general error');
+                }
+              })
+              .catch(function(e) {
+                alert('There was an error deleting "' + name + '"')
+              })
+          }
+        });
+    }
+
     window.itemCatalog = {
       setupItemForm: setupItemForm,
+      setupDeleteButton: setupDeleteButton,
     };
   })()
   

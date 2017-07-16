@@ -6,5 +6,8 @@
 <div class="item-description">{{item.description}}
 </div>
 <a href="{{url_for('edit_item', item_id=item.id)}}"><button class="btn btn-primary">Edit</button></a>
-<button class="btn btn-danger">Delete</button>
+<button class="btn btn-danger" id="delete-button">Delete</button>
+<script>
+  itemCatalog.setupDeleteButton({{item.id}}, '{{item.name}}');
+</script>
 {% endblock %}

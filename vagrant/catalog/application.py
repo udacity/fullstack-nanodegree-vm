@@ -45,13 +45,9 @@ def create_item():
         description = request.form['description']
         category_id = request.form['category']
 
-        # @TOOD - return errors if name or category is empty
-
-        session = DBSession()
         new_item = Item(name=name, description=description, category_id=category_id)
         session.add(new_item)
         session.commit()
-        session.close()
 
         return redirect('/', code=303)
 
@@ -64,8 +60,6 @@ def edit_item(item_id):
         description = request.form['description']
         category_id = request.form['category']
 
-        print request.form
-
         # @TOOD - return errors if name or category is empty
         item = get_item_by_id(item_id)
         item.name = name
@@ -75,6 +69,15 @@ def edit_item(item_id):
         session.commit()
 
         return redirect('/', code=303)
+
+@app.route('/item/delete/<int:item_id>', methods=['DELETE'])
+def delete_item(item_id):
+    item = get_item_by_id(item_id)
+    session.delete(item)
+    session.commit()
+    
+    return redirect('/', code=303)
+
 
 if __name__ == '__main__':
     # @TODO - remove debug mode
