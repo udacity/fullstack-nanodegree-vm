@@ -55,9 +55,26 @@ def create_item():
 
         return redirect('/', code=303)
 
-@app.route('/item/edit/<int:item_id>', methods=['GET', 'POST'])
+@app.route('/item/edit/<int:item_id>', methods=['GET', 'PUT'])
 def edit_item(item_id):
-    return render_template('edit-item.html', categories=get_all_categories(), item=get_item_by_id(item_id))
+    if request.method == 'GET':
+        return render_template('edit-item.html', categories=get_all_categories(), item=get_item_by_id(item_id))
+    else:
+        name = request.form['name']
+        description = request.form['description']
+        category_id = request.form['category']
+
+        print request.form
+
+        # @TOOD - return errors if name or category is empty
+        item = get_item_by_id(item_id)
+        item.name = name
+        item.category_id = category_id
+        item.description = description
+        session.add(item)
+        session.commit()
+
+        return redirect('/', code=303)
 
 if __name__ == '__main__':
     # @TODO - remove debug mode

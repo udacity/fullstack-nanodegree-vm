@@ -1,9 +1,35 @@
 {% extends "layout.html" %}
 {% block content %}
-<form method="POST" action="/item/new" class="create-item">
+<form method="POST" action="/item/edit/{{item.id}}" class="create-item" id="edit-form">
   {% include 'item-form.html' %}
   <div class="form-group">
     <button class="btn btn-primary" type="submit">Update Item</button>
   </div>
 </form>
+<script type="text/javascript">
+  (function() {
+    var form = document.getElementById('edit-form');
+    form.addEventListener('submit', function(e) {
+      var formData = new FormData(e.target);
+      var formAction = form.getAttribute('action');
+      fetch(formAction, {
+        method: 'PUT',
+        body: formData,
+      })
+        .then(function(response){
+          if (response.ok && response.redirected) {
+            window.location.href = response.url
+          } else {
+            // just makes sure to cascade to catch
+            throw new Error('general error');
+          }
+        })
+        .catch(function() {
+          alert('there was an error updating your item');
+        })
+      e.preventDefault();
+    })
+  })()
+</script>
+  
 {% endblock %}
