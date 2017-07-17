@@ -26,6 +26,20 @@ def get_category_by_id(id):
 def get_item_by_id(id):
     return session.query(Item).filter(Item.id == id).first()
 
+def get_user_by_email(email):
+    return session.query(User).filter(User.email == email).first()
+
+def create_user(login_session):
+    new_item = User(
+        name=login_session['username'],
+        email=login_session['email'],
+        picture=login_session['picture']
+    )
+    session.add(new_item)
+    session.commit()
+    return new_item
+
+
 @app.route('/')
 def main():
     return render_template('main.html', categories=get_all_categories(), items=get_recent_items())
@@ -170,6 +184,15 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    user_from_db = get_user_by_email(login_session['email'])
+    if user_from_db is None:
+        user = create_user(login_session)
+        login_session['id'] = user.id
+    else:
+        login_session['id'] = user_from_db.id
+
+    
+    
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
