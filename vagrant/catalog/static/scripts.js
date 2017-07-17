@@ -2,11 +2,15 @@
 
     function setupItemForm(id, method, verb) {
       var form = document.getElementById(id);
-      var errorMessage = 'There was an error ' + 
-        method === 'POST' ? 'creating' : 'updating' + 
-        ' your item';
-      var successMessage = 'Item successfully ' + 
-        method === 'POST' ? 'created' : 'updated';
+      var errorMessage = [
+        'There was an error ',
+        method === 'POST' ? 'creating' : 'updating',
+        ' your item'
+      ].join('')
+      var successMessage = [
+        'Item successfully ',
+         method === 'POST' ? 'created' : 'updated'
+      ].join('');
       
       form.addEventListener('submit', function(e) {
         var formData = new FormData(e.target);
@@ -42,7 +46,7 @@
             })
               .then(function(response){
                 if (response.ok && response.redirected) {
-                  alert(name + ' successfully deleted');
+                  alert('"' + name + '" successfully deleted');
                   window.location.href = response.url
                 } else {
                   // just makes sure to cascade to catch

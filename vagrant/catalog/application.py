@@ -58,7 +58,9 @@ def category(category_id):
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
-    return render_template('item.html', item=get_item_by_id(item_id), user_id=login_session.get('id'))
+    item = get_item_by_id(item_id)
+    viewer_is_owner = login_session.get('id') is item.user_id
+    return render_template('item.html', item=item, viewer_is_owner=viewer_is_owner)
 
 @app.route('/item/new', methods=['GET', 'POST'])
 def create_item():
@@ -242,8 +244,6 @@ def gdisconnect():
     else:
     	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
     	response.headers['Content-Type'] = 'application/json'
-
-
 
 if __name__ == '__main__':
     # @TODO change secret key

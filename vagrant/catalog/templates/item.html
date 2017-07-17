@@ -4,11 +4,13 @@
 
 <h3 class="h4 item-description-headline">Description:</h3>
 <div class="item-description">{{item.description}}</div>
-{% if user_id == item.user_id %}
-  <a href="{{url_for('edit_item', item_id=item.id)}}"><button class="btn btn-primary">Edit</button></a>
+{% if viewer_is_owner %}
+  <a href="{{url_for('edit_item', item_id=item.id)}}">
+    <button class="btn btn-primary">Edit</button>
+  </a>
   <button class="btn btn-danger" id="delete-button">Delete</button>
 {% endif %}
-{% if user_id == item.user_id %}
+{% if viewer_is_owner %}
   <script>
     itemCatalog.setupDeleteButton({{item.id}}, '{{item.name}}');
   </script>
