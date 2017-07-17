@@ -13,7 +13,9 @@
           items
         {% endif %}
       )</h2>
-      <button class="btn btn-sm btn-primary add-item-button">Add an Item to Category</button>
+      {% if user_id > 0 %}      
+        <button class="btn btn-sm btn-primary add-item-button">Add an Item to Category</button>
+      {% endif %}
       <ul class="items-list">
         {% for item in category.items %}
           {% include 'item-list-item.html' %}

@@ -38,7 +38,7 @@ class Item(Base):
     user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
     category = relationship('Category', backref="categories")
     name = Column(String, nullable=False)
-    description = Column(Text);
+    description = Column(Text)
     created_at = Column(DateTime, default=datetime.datetime.utcnow)
 
     def __repr__(self):

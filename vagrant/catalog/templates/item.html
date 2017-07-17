@@ -3,11 +3,14 @@
 <h2 class="h3 item-name-headline">{{item.name}}</h2>
 
 <h3 class="h4 item-description-headline">Description:</h3>
-<div class="item-description">{{item.description}}
-</div>
-<a href="{{url_for('edit_item', item_id=item.id)}}"><button class="btn btn-primary">Edit</button></a>
-<button class="btn btn-danger" id="delete-button">Delete</button>
-<script>
-  itemCatalog.setupDeleteButton({{item.id}}, '{{item.name}}');
-</script>
+<div class="item-description">{{item.description}}</div>
+{% if user_id == item.user_id %}
+  <a href="{{url_for('edit_item', item_id=item.id)}}"><button class="btn btn-primary">Edit</button></a>
+  <button class="btn btn-danger" id="delete-button">Delete</button>
+{% endif %}
+{% if user_id == item.user_id %}
+  <script>
+    itemCatalog.setupDeleteButton({{item.id}}, '{{item.name}}');
+  </script>
+{% endif %}
 {% endblock %}

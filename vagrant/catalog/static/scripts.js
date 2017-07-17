@@ -15,6 +15,7 @@
         fetch(formAction, {
           method: method,
           body: formData,
+          credentials: "same-origin"
         })
           .then(function(response){
             if (response.ok && response.redirected) {

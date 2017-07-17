@@ -42,7 +42,7 @@ def create_user(login_session):
 
 @app.route('/')
 def main():
-    return render_template('main.html', categories=get_all_categories(), items=get_recent_items())
+    return render_template('main.html', categories=get_all_categories(), items=get_recent_items(), user_id=login_session.get('id'))
 
 @app.route('/catalog.json')
 def catalog_json():
@@ -51,14 +51,17 @@ def catalog_json():
 # TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
 @app.route('/category/<int:category_id>')
 def category(category_id):
-    return render_template('category.html', categories=get_all_categories(), category=get_category_by_id(category_id))
+    return render_template('category.html', categories=get_all_categories(), category=get_category_by_id(category_id), user_id=login_session.get('id'))
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
-    return render_template('item.html', item=get_item_by_id(item_id))
+    return render_template('item.html', item=get_item_by_id(item_id), user_id=login_session.get('id'))
 
 @app.route('/item/new', methods=['GET', 'POST'])
 def create_item():
+    print login_session
+    if login_session.get('id') is None:
+        return 'You must be logged in to perform this action'
     if request.method == 'GET':
         return render_template('new-item.html', categories=get_all_categories())
     else:
@@ -66,7 +69,7 @@ def create_item():
         description = request.form['description']
         category_id = request.form['category']
 
-        new_item = Item(name=name, description=description, category_id=category_id)
+        new_item = Item(name=name, description=description, category_id=category_id, user_id=login_session.get('id'))
         session.add(new_item)
         session.commit()
 
@@ -74,8 +77,9 @@ def create_item():
 
 @app.route('/item/edit/<int:item_id>', methods=['GET', 'PUT'])
 def edit_item(item_id):
+    # only allow this page if the owner is editor
     if request.method == 'GET':
-        return render_template('edit-item.html', categories=get_all_categories(), item=get_item_by_id(item_id))
+        return render_template('edit-item.html', categories=get_all_categories(), item=get_item_by_id(item_id), user_id=login_session.get('id'))
     else:
         name = request.form['name']
         description = request.form['description']
@@ -93,22 +97,20 @@ def edit_item(item_id):
 
 @app.route('/item/delete/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
+    # only allow this action if the owner is editor
     item = get_item_by_id(item_id)
     session.delete(item)
     session.commit()
     
     return redirect('/', code=303)
 
-
-# Create anti-forgery state token
-# Create anti-forgery state token
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
     # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state)
+    return render_template('login.html', STATE=state, user_id=login_session.get('id'))
 
 
 @app.route('/gconnect', methods=['POST'])
@@ -221,11 +223,13 @@ def gdisconnect():
     print 'result is '
     print result
     if result['status'] == '200':
-	del login_session['access_token'] 
-    	del login_session['gplus_id']
+        del login_session['access_token']
+        del login_session['gplus_id']
     	del login_session['username']
     	del login_session['email']
     	del login_session['picture']
+        del login_session['id']
+
     	response = make_response(json.dumps('Successfully disconnected.'), 200)
     	response.headers['Content-Type'] = 'application/json'
     	return response
@@ -239,7 +243,6 @@ def gdisconnect():
 if __name__ == '__main__':
     # @TODO change secret key
     app.secret_key = 'super secret key'
-    app.config['SESSION_TYPE'] = 'filesystem'
     # @TODO - remove debug mode
     app.run(host='0.0.0.0', port=8000, debug=True)
 
