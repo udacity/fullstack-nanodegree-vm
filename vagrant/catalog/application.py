@@ -63,12 +63,24 @@ def catalog_json():
 # TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
 @app.route('/category/<int:category_id>')
 def category(category_id):
-    return render_template('category.html', categories=get_all_categories(), category=get_category_by_id(category_id), is_logged_in=is_logged_in())
+    return render_template(
+        'category.html', 
+        categories=get_all_categories(), 
+        category=get_category_by_id(category_id), 
+        is_logged_in=is_logged_in(),
+        logged_in_user=login_session
+    )
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = get_item_by_id(item_id)
-    return render_template('item.html', item=item, viewer_is_owner=is_viewer_owner(item))
+    return render_template(
+        'item.html', 
+        item=item, 
+        viewer_is_owner=is_viewer_owner(item),
+        is_logged_in=is_logged_in(),
+        logged_in_user=login_session
+    )
 
 @app.route('/item/new', methods=['GET', 'POST'])
 def create_item():
@@ -76,13 +88,23 @@ def create_item():
         return 'You must be logged in to perform this action'
     
     if request.method == 'GET':
-        return render_template('new-item.html', categories=get_all_categories(), is_logged_in=is_logged_in())
+        return render_template(
+            'new-item.html', 
+            categories=get_all_categories(), 
+            is_logged_in=is_logged_in(),
+            logged_in_user=login_session
+        )
     else:
         name = request.form['name']
         description = request.form['description']
         category_id = request.form['category']
 
-        new_item = Item(name=name, description=description, category_id=category_id, user_id=login_session.get('id'))
+        new_item = Item(
+            name=name, 
+            description=description, 
+            category_id=category_id, 
+            user_id=login_session.get('id')
+        )
         session.add(new_item)
         session.commit()
 
@@ -97,7 +119,14 @@ def edit_item(item_id):
         return 'Unauthorized Action'
 
     if request.method == 'GET':
-        return render_template('edit-item.html', categories=get_all_categories(), item=item, is_logged_in=is_logged_in(), viewer_is_owner=viewer_is_owner)
+        return render_template(
+            'edit-item.html', 
+            categories=get_all_categories(), 
+            item=item,
+            is_logged_in=is_logged_in(), 
+            viewer_is_owner=viewer_is_owner,
+            logged_in_user=login_session
+        )
     else:
         name = request.form['name']
         description = request.form['description']
@@ -126,8 +155,13 @@ def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
+    
     # return "The current session state is %s" % login_session['state']
-    return render_template('login.html', STATE=state, user_id=login_session.get('id'))
+    return render_template(
+        'login.html', 
+        STATE=state, 
+        user_id=login_session.get('id')
+    )
 
 
 @app.route('/gconnect', methods=['POST'])

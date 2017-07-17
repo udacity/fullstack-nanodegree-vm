@@ -13,7 +13,7 @@
           items
         {% endif %}
       )</h2>
-      {% if user_id > 0 %}      
+      {% if is_logged_in %}      
         <button class="btn btn-sm btn-primary add-item-button">Add an Item to Category</button>
       {% endif %}
       <ul class="items-list">
