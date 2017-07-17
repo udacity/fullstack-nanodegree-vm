@@ -1,6 +1,6 @@
 import random, string, json, httplib2
 from flask import Flask, render_template, request, redirect, jsonify, make_response, flash
-from db import Category, Item, DBSession
+from db import Category, Item, User, DBSession
 from sqlalchemy import desc
 from flask import session as login_session
 from oauth2client.client import FlowExchangeError, flow_from_clientsecrets
@@ -10,7 +10,8 @@ app = Flask(__name__, static_url_path="/static")
 session = DBSession()
 
 CLIENT_ID = json.loads(
-    open('client_secrets.json', 'r').read())['web']['client_id']
+    open('client_secrets.json', 'r').read()
+)['web']['client_id']
 APPLICATION_NAME = "Restaurant Menu Application"
 
 def get_all_categories():
