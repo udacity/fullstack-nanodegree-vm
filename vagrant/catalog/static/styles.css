@@ -20,6 +20,16 @@
   margin-top:7px;
 }
 
+.logged-in-name {
+  float:right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.logged-in-image{ 
+  margin-right: 5px;
+}
+
 .main-content {
   padding: 0 15px;
 }

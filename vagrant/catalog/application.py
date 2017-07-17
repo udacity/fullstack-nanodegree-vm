@@ -32,6 +32,9 @@ def get_user_by_email(email):
 def is_logged_in():
     return login_session.get('id') is not None
 
+def is_viewer_owner(item):
+    return login_session.get('id') is item.user_id
+
 def create_user(login_session):
     new_item = User(
         name=login_session['username'],
@@ -45,7 +48,13 @@ def create_user(login_session):
 
 @app.route('/')
 def main():
-    return render_template('main.html', categories=get_all_categories(), items=get_recent_items(), is_logged_in=is_logged_in())
+    return render_template(
+        'main.html',
+        categories=get_all_categories(),
+        items=get_recent_items(),
+        is_logged_in=is_logged_in(),
+        logged_in_user=login_session
+    )
 
 @app.route('/catalog.json')
 def catalog_json():
@@ -54,21 +63,20 @@ def catalog_json():
 # TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
 @app.route('/category/<int:category_id>')
 def category(category_id):
-    return render_template('category.html', categories=get_all_categories(), category=get_category_by_id(category_id), user_id=login_session.get('id'))
+    return render_template('category.html', categories=get_all_categories(), category=get_category_by_id(category_id), is_logged_in=is_logged_in())
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = get_item_by_id(item_id)
-    viewer_is_owner = login_session.get('id') is item.user_id
-    return render_template('item.html', item=item, viewer_is_owner=viewer_is_owner)
+    return render_template('item.html', item=item, viewer_is_owner=is_viewer_owner(item))
 
 @app.route('/item/new', methods=['GET', 'POST'])
 def create_item():
-    print login_session
-    if login_session.get('id') is None:
+    if not is_logged_in():
         return 'You must be logged in to perform this action'
+    
     if request.method == 'GET':
-        return render_template('new-item.html', categories=get_all_categories())
+        return render_template('new-item.html', categories=get_all_categories(), is_logged_in=is_logged_in())
     else:
         name = request.form['name']
         description = request.form['description']
@@ -82,16 +90,20 @@ def create_item():
 
 @app.route('/item/edit/<int:item_id>', methods=['GET', 'PUT'])
 def edit_item(item_id):
-    # only allow this page if the owner is editor
+    item = get_item_by_id(item_id)
+    viewer_is_owner=is_viewer_owner(item)
+
+    if not viewer_is_owner:
+        return 'Unauthorized Action'
+
     if request.method == 'GET':
-        return render_template('edit-item.html', categories=get_all_categories(), item=get_item_by_id(item_id), user_id=login_session.get('id'))
+        return render_template('edit-item.html', categories=get_all_categories(), item=item, is_logged_in=is_logged_in(), viewer_is_owner=viewer_is_owner)
     else:
         name = request.form['name']
         description = request.form['description']
         category_id = request.form['category']
 
         # @TOOD - return errors if name or category is empty
-        item = get_item_by_id(item_id)
         item.name = name
         item.category_id = category_id
         item.description = description

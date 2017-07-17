@@ -23,6 +23,10 @@
         <a href="{{url_for('gdisconnect')}}">
           <button class="btn btn-primary login-button">Logout</button>
         </a>
+        <span class="logged-in-name">
+          <img class="logged-in-image" src="{{logged_in_user.picture}}" height="40" width="40" />
+          Logged in as {{logged_in_user.username}}
+        </span>
       {% endif %}
     </div>
   </nav>
