@@ -83,7 +83,8 @@ def item(item_id):
     )
 
 @app.route('/item/new', methods=['GET', 'POST'])
-def create_item():
+@app.route('/item/new/<int:category_id>', methods=['GET', 'POST'])
+def create_item(category_id):
     if not is_logged_in():
         return 'You must be logged in to perform this action'
     
@@ -92,7 +93,8 @@ def create_item():
             'new-item.html', 
             categories=get_all_categories(), 
             is_logged_in=is_logged_in(),
-            logged_in_user=login_session
+            logged_in_user=login_session,
+            category_id=category_id
         )
     else:
         name = request.form['name']

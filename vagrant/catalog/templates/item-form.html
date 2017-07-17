@@ -13,7 +13,7 @@
     {% for category in categories %}
         <option 
         value={{category.id}}
-        {% if item is defined and item.category.id == category.id %}
+        {% if item is defined and item.category.id == category.id or category_id == category.id %}
             selected="selected"
         {% endif %}
         >
