@@ -86,7 +86,7 @@ def item(item_id):
 @app.route('/item/new/<int:category_id>', methods=['GET', 'POST'])
 def create_item(category_id):
     if not is_logged_in():
-        return 'You must be logged in to perform this action'
+        return 'Unauthorized Action'
     
     if request.method == 'GET':
         return render_template(
@@ -145,8 +145,12 @@ def edit_item(item_id):
 
 @app.route('/item/delete/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
-    # only allow this action if the owner is editor
     item = get_item_by_id(item_id)
+    viewer_is_owner=is_viewer_owner(item)
+
+    if not viewer_is_owner:
+        return 'Unauthorized Action'
+
     session.delete(item)
     session.commit()
     
