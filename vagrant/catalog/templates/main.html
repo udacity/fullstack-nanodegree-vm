@@ -4,7 +4,7 @@
   {% include 'category-list.html' %}
   <div class="col-sm-6">
     <h2 class="h3">Recently Added Items</h2>
-      {% if user_id > 0 %}
+      {% if is_logged_in %}
         <a href="/item/new">
           <button class="btn btn-sm btn-primary add-item-button">Add an Item</button>
         </a>

@@ -15,7 +15,15 @@
       <div class="navbar-header">
         <a href="/" class="navbar-brand">Catalog App</a>
       </div>
-      <button class="btn btn-primary login-button">Login</button>
+      {% if not is_logged_in %}
+        <a href="{{url_for('showLogin')}}">
+          <button class="btn btn-primary login-button">Login</button>
+        </a>
+      {% else %}
+        <a href="{{url_for('gdisconnect')}}">
+          <button class="btn btn-primary login-button">Logout</button>
+        </a>
+      {% endif %}
     </div>
   </nav>
   <main class="main-content">

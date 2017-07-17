@@ -29,6 +29,9 @@ def get_item_by_id(id):
 def get_user_by_email(email):
     return session.query(User).filter(User.email == email).first()
 
+def is_logged_in():
+    return login_session.get('id') is not None
+
 def create_user(login_session):
     new_item = User(
         name=login_session['username'],
@@ -42,8 +45,7 @@ def create_user(login_session):
 
 @app.route('/')
 def main():
-    print login_session
-    return render_template('main.html', categories=get_all_categories(), items=get_recent_items(), user_id=login_session.get('id'))
+    return render_template('main.html', categories=get_all_categories(), items=get_recent_items(), is_logged_in=is_logged_in())
 
 @app.route('/catalog.json')
 def catalog_json():
@@ -235,12 +237,9 @@ def gdisconnect():
     	del login_session['email']
     	del login_session['picture']
         del login_session['id']
-
-    	response = make_response(json.dumps('Successfully disconnected.'), 200)
-    	response.headers['Content-Type'] = 'application/json'
-    	return response
+        
+        return redirect('/', code=303)
     else:
-	
     	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
     	response.headers['Content-Type'] = 'application/json'
 

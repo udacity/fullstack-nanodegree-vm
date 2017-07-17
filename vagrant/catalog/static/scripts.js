@@ -34,7 +34,6 @@
     }
 
     function setupDeleteButton(id, name) {
-      alert('setting up');
       document.getElementById('delete-button')
         .addEventListener('click', function(){
           if (confirm('Are you sure you want to delete "' + name + '"?')) {
