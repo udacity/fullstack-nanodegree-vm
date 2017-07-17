@@ -42,6 +42,7 @@ def create_user(login_session):
 
 @app.route('/')
 def main():
+    print login_session
     return render_template('main.html', categories=get_all_categories(), items=get_recent_items(), user_id=login_session.get('id'))
 
 @app.route('/catalog.json')
@@ -116,18 +117,23 @@ def showLogin():
 @app.route('/gconnect', methods=['POST'])
 def gconnect():
     # Validate state token
-    if request.args.get('state') != login_session['state']:
+    if request.args.get('state') != login_session.get('state'):
         response = make_response(json.dumps('Invalid state parameter.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
     # Obtain authorization code
     code = request.data
+    print code
 
     try:
+        print 'code'
+        print code
         # Upgrade the authorization code into a credentials object
         oauth_flow = flow_from_clientsecrets('client_secrets.json', scope='')
         oauth_flow.redirect_uri = 'postmessage'
         credentials = oauth_flow.step2_exchange(code)
+
+        print credentials
     except FlowExchangeError:
         response = make_response(
             json.dumps('Failed to upgrade the authorization code.'), 401)
@@ -162,7 +168,7 @@ def gconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
-    stored_credentials = login_session.get('credentials')
+    stored_credentials = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
     if stored_credentials is not None and gplus_id == stored_gplus_id:
         response = make_response(json.dumps('Current user is already connected.'),
@@ -171,7 +177,7 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    login_session['credentials'] = credentials
+    # login_session['credentials'] = credentials
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
@@ -193,8 +199,8 @@ def gconnect():
     else:
         login_session['id'] = user_from_db.id
 
-    
-    
+    print login_session
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
