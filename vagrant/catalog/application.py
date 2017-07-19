@@ -58,7 +58,24 @@ def main():
 
 @app.route('/catalog.json')
 def catalog_json():
-    return jsonify({'json will go here': 'yeah' })
+    data = []
+
+    for cat in get_all_categories():
+        items = []
+        for i in cat.items:
+            items.append({
+                'id': i.id,
+                'name': i.name,
+                'description': i.description,
+            })
+
+        data.append({
+            'category': cat.name,
+            'id': cat.id,
+            'items': items,
+        })
+
+    return jsonify(data=data)
 
 # TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
 @app.route('/category/<int:category_id>')
@@ -233,7 +250,6 @@ def gconnect():
         return response
 
     # Store the access token in the session for later use.
-    # login_session['credentials'] = credentials
     login_session['access_token'] = credentials.access_token
     login_session['gplus_id'] = gplus_id
 
