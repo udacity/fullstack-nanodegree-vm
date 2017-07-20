@@ -30,7 +30,7 @@ class RestaurantServerHandler(BaseHTTPRequestHandler):
 					output += r.name
 					output += "</td>"
 					output += "<td> <a href='%s/edit'>Edit</a></td>" % r.id
-					output += "<td> <a href='%s/delete'>Delete</a></td>"
+					output += "<td> <a href='%s/delete'>Delete</a></td>" % r.id
 					output += "</tr>"
 
 				output += "</table>"
@@ -63,12 +63,29 @@ class RestaurantServerHandler(BaseHTTPRequestHandler):
 				
 				output = ""
 				output += "<html><body>"
-				output += "Create a new Restaurant"
+				output += "Update Restaurant"
 				output += '''<form method='POST' enctype='multipart/form-data' action='/%s/update'><h2>Update the name of the restaurant:</h2><input name="res_name" type="text" value="%s" ><input type="submit" value="Submit"> </form>''' % (updateRestaurant.id, updateRestaurant.name)
 				output += "</body></html>"
 				self.wfile.write(output)
 				return
 
+			if self.path.endswith('/delete'):
+				self.send_response(200)
+				self.send_header('Content-type', 'text/html')
+				self.end_headers()
+				recv_id = self.path.split('/')[1]
+				print recv_id
+				session = DBSession()
+				updateRestaurant = session.query(Restaurant).filter_by(id = recv_id).one()
+				print updateRestaurant.name
+				
+				output = ""
+				output += "<html><body>"
+				output += "Delete Restaurant"
+				output += '''<form method='POST' enctype='multipart/form-data' action='/%s/delete'><h2>Deleting %s restaurant. Are you sure?</h2><input type="submit" value="Delete"><br /><a href = "/restaurants">Back to restaurants</a> </form>''' % (updateRestaurant.id, updateRestaurant.name)
+				output += "</body></html>"
+				self.wfile.write(output)
+				return
 
 		except:
 			self.send_error(404, 'File Not Found %s' %self.path)
@@ -106,6 +123,18 @@ class RestaurantServerHandler(BaseHTTPRequestHandler):
 				self.send_header('Location', '/restaurants')
 				self.end_headers()
 				return
+
+			if self.path.endswith('/delete'):
+				recv_id = self.path.split('/')[1]
+				session = DBSession()
+				delRes = session.query(Restaurant).filter_by(id = recv_id).one()
+				session.delete(delRes)
+				session.commit()
+				self.send_response(301)
+				self.send_header('Location', '/restaurants')
+				self.end_headers()
+				print "Restaurant deleted!"
+				return				
 
 		except:
 			pass
