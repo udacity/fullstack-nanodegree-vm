@@ -44,7 +44,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
 			ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
 			if ctype == 'multipart/form-data':
 				fields = cgi.parse_multipart(self.rfile, pdict)
-				messagecontent = fields.get('message')
+				messagecontent = fields.get('res_name')
 			
 			output = ""
 			output += "<html><body>"
