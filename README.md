@@ -53,9 +53,13 @@ Create a reporting tool that prints out reports (in plain text) based on the dat
         * The log table includes one entry for each time a user has accessed the site.
   
  
-  #### Running the queries:
-  1. From the vagrant/news directory inside the virtual machine, run logs.py using:
+  #### Generate the reports:
+  1. From the /vagrant/news directory inside the virtual machine, run::
   ```
-    $ python3 logs.py
+    $ python3  newsreports.py
   ```
-  results should be identical to the report in the sampleReport file provided.
+  results should be identical to the thoose the sampleReport file provided.
+ 
+  
+  ### Adding reports:
+  Please see comments in the newreports.py file for instructions on adding new reports.
