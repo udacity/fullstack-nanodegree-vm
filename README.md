@@ -16,7 +16,7 @@ Create a reporting tool that prints out reports (in plain text) based on the dat
   * [Vagrant](https://www.vagrantup.com/)
   * [VirtualBox](https://www.virtualbox.org/)
   
-  #### Setup Project:
+#### Setup Project:
   1. Install Vagrant and VirtualBox
   2. Download or Clone [fullstack-nanodegree-vm](https://github.com/mdjolieca/fullstack-nanodegree-vm/tree/Log_Analysis_Project)     repository.
   
@@ -32,15 +32,21 @@ Create a reporting tool that prints out reports (in plain text) based on the dat
     $ vagrant ssh
   ```
   3. Change directory to /vagrant/news and look around with ls.
-  
-#### Setting up the database and Creating Views:
-
-  1. Load the data in local database run this command from the vagrant/news directory:
-  
   ```
+    $ cd /vagrant/news
+  ```
+     all of the file related to this project are in this directory.
+  
+#### Setting up the database:
+
+   1. Unzip the /vagrant/news/newsdata.zip  file.  
+  
+   2. Load the data into the news database using the newsdata.sql script from step 1 zip file:
+  
+  ``` 
     psql -d news -f newsdata.sql
   ```
-   2. (Optional)Use `psql -d news` to connect to database and veiw the table structure.
+   3. (Optional)Use `psql -d news` to connect to database and veiw the table structure.
       The database includes three tables:
         * The authors table includes information about the authors of articles.
         * The articles table includes the articles themselves.
@@ -48,7 +54,7 @@ Create a reporting tool that prints out reports (in plain text) based on the dat
   
  
   #### Running the queries:
-  1. From the vagrant/news directory inside the virtual machine,run logs.py using:
+  1. From the vagrant/news directory inside the virtual machine, run logs.py using:
   ```
     $ python3 logs.py
   ```
