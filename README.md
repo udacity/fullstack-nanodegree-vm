@@ -40,7 +40,7 @@ Create a reporting tool that prints out reports (in plain text) based on the dat
   ```
     psql -d news -f newsdata.sql
   ```
-   2. Use `psql -d news` to connect to database and veiw the table structure.
+   2. (Optional)Use `psql -d news` to connect to database and veiw the table structure.
       The database includes three tables:
         * The authors table includes information about the authors of articles.
         * The articles table includes the articles themselves.
@@ -52,3 +52,4 @@ Create a reporting tool that prints out reports (in plain text) based on the dat
   ```
     $ python3 logs.py
   ```
+  results should be identical to the report in the sampleReport file provided.
