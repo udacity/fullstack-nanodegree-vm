@@ -67,4 +67,4 @@ def check_range(start, finish):
 
 if __name__ == "__main__":
     # execute only if run as a script
-    generate_reports(0,3)
+    generate_reports()
