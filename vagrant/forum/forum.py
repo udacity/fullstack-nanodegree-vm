@@ -83,9 +83,7 @@ def Post(env, resp):
     return ['Redirecting']
 
 ## Dispatch table - maps URL prefixes to request handlers
-DISPATCH = {'': View,
-            'post': Post,
-	    }
+
 
 ## Dispatcher forwards requests according to the DISPATCH table.
 def Dispatcher(env, resp):
