@@ -7,7 +7,8 @@
 		<div class="header">
 			<h1>{{restaurant.name}}</h1>
 		</div>
-		<a href="{{url_for('newMenuItem',restaurant_id=restaurant.id)}}">Create New Menu</a>
+		<a class="new" href="{{url_for('newMenuItem',restaurant_id=restaurant.id)}}">Create New Menu</a>
+		<a class="back" href="{{url_for('restaurantList')}}">Back to Restaurant List</a>
 		{% with messages = get_flashed_messages() %}
 		{% if messages %}
 		<div class="menuitem">	
