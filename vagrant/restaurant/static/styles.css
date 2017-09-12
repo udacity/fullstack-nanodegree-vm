@@ -1,0 +1,44 @@
+<style type="text/css">
+	body
+	{
+		font-family: sans-serif;
+    	background-image: url('img3.jpg');
+
+	}
+	div.main{
+		font-family: sans-serif;
+    	background-color: #333333;
+    	margin : 0 15% 0 15%;
+    	padding: 2%;
+    	border-style: solid;
+    	border-radius: 5%;
+    	border-color: #FFFFFF;
+    	position: absolute;
+	}
+	
+	h1,h2,p
+	{
+		color: #FFFFFF;
+		padding: 0px;
+	}
+	span{
+		float: right;
+	}
+	a{
+		text-decoration: none;
+		color: #AAAAAA;
+	}
+	.menuitem: a{
+		color: black;
+		background-color: #111111;
+		border-radius :1%;
+	}	
+	.header
+	{
+		text-align: center;
+		border:none;
+		border-bottom: solid;
+		border-color: #FFFFFF;
+	}
+
+</style>
