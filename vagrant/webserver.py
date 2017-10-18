@@ -12,13 +12,24 @@ class webserverHandler(BaseHTTPRequestHandler):  # webserverHandler inheriting f
             self.wfile.write(message.encode())
             print(message)
             return
+
+        if self.path == '/hola':
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            message = ""
+            message += "<html><body> &#161Hola! <a href='/hello'>Back to Hello</a><body><html>"
+            self.wfile.write(message.encode())
+            print(message)
+            return
+
         else:
             self.send_error(404, 'File {} not found'.format(self.path[1:]))
 
 
 def main():
     try:
-        port = 8080
+        port = 9000
         serverAddress = ('', port)
         server = HTTPServer(serverAddress, webserverHandler)  # Handler class webserverHandler
         print("Web server running on port %s" % port)
