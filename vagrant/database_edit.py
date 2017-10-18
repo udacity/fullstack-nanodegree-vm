@@ -22,7 +22,6 @@ session.add(UrbanVeggieBurger)
 session.commit()
 print(UrbanVeggieBurger.price)
 
-
 spinach = session.query(MenuItem).filter_by(name='Spinach Ice Cream').one()
 print(spinach.id)
 print(spinach.price)
