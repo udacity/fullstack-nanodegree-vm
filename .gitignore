@@ -105,11 +105,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 
-.gitignore
-.idea/fullstack-nanodegree-vm.iml
-.idea/inspectionProfiles/
-.idea/markdown-navigator/
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
-vagrant/database_setup.py
+
+vagrant/restaurantmenu.db
+.idea/
+.vscode/
