@@ -129,6 +129,8 @@ class webServerHandler(BaseHTTPRequestHandler):
         if self.path.endswith("/delete"):
             myRestaurantPath = self.path.split("/")[2]
             myRestaurantId = session.query(Restaurant).filter_by(id=myRestaurantPath).one()
+
+            # Deleting Restaurant
             if myRestaurantId:
                 session.delete(myRestaurantId)
                 session.commit()
