@@ -1,3 +1,4 @@
+#!/usr/bin/env python2.7
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
