@@ -22,6 +22,10 @@ class webServerHandler(BaseHTTPRequestHandler):
             output += "<html><body>"
             for restaurant in restaurants:
                 output += restaurant.name
+                output += "<br>"
+                output += "<a href='#'>Edit</a>"
+                output += "<br>"
+                output += "<a href='#'>Delete</a>"
                 output += "<br><br><br>"
 
             output += "</body></html>"
