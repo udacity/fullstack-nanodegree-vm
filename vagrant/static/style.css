@@ -1,3 +1,8 @@
 body {
-    background-color: beige;
+    background-color: black;
+}
+
+.wrapper{
+    margin: 0 auto;
+    width: 80%;
 }

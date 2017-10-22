@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+<div class="wrapper">
     <h1>{{restaurant.name}}</h1>
 
         <!-- assigning the function get_flashed_messages() to messages -->
@@ -40,7 +41,7 @@
             </a>
         <br>
     </div>
-
+</div>
     {% endfor %}
 <!--indicating end of loop-->
 

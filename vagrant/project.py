@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 
 app = Flask(__name__)
 
@@ -14,6 +14,21 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+def restaurantMenuJSON(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).all()
+    return jsonify(MenuItems=[item.serialize for item in items])
+#
+#
+# @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/JSON')
+# def MenuItemJSON(restaurant_id, menu_id):
+#     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+#     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).one
+#     item = session.query(MenuItem).filter_by(id=menu_id).one()
+#     return jsonify(MenuItems=[item.serialize])
+
+
 @app.route('/')
 @app.route('/restaurants')
 def welcome():
@@ -24,7 +39,7 @@ def welcome():
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurantMenu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id)
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).all()
     return render_template('menu.html', restaurant=restaurant, items=items)  # use of render_template for the html
 
 
