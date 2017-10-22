@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Restaurant App </title>
+</head>
+<body>
+    <h1> Welcome to Restaurant </h1>
+    <h3> Below are the restaurants available:</h3>
+
+    {% for restaurant in restaurants %}
+
+    <div>
+        <a href="{{ url_for('restaurantMenu', restaurant_id = restaurant.id) }}"> {{restaurant.name}}</a>
+        <br>
+    </div>
+
+    {% endfor%}
+
+</body>
+</html>
