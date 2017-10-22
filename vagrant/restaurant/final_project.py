@@ -2,7 +2,7 @@ from flask import Flask,render_template,url_for,request,redirect,flash,jsonify
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from database_setup import Base,Restaurant,MenuItem
+from database_setup import Base,Restaurant,MenuItem, User
 
 # New imports for the login implementation
 from flask import session as login_session
@@ -23,7 +23,7 @@ APPLICATION_NAME = "Restaurant Menu Application"
 
 
 #Create a DB connection and connect to DB
-engine = create_engine('sqlite:///restaurantmenu.db')
+engine = create_engine('sqlite:///restaurantmenuwithusers.db')
 Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
@@ -89,7 +89,13 @@ def gconnect():
 
     stored_access_token = login_session.get('access_token')
     stored_gplus_id = login_session.get('gplus_id')
-    if stored_access_token is not None and gplus_id == stored_gplus_id:
+    # check also if access token is valid or expired, if expired then resrore the access token
+    stored_url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
+           % stored_access_token)
+    stored_h = httplib2.Http()
+    stored_result = json.loads(stored_h.request(stored_url, 'GET')[1])
+    
+    if stored_access_token is not None and gplus_id == stored_gplus_id and stored_result.get('error') is None:
         response = make_response(json.dumps('Current user is already connected.'),
                                  200)
         response.headers['Content-Type'] = 'application/json'
@@ -109,6 +115,12 @@ def gconnect():
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+
+    # See if user exists, if it doesn't make a new one
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+    	user_id=createUser(login_session)    	
+    login_session['user_id'] = user_id
 
     output = ''
     output += '<h1>Welcome, '
@@ -131,7 +143,7 @@ def gdisconnect():
         response = make_response(json.dumps('Current user not connected.'), 401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    print 'In gdisconnect access token is %s', access_token
+    print 'In gdisconnect access token is %s' % access_token
     print 'User name is: '
     print login_session['username']
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
@@ -139,6 +151,7 @@ def gdisconnect():
     result = h.request(url, 'GET')[0]
     print 'result is '
     print result
+
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
@@ -190,8 +203,11 @@ def menuItemJSON(restaurant_id,menu_id):
 def restaurantList():
 	restaurants = session.query(Restaurant).all()
 	#Below code show how to use HTML Template to achieve the same dynamically
-	return render_template('restaurant.html',restaurants=restaurants)
-
+	#checkAccessToken checks and clears the login_session if the token is expired
+	if 'username' in login_session and checkAccessToken():	
+		return render_template('restaurant.html',restaurants=restaurants)
+	else:
+		return render_template('publicrestaurant.html',restaurants=restaurants)	
 
 # Task 1: Create route for newRestaurant function here
 @app.route('/restaurant/new/',methods=['GET','POST'])	
@@ -199,7 +215,7 @@ def newRestaurant():
 	if 'username' not in login_session:
 		return redirect('/login');
 	if request.method == 'POST':
-		newRestaurant = Restaurant(name=request.form['restaurantname'])
+		newRestaurant = Restaurant(name=request.form['restaurantname'],user_id = login_session['user_id'])
 		session.add(newRestaurant)
 		session.commit()
 		flash('New Restaurant created')
@@ -247,17 +263,23 @@ def deleteRestaurant(restaurant_id):
 def restaurantMenu(restaurant_id):
 	restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
 	menuItems = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).all()
+
+	menuUser = getUserInfo(restaurant.user_id)
+	print menuUser.id,login_session['user_id']
+	if 'username' not in login_session or menuUser.id != login_session['user_id']:
 	#Below code show how to use HTML Template to achieve the same dynamically
-	return render_template('menu.html',restaurant=restaurant,menuItems=menuItems)
-	
+		return render_template('publicmenu.html',restaurant=restaurant,menuItems=menuItems,creator = menuUser)
+	else:
+		return render_template('menu.html',restaurant=restaurant,menuItems=menuItems, creator = menuUser)
 
 # Task 6: Create route for newMenuItem function here
 @app.route('/restaurant/<int:restaurant_id>/menu/new/',methods=['GET','POST'])	
 def newMenuItem(restaurant_id):
 	if 'username' not in login_session:
 		return redirect('/login');	
-	if request.method == 'POST':
-		newMenu = MenuItem(name=request.form['newmenu'],price=request.form['price'],description=request.form['description'],restaurant_id=restaurant_id)
+	if request.method == 'POST':		
+		newMenu = MenuItem(name=request.form['newmenu'],price=request.form['price'],description=request.form['description'],restaurant_id=restaurant_id
+			,user_id = login_session['user_id'])
 		session.add(newMenu)
 		session.commit()
 		flash('New menu item created')
@@ -299,6 +321,45 @@ def deleteMenuItem(restaurant_id,menu_id):
 	else:
 		return render_template('deletemenuitem.html',restaurant_id=restaurant_id,menu_id=menu_id,deleteItemMenu=deletedMenu)
 
+# check also if access token is valid or expired, if expired then resrore the access token
+def checkAccessToken():
+    stored_access_token = login_session.get('access_token')
+    stored_url = ('https://www.googleapis.com/oauth2/v1/tokeninfo?access_token=%s'
+           % stored_access_token)
+    stored_h = httplib2.Http()
+    stored_result = json.loads(stored_h.request(stored_url, 'GET')[1])
+    if stored_result.get('error') is not None:
+		clearAccessToken()
+		return False
+    return True
+		
+def clearAccessToken():
+    del login_session['access_token']
+    del login_session['gplus_id']
+    del login_session['username']
+    del login_session['email']
+    del login_session['picture']	
+
+def createUser(login_session):
+	newUser = User(name=login_session['username'],email=login_session['email'],picture=login_session['picture'])
+	session.add(newUser)
+	session.commit()
+	user = session.query(User).filter_by(email=login_session['email']).one()
+	return user.id
+
+def getUserInfo(user_id):
+	try:
+		user = session.query(User).filter_by(id=user_id).one()
+		return user
+	except Exception as e:
+		return None
+
+def getUserID(email):
+	try:
+		user = session.query(User).filter_by(email=email).one()
+		return user.id	
+	except Exception as e:
+		return None
 
 if __name__ == '__main__':
 	app.secret_key = 'Super-Secret-Key'
