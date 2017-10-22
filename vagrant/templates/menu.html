@@ -1,31 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
 <body>
-<h1>{{restaurant.name}}</h1>
-<h3>
-    <a href="{{ url_for('newMenuItem', restaurant_id = restaurant.id) }}">
-        Make new Menu
-    </a>
-</h3>
+    <h1>{{restaurant.name}}</h1>
+
+        <!-- assigning the function get_flashed_messages() to messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+
+        <ul>
+        {% for message in messages %}
+          <li><strong>{{message}}</strong></li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+    <h3>
+        <a href="{{ url_for('newMenuItem', restaurant_id = restaurant.id) }}">
+            Make new Menu
+        </a>
+    </h3>
 
 <!--indicating start of loop-->
-{% for item in items %}
+    {% for item in items %}
 
-<div>
-    <p>{{item.name}}</p>
-    <p>{{item.description}}</p>
-    <p> {{item.price}} </p>
-        <a href="{{ url_for('editMenuItem', restaurant_id=restaurant.id, menu_id = item.id)}}">
-            Edit
-        </a>
-    <br>
-        <a href="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id = item.id) }}">
-            Delete
-        </a>
-    <br>
-</div>
+    <div>
+        <p>{{item.name}}</p>
+        <p>{{item.description}}</p>
+        <p> {{item.price}} </p>
+            <a href="{{ url_for('editMenuItem', restaurant_id=restaurant.id, menu_id = item.id)}}">
+                Edit
+            </a>
+        <br>
+            <a href="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id = item.id) }}">
+                Delete
+            </a>
+        <br>
+    </div>
 
-{% endfor %}
+    {% endfor %}
 <!--indicating end of loop-->
 
 </body>
