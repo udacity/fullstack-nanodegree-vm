@@ -14,28 +14,15 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 
-@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
-def restaurantMenuJSON(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).all()
-    return jsonify(MenuItems=[item.serialize for item in items])
-#
-#
-# @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/JSON')
-# def MenuItemJSON(restaurant_id, menu_id):
-#     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-#     items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).one
-#     item = session.query(MenuItem).filter_by(id=menu_id).one()
-#     return jsonify(MenuItems=[item.serialize])
-
-
+# route to welcome page
 @app.route('/')
-@app.route('/restaurants')
+@app.route('/restaurants/')
 def welcome():
     restaurants = session.query(Restaurant).all()
     return render_template('welcome.html', restaurants=restaurants)
 
 
+# route to restaurant page
 @app.route('/restaurants/<int:restaurant_id>/')
 def restaurantMenu(restaurant_id):
     restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
@@ -86,6 +73,20 @@ def deleteMenuItem(restaurant_id, menu_id):
         return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
     else:
         return render_template('deletemenu.html', restaurant_id=restaurant_id, menu_id=menu_id, item=itemToDelete)
+
+
+# route for JSON API
+@app.route('/restaurants/<int:restaurant_id>/menu/JSON')
+def restaurantMenuJSON(restaurant_id):
+    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
+    items = session.query(MenuItem).filter_by(restaurant_id=restaurant.id).all()
+    return jsonify(MenuItems=[item.serialize for item in items])
+
+
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/JSON')
+def MenuItemJSON(restaurant_id, menu_id):
+    item = session.query(MenuItem).filter_by(id=menu_id).one()
+    return jsonify(MenuItems=[item.serialize])
 
 
 if __name__ == '__main__':
