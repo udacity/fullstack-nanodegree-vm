@@ -6,6 +6,7 @@
 </head>
 <body>
     <h1> There are no menus in this Restaurant</h1> <br>
+    <a href="{{url_for('new_menu', restaurant_id = restaurant.id)}}"> Create New Menu </a> <br>
     <a href="{{url_for('show_restaurant')}}"> Back </a>
 </body>
 </html>

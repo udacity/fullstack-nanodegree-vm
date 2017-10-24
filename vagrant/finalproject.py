@@ -71,7 +71,7 @@ def show_menu(restaurant_id):
     if items:
         return render_template('show_menu.html', restaurant=restaurant, items=items)
     else:
-        return render_template('no_menu.html')
+        return render_template('no_menu.html', restaurant=restaurant)
 
 
 @app.route('/restaurants/<int:restaurant_id>/menu/new', methods=["GET", "POST"])
