@@ -109,3 +109,4 @@ venv.bak/
 vagrant/restaurantmenu.db
 .idea/
 .vscode/
+.vagrant/*

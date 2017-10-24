@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title> Make a new Restaurant </title>
+</head>
+<body>
+
+    <h1> New Restaurant </h1>
+    <form action="{{url_for('new_restaurant')}}" method="post">
+
+        <label> Name:
+            <input type="text" size="30" name="name" placeholder="New Restaurant Name">
+        </label>
+        <input type="submit" value="Create">
+
+    </form>
+    <p> <a href="{{url_for('show_restaurant')}}"> Cancel </a> </p>
+</body>
+</html>
