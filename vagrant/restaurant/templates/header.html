@@ -1,0 +1,33 @@
+<div class="col-md-6 col-sm-6 col-xs-3 text-right">
+	{% if 'username' not in session %}
+	<div class="row profile-pic">
+		<div class="col-xs-8">
+		</div>			
+		<div class="col-xs-4 text-center">
+			<img src="static/profile.png">
+		</div>
+	</div>
+	<div class="row profile-status">
+		<div class="col-xs-8">
+		</div>			
+		<div class="col-xs-4 text-center">
+			<a href="{{url_for('showLogin')}}" >Login</a>
+		</div>		
+	</div>
+	{% else %}
+	<div class="row profile-pic">
+		<div class="col-sm-8">
+		</div>			
+		<div class="col-sm-4 text-center">
+			<img src="{{session['picture']}}">
+		</div>
+	</div>
+	<div class="row profile-status">		
+		<div class="col-sm-8">
+		</div>			
+		<div class="col-sm-4 text-center">
+			<a href="{{url_for('disconnect')}}">Logout</a>
+		</div>
+	</div>
+	{% endif %}
+</div>
