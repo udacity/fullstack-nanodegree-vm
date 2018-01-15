@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="/static/scripts.js"></script>
+  <script>
+    var signInCallback = itemCatalog.getSignInCallback('{{STATE}}');
+  </script>
+  <script src="//apis.google.com/js/platform.js?onload=start"> </script>
+</head>
+<body>  
+  <!-- GOOGLE PLUS SIGN IN BUTTON-->
+  <div id="signInButton">
+    <span class="g-signin"
+      data-scope="openid email"
+      data-clientid="649982600612-t5jmgu09badhkto16glsuogv3bik1ehp.apps.googleusercontent.com"
+      data-redirecturi="postmessage"
+      data-accesstype="offline"
+      data-cookiepolicy="single_host_origin"
+      data-callback="signInCallback"
+      data-approvalprompt="force">
+    </span>
+  </div>
+  <div id="result"></div>
+  <!--END GOOGLE PLUS SIGN IN BUTTON -->
+</body>
+</html>

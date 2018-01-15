@@ -1,0 +1,8 @@
+<li>
+    <a href="{{url_for('item', item_id=item.id)}}">
+        {{ item.name }}
+    </a>
+    <a href="{{url_for('category', category_id=item.category.id)}}">
+        <span class="item-list-category"> ({{ item.category.name }})</span>
+    </a>
+</li>

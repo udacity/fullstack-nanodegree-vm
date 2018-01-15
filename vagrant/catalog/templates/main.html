@@ -1,0 +1,19 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+  {% include 'category-list.html' %}
+  <div class="col-sm-6">
+    <h2 class="h3">Recently Added Items</h2>
+      {% if is_logged_in %}
+        <a href="/item/new">
+          <button class="btn btn-sm btn-primary add-item-button">Add an Item</button>
+        </a>
+      {% endif %}
+      <ul class="item-list">
+        {% for item in items %}
+          {% include 'item-list-item.html' %}
+        {% endfor %}
+      </ul>
+  </div>
+</div>
+{% endblock %}

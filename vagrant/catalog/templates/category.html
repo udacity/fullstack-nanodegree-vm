@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="row">
+  {% include 'category-list.html' %}
+  <div class="col-sm-6">
+    <h2 class="h3">
+      {{category.name}} 
+      (
+        {{category.items|length}} 
+        {% if category.items|length == 1 %}
+          item
+        {% else %}
+          items
+        {% endif %}
+      )</h2>
+      {% if is_logged_in %}
+        <a href="{{url_for('create_item', category_id=category.id)}}">
+          <button class="btn btn-sm btn-primary add-item-button">Add an Item to {{category.name}}</button>
+        </a>
+      {% endif %}
+      <ul class="items-list">
+        {% for item in category.items %}
+          {% include 'item-list-item.html' %}
+        {% endfor %}
+      </ul>
+  </div>
+</div>
+{% endblock %}

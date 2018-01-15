@@ -1,0 +1,12 @@
+{% extends "layout.html" %}
+{% block content %}
+<form method="POST" action="/item/new" class="create-item" id="new-form">
+  {% include 'item-form.html' %}
+    <div class="form-group">
+      <button class="btn btn-primary" type="submit">Create Item</button>
+    </div>
+</form>
+<script type="text/javascript">
+  itemCatalog.setupItemForm('new-form', 'POST',);
+</script>
+{% endblock %}

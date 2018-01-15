@@ -1,0 +1,70 @@
+
+/* General Layout */
+
+.navbar-inner,
+.main-content {
+  margin: 0 auto;
+  max-width: 960px;
+}
+
+@media screen and (min-width: 768px) {
+  .navbar {
+    margin: 0 15px;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+  }
+}
+
+.login-button {
+  float: right;
+  margin-top:7px;
+}
+
+.logged-in-name {
+  float:right;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.logged-in-image{ 
+  margin-right: 5px;
+}
+
+.main-content {
+  padding: 0 15px;
+}
+
+/* Main Page */
+
+.item-list-category {
+  color: #999999; /* copied from flatly */
+}
+
+.add-item-button {
+  margin-bottom: 10px;
+}
+
+/* Item page */
+.item-name-headline {
+  margin-bottom: 20px;
+}
+
+.item-description-headline {
+  margin-bottom: 5px;
+}
+
+.item-description {
+  white-space: pre-wrap;
+  margin-bottom: 20px;
+}
+
+/* Create Item */
+
+.form-group {
+  margin-top: 20px;
+}
+
+/* specific selector to override bootstrap */
+textarea.create-item-description {
+  height: 200px;
+}
