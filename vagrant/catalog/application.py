@@ -1,4 +1,7 @@
-import random, string, json, httplib2
+import random
+import string
+import json
+import httplib2
 from flask import Flask, render_template, request, redirect, jsonify, make_response, flash
 from db import Category, Item, User, DBSession
 from sqlalchemy import desc
@@ -12,28 +15,35 @@ session = DBSession()
 CLIENT_ID = json.loads(
     open('client_secrets.json', 'r').read()
 )['web']['client_id']
-APPLICATION_NAME = "Restaurant Menu Application"
+
 
 def get_all_categories():
     return session.query(Category).order_by(Category.name).all()
 
+
 def get_recent_items():
     return session.query(Item).order_by(desc(Item.created_at)).all()
+
 
 def get_category_by_id(id):
     return session.query(Category).filter(Category.id == id).first()
 
+
 def get_item_by_id(id):
     return session.query(Item).filter(Item.id == id).first()
+
 
 def get_user_by_email(email):
     return session.query(User).filter(User.email == email).first()
 
+
 def is_logged_in():
     return login_session.get('id') is not None
 
+
 def is_viewer_owner(item):
     return login_session.get('id') is item.user_id
+
 
 def create_user(login_session):
     new_item = User(
@@ -55,6 +65,7 @@ def main():
         is_logged_in=is_logged_in(),
         logged_in_user=login_session
     )
+
 
 @app.route('/catalog.json')
 def catalog_json():
@@ -78,37 +89,41 @@ def catalog_json():
     return jsonify(data=data)
 
 # TODO - cateogry and item pages should perhaps takes slugs instead of ids at some point
+
+
 @app.route('/category/<int:category_id>')
 def category(category_id):
     return render_template(
-        'category.html', 
-        categories=get_all_categories(), 
-        category=get_category_by_id(category_id), 
+        'category.html',
+        categories=get_all_categories(),
+        category=get_category_by_id(category_id),
         is_logged_in=is_logged_in(),
         logged_in_user=login_session
     )
+
 
 @app.route('/item/<int:item_id>')
 def item(item_id):
     item = get_item_by_id(item_id)
     return render_template(
-        'item.html', 
-        item=item, 
+        'item.html',
+        item=item,
         viewer_is_owner=is_viewer_owner(item),
         is_logged_in=is_logged_in(),
         logged_in_user=login_session
     )
 
+
 @app.route('/item/new', methods=['GET', 'POST'])
 @app.route('/item/new/<int:category_id>', methods=['GET', 'POST'])
-def create_item(category_id):
+def create_item(category_id=0):
     if not is_logged_in():
         return 'Unauthorized Action'
-    
+
     if request.method == 'GET':
         return render_template(
-            'new-item.html', 
-            categories=get_all_categories(), 
+            'new-item.html',
+            categories=get_all_categories(),
             is_logged_in=is_logged_in(),
             logged_in_user=login_session,
             category_id=category_id
@@ -119,9 +134,9 @@ def create_item(category_id):
         category_id = request.form['category']
 
         new_item = Item(
-            name=name, 
-            description=description, 
-            category_id=category_id, 
+            name=name,
+            description=description,
+            category_id=category_id,
             user_id=login_session.get('id')
         )
         session.add(new_item)
@@ -129,20 +144,21 @@ def create_item(category_id):
 
         return redirect('/', code=303)
 
+
 @app.route('/item/edit/<int:item_id>', methods=['GET', 'PUT'])
 def edit_item(item_id):
     item = get_item_by_id(item_id)
-    viewer_is_owner=is_viewer_owner(item)
+    viewer_is_owner = is_viewer_owner(item)
 
     if not viewer_is_owner:
         return 'Unauthorized Action'
 
     if request.method == 'GET':
         return render_template(
-            'edit-item.html', 
-            categories=get_all_categories(), 
+            'edit-item.html',
+            categories=get_all_categories(),
             item=item,
-            is_logged_in=is_logged_in(), 
+            is_logged_in=is_logged_in(),
             viewer_is_owner=viewer_is_owner,
             logged_in_user=login_session
         )
@@ -160,29 +176,31 @@ def edit_item(item_id):
 
         return redirect('/', code=303)
 
+
 @app.route('/item/delete/<int:item_id>', methods=['DELETE'])
 def delete_item(item_id):
     item = get_item_by_id(item_id)
-    viewer_is_owner=is_viewer_owner(item)
+    viewer_is_owner = is_viewer_owner(item)
 
     if not viewer_is_owner:
         return 'Unauthorized Action'
 
     session.delete(item)
     session.commit()
-    
+
     return redirect('/', code=303)
+
 
 @app.route('/login')
 def showLogin():
     state = ''.join(random.choice(string.ascii_uppercase + string.digits)
                     for x in xrange(32))
     login_session['state'] = state
-    
+
     # return "The current session state is %s" % login_session['state']
     return render_template(
-        'login.html', 
-        STATE=state, 
+        'login.html',
+        STATE=state,
         user_id=login_session.get('id')
     )
 
@@ -284,17 +302,19 @@ def gconnect():
     print "done!"
     return output
 
+
 @app.route('/gdisconnect')
 def gdisconnect():
     print login_session
     access_token = login_session.get('access_token')
     print 'In gdisconnect access token is %s', access_token
-    print 'User name is: ' 
+    print 'User name is: '
     print login_session['username']
     if access_token is None:
-    	response = make_response(json.dumps('Current user not connected.'), 401)
-    	response.headers['Content-Type'] = 'application/json'
-    	return response
+        response = make_response(json.dumps(
+            'Current user not connected.'), 401)
+        response.headers['Content-Type'] = 'application/json'
+        return response
     url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
@@ -303,19 +323,20 @@ def gdisconnect():
     if result['status'] == '200':
         del login_session['access_token']
         del login_session['gplus_id']
-    	del login_session['username']
-    	del login_session['email']
-    	del login_session['picture']
+        del login_session['username']
+        del login_session['email']
+        del login_session['picture']
         del login_session['id']
-        
+
         return redirect('/', code=303)
     else:
-    	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
-    	response.headers['Content-Type'] = 'application/json'
+        response = make_response(json.dumps(
+            'Failed to revoke token for given user.', 400))
+        response.headers['Content-Type'] = 'application/json'
+
 
 if __name__ == '__main__':
     # @TODO change secret key
     app.secret_key = 'super secret key'
     # @TODO - remove debug mode
     app.run(host='0.0.0.0', port=8000, debug=True)
-
