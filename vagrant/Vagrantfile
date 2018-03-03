@@ -3,7 +3,7 @@
 
 Vagrant.configure("2") do |config|
   Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
-  config.vm.box = "bento/ubuntu-16.04-i386"
+  config.vm.box = "bento/ubuntu-16.04"
   config.vm.box_version = "= 2.3.5"
   config.vm.network "forwarded_port", guest: 8000, host: 8000, host_ip: "127.0.0.1"
   config.vm.network "forwarded_port", guest: 8080, host: 8080, host_ip: "127.0.0.1"
