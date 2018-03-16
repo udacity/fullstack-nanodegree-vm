@@ -1,4 +1,5 @@
 fullstack-nanodegree-vm
 =============
 
-Common code for the Relational Databases and Full Stack Fundamentals courses
+# Full-Stack
+## projects included in udacity's full stack developement course
