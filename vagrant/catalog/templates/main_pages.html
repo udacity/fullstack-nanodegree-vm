@@ -1,0 +1,7 @@
+{% extends "layouts.html" %}
+{% block content %}
+<h1>Online Catalog</h1>
+{% for i in cat_name %}
+<h2><a href="{{ url_for('main_page1',ids=i.id) }}">{{i.name}}</a></h2>
+{% endfor %}
+{% endblock %}

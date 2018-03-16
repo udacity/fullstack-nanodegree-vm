@@ -1,0 +1,18 @@
+{% extends "layouts.html" %}
+{% block content %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<h3>{{ messages }}<h3>
+{% endif %}
+{% endwith %}
+<h1>Editing existing category</h1>
+<br>
+<form action="{{ url_for('edit_item1',ids=ids,id2=id2)}}" method="POST">
+Title:
+<input type=text name=names id=name placeholder="{{it_nme}}"><br><br>
+
+Description:
+<textarea rows="4" cols="60" name=description id=description placeholder="{{it_des}}"></textarea><br><br>
+<input type=submit value=edit><br>
+</form>
+{% endblock %}
