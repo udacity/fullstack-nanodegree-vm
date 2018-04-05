@@ -2,7 +2,6 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  Vagrant::DEFAULT_SERVER_URL.replace('https://vagrantcloud.com')
   config.vm.box = "bento/ubuntu-16.04"
   config.vm.box_version = "= 2.3.5"
   config.vm.synced_folder ".", "/vagrant"
