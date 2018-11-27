@@ -2,31 +2,29 @@
     <body>
         <h1>{{restaurant.name}}</h1>
 
-            {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            <ul>
-            {% for message in messages %}
-                <li> <strong> {{ message }} </strong></li>
+        <form action="{{url_for('showMenuItems', restaurant_id=restaurant.id )}}" method = 'GET'>
+
+            <a href='{{url_for('newMenuItem', restaurant_id = restaurant.id) }}'>New Menu Item</a></br>
+
+            {% for i in items %}
+
+                <div>
+
+                    <p>{{i.name}}</br>{{i.description}}</br>{{i.price}}</br>{{i.course}}</br></br>
+                        <a href='{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}'>Edit</a></br>
+                        <a href='{{url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}'>Delete</a>
+                    </p>
+                    </br>
+
+                </div>
+
             {% endfor %}
-            </ul>
-        {% endif %}
-            {% endwith %}
 
-        <a href='{{url_for('newMenuItem', restaurant_id = restaurant.id) }}'>New Menu Item</a></br>
+            {% if items == "" %}
+                <p>There are no menu items to show</p>
+            {% endif %}
 
-        {% for i in items %}
-
-        <div>
-
-        <p>{{i.name}}</br>{{i.description}}</br>{{i.price}}</br>
-            <a href='{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}'>Edit</a></br>
-            <a href='{{url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}'>Delete</a>
-        </p>
-    </br>
-
-        </div>
-
-    {% endfor %}
-
+            <a href='{{url_for('showRestaurants') }}'>Restaurant List</a>
+        </form>
     </body>
 </html>
