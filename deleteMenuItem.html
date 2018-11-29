@@ -5,7 +5,7 @@
         <h1>Delete Menu Item for {{restaurant.name}}</h1>
         <h2>Are you sure you want to delete {{item.name}}?</h2>
 
-        <form action="#" method = 'post'></form>
+        <form action="{{url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id=item.id )}}" method = 'POST'>
 
             <input type='submit' value='Delete'>
 
