@@ -44,8 +44,8 @@ Daily access by status
 ```news=> create view views_by_status as select count(*) as views, time::date as day, status from complete_log group by day,status order by day desc;```
 
 
-##How to run the software
+## How to run the software
 
-From the folder logs_analysis, run reports.py
+**From the folder logs_analysis, run reports.py**  
 
 ```vagrant@vagrant:/vagrant/log_analysis$ ./reports.py```
