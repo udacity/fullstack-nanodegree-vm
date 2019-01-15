@@ -1,7 +1,7 @@
 from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 
 
-class WebServerHandler(BaseHTTPRequestHandler):
+class webServerHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if self.path.endswith("/hello"):
@@ -13,6 +13,17 @@ class WebServerHandler(BaseHTTPRequestHandler):
             self.wfile.write(message)
             print message
             return
+
+        if self.path.endswith("/hola"):
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            message = ""
+            message += "<html><body> &#161 Hola ! </body></html>"
+            self.wfile.write(message)
+            print message
+            return
+
         else:
             self.send_error(404, 'File Not Found: %s' % self.path)
 
@@ -20,7 +31,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
 def main():
     try:
         port = 8080
-        server = HTTPServer(('', port), WebServerHandler)
+        server = HTTPServer(('', port), webServerHandler)
         print "Web Server running on port %s" % port
         server.serve_forever()
     except KeyboardInterrupt:
