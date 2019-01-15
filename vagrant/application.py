@@ -1,8 +1,8 @@
 from sqlalchemy import create_engine
 from sqlalchemy import sessionmaker
-from sqlalchemy import Base, Restaurant, MenuItem
+from database_setup import Base, Restaurant, MenuItem
 engine = create_engine('sqlite:///restaurantmenu.db')
-base.metadata.bind = create_engine
+Base.metadata.bind = engine
 DBSession = sessionmaker(bind = engine)
 session = DBSession()
 myFirstRestaurant = Restaurant(name = "Pizza Palace")
@@ -14,6 +14,13 @@ session.add(cheesepizza)
 session.commit()
 firstResult = session.query(Restaurant).first()
 firstResult.name
+veggieBurgers = session.query(MenuItem).filter_by(name= 'Veggie Burger')
+for veggieBurger in veggieBurgers:
+    print veggieBurger.id
+    print veggieBurger.price
+    print veggieBurger.restaurant.name
+    print "\n"
+UrbanVeggieBurger = session.query(MenuItem).filter_by(id=8).one()
 UrbanVeggieBurger.price = '$2.99'
 session.add(UrbanVeggieBurger)
 session.commit()
