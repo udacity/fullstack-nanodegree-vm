@@ -89,3 +89,15 @@ def popularAuthors():
                     for name, sum in get_popularauthors())
     html = HTML_WRAP1 % posts
     return html
+
+@app.route('/populararticles', methods=['GET'])
+def popularArticles():
+    '''Main page of the forum.'''
+    posts = "".join(POST1 % (title, num)
+                    for title, num in get_articlelogdatas())
+    html = HTML_WRAP1 % posts
+    return html
+
+if __name__ == '__main__':
+    app.debug = True
+    app.run(host='0.0.0.0', port=8000)
