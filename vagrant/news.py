@@ -37,3 +37,31 @@ POST = '''\
     <em class=time>%s  </em> -----  %s<span>&#37;</span>  <span>error</span> <br>
     </div>
 '''
+
+HTML_WRAP1 = '''\
+<!DOCTYPE html>
+<html>
+  <head>
+    <title> News Error </title>
+    <style>
+      h1, form { text-align: center; }
+      textarea { width: 400px; height: 100px; }
+      div.post { border: 1px solid #999;
+                 padding: 10px 10px;
+                 margin: 10px 20%%; }
+      hr.postbound { width: 50%%; }
+    </style>
+  </head>
+  <body>
+    <h1>Number of Views</h1>
+    <!-- post content will go here -->
+%s
+  </body>
+</html>
+'''
+
+POST1 = '''\
+    <div class=post>
+    <em class=time>%s  </em> -----  %s  <span>views</span> <br>
+    </div>
+'''
