@@ -2,15 +2,6 @@
 import psycopg2
 import bleach
 
-def get_firstThree():
-    """Return three popular articles from the 'database', most recent first."""
-    conn = psycopg2.connect('dbname=news')
-    cusor = conn.cursor()
-    cusor.execute(
-        "select method, status from log")
-    result = cusor.fetchall()
-    conn.close()
-    return result
 
 def get_popularauthors():
     """Return three popular authors of all time from the 'database', most recent first."""
@@ -43,7 +34,7 @@ def get_allpercenterror():
     conn.close()
     return result
 
-def get_articlelogdatas():
+def get_firstthree():
     """Return all articles from the 'database', most recent first."""
     conn = psycopg2.connect('dbname=news')
     cusor = conn.cursor()

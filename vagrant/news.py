@@ -4,7 +4,7 @@
 
 from flask import Flask, request, redirect, url_for
 
-from newsdb import get_allpercenterror, get_articlelogdatas, get_popularauthors, get_morethantwopercent
+from newsdb import get_allpercenterror, get_popularauthors, get_morethantwopercent, get_firstthree
 
 app = Flask(__name__)
 
@@ -91,12 +91,14 @@ def popularAuthors():
     return html
 
 @app.route('/populararticles', methods=['GET'])
-def popularArticles():
+def firstThree():
     '''Main page of the forum.'''
     posts = "".join(POST1 % (title, num)
-                    for title, num in get_articlelogdatas())
+                    for title, num in get_firstthree())
     html = HTML_WRAP1 % posts
     return html
+
+
 
 if __name__ == '__main__':
     app.debug = True
