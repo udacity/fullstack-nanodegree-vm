@@ -21,3 +21,13 @@ def get_popularauthors():
     result = cusor.fetchall()
     conn.close()
     return result
+
+def get_morethantwopercent():
+    """Return all posts from the 'database', most recent first."""
+    conn = psycopg2.connect('dbname=news')
+    cusor = conn.cursor()
+    cusor.execute(
+        "select date, percenterror from morethantwopercent")
+    result = cusor.fetchall()
+    conn.close()
+    return result
