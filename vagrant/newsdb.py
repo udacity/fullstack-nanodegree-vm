@@ -11,3 +11,13 @@ def get_firstThree():
     result = cusor.fetchall()
     conn.close()
     return result
+
+def get_popularauthors():
+    """Return all posts from the 'database', most recent first."""
+    conn = psycopg2.connect('dbname=news')
+    cusor = conn.cursor()
+    cusor.execute(
+        "select name, sum from popularauthors")
+    result = cusor.fetchall()
+    conn.close()
+    return result
