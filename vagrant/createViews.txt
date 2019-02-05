@@ -1,0 +1,48 @@
+create view percentageerror as 
+select time::timestamp::date as date, status, count(time) as num
+from log
+group by date, status;
+
+create view badreport as select date, status, num as errornum
+from percentageerror 
+where status like '%40%';
+
+create view goodreport as select date, status, num 
+from percentageerror 
+where status like '%200%';
+
+create view allerrorpercentage as select badreport.date as date, badreport.status as status, badreport.errornum as errornum, (badreport.errornum::decimal/goodreport.num)* 100 as percenterror 
+from badreport join goodreport 
+on goodreport.date = badreport.date 
+order by percenterror desc;
+
+create view morethantwopercent as select badreport.date as date, badreport.status as status, badreport.errornum as errornum, (badreport.errornum::decimal/goodreport.num)* 100 as percenterror 
+from badreport join goodreport 
+on goodreport.date = badreport.date 
+order by percenterror desc 
+limit 1;
+
+create view editedarticle as
+select author, id, title, slug 
+from articles;
+
+create view logcounts as 
+select count(*) as num, article
+from (select substring(path, 10) as article from log)
+as article
+group by article
+order by num desc;
+
+create view articlelogdatas as 
+select b.author, b.id, a.num, a.article, b.title
+from editedarticle as b, logcounts as a
+where a.article = b.slug
+order by num desc;
+
+
+create view popularauthors as 
+select a.id, a.name, sum(b.num) 
+from authors as a, articlelogdatas as b 
+where a.id = b.author
+group by a.id;
+
