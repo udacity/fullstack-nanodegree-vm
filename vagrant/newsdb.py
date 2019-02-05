@@ -3,7 +3,7 @@ import psycopg2
 import bleach
 
 def get_firstThree():
-    """Return all posts from the 'database', most recent first."""
+    """Return three popular articles from the 'database', most recent first."""
     conn = psycopg2.connect('dbname=news')
     cusor = conn.cursor()
     cusor.execute(
@@ -13,7 +13,7 @@ def get_firstThree():
     return result
 
 def get_popularauthors():
-    """Return all posts from the 'database', most recent first."""
+    """Return three popular authors of all time from the 'database', most recent first."""
     conn = psycopg2.connect('dbname=news')
     cusor = conn.cursor()
     cusor.execute(
@@ -23,7 +23,7 @@ def get_popularauthors():
     return result
 
 def get_morethantwopercent():
-    """Return all posts from the 'database', most recent first."""
+    """Return highest error from logged date from the 'database', most recent first."""
     conn = psycopg2.connect('dbname=news')
     cusor = conn.cursor()
     cusor.execute(
@@ -34,11 +34,21 @@ def get_morethantwopercent():
 
 
 def get_allpercenterror():
-    """Return all posts from the 'database', most recent first."""
+    """Return all error logs from the 'database', most recent first."""
     conn = psycopg2.connect('dbname=news')
     cusor = conn.cursor()
     cusor.execute(
         "select date, percenterror from allerrorpercentage")
+    result = cusor.fetchall()
+    conn.close()
+    return result
+
+def get_articlelogdatas():
+    """Return all articles from the 'database', most recent first."""
+    conn = psycopg2.connect('dbname=news')
+    cusor = conn.cursor()
+    cusor.execute(
+        "select title, num from articlelogdatas limit 3")
     result = cusor.fetchall()
     conn.close()
     return result
