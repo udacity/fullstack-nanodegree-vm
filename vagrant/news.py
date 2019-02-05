@@ -65,3 +65,11 @@ POST1 = '''\
     <em class=time>%s  </em> -----  %s  <span>views</span> <br>
     </div>
 '''
+
+@app.route('/allerror', methods=['GET'])
+def main():
+    '''Main page of the forum.'''
+    posts = "".join(POST % (date, percenterror)
+                    for date, percenterror in get_allpercenterror())
+    html = HTML_WRAP % posts
+    return html
