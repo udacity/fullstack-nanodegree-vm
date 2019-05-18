@@ -1,4 +1,4 @@
 .DS_Store
 .idea/
 vagrant/project1/newsdata.sql
-vagrant/project1/.idea/workspace.xml
+vagrant/project1/.idea/

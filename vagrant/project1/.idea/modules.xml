@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/project1.iml" filepath="$PROJECT_DIR$/.idea/project1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../project2/.idea/project2.iml" filepath="$PROJECT_DIR$/../project2/.idea/project2.iml" />
+      <module fileurl="file://$USER_HOME$/GitHub/static-config/.idea/static-config.iml" filepath="$USER_HOME$/GitHub/static-config/.idea/static-config.iml" />
     </modules>
   </component>
 </project>
