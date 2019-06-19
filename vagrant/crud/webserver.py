@@ -20,6 +20,11 @@ class webserverHandler(BaseHTTPRequestHandler):
         self.send_header('Content-type', 'text/html')
         self.end_headers()
 
+    def __redirect(self, url):
+        self.send_response(302)
+        self.send_header('Location', url)
+        self.end_headers()
+
     def do_GET(self):
         try:
             split_path = self.path.split('/')
@@ -62,7 +67,8 @@ class webserverHandler(BaseHTTPRequestHandler):
                     output += '<h2>'+restaurant.name+'</h2>'
                     output += '<h3><a href="/restaurants/'+rid+ \
                               '/edit">Edit</a></h3>'
-                    output += '<h3><a href="#">Delete</a></h3>'
+                    output += '<h3><a href="/restaurants/'+rid+ \
+                              '/delete">Delete</a></h3>'
                     output += '</li>'
                 output += '</ul></body></html>'
                 print(output)
@@ -72,7 +78,7 @@ class webserverHandler(BaseHTTPRequestHandler):
                 self._set_headers()
                 output = '<html><body>'
                 output += '<form method="POST" enctype="multipart/form-data" '
-                output += 'action="/restaurants">'
+                output += 'action="">'
                 output += '<h2>Write a new restaurant name please.</h2>'
                 output += '<input name="restaurant_name" type="text">'
                 output += '<input type="submit" value="Submit">'
@@ -86,11 +92,28 @@ class webserverHandler(BaseHTTPRequestHandler):
                 self._set_headers()
                 output = '<html><body>'
                 output += '<form method="POST" enctype="multipart/form-data" '
-                output += 'action="/restaurants">'
+                output += 'action="">'
                 output += '<h2>Change the restaurant name.</h2>'
-                output += '<input name="id" type="hidden" value="'+rid+'">'
+                output += '<input name="edit_id" type="hidden" value="'+rid+'">'
                 output += '<input name="new_restaurant_name" type="text">'
                 output += '<input type="submit" value="Submit">'
+                output += '</form>'
+                output += '</body></html>'
+                print(output)
+                response = bytes(output, 'UTF-8')
+                self.wfile.write(response)
+            elif split_path[1] == 'restaurants' and split_path[3] == 'delete':
+                rid = split_path[2]
+                session = self.__open_sql_session()
+                restaurant = session.query(Restaurant).get(rid)
+                self._set_headers()
+                output = '<html><body>'
+                output += '<form method="POST" enctype="multipart/form-data" '
+                output += 'action="">'
+                output += '<h2>Do you want to delete '+restaurant.name+ \
+                    ' from the database</h2>'
+                output += '<input name="delete_id" type="hidden" value="'+rid+'">'
+                output += '<input type="submit" value="Yes">'
                 output += '</form>'
                 output += '</body></html>'
                 print(output)
@@ -101,14 +124,13 @@ class webserverHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            self.send_response(301)
-            self.end_headers()
             form = cgi.FieldStorage(
                 fp=self.rfile,
                 headers=self.headers,
                 environ={'REQUEST_METHOD': 'POST'}
             )
             if form.getvalue('message') is not None:
+                self._set_headers()
                 output = ''
                 output += '<html><body>'
                 output += '<h2>Okay,</h2>'
@@ -124,16 +146,25 @@ class webserverHandler(BaseHTTPRequestHandler):
                 response = bytes(output, 'UTF-8')
                 self.wfile.write(response)
             elif form.getvalue('restaurant_name') is not None:
+                self.__redirect('/restaurants')
                 session = self.__open_sql_session()
                 restaurant_object = Restaurant(
                     name=form.getvalue('restaurant_name'))
                 session.add(restaurant_object)
                 session.commit()
             elif form.getvalue('new_restaurant_name') is not None:
-                print(form.getvalue('id'), form.getvalue('new_restaurant_name'))
+                self.__redirect('/restaurants')
                 session = self.__open_sql_session()
-                restaurant = session.query(Restaurant).get(form.getvalue('id'))
+                restaurant = session.query(Restaurant).get(
+                    form.getvalue('edit_id'))
                 restaurant.name = form.getvalue('new_restaurant_name')
+                session.commit()
+            elif form.getvalue('delete_id') is not None:
+                self.__redirect('/restaurants')
+                session = self.__open_sql_session()
+                restaurant = session.query(Restaurant).get(
+                    form.getvalue('delete_id'))
+                session.delete(restaurant)
                 session.commit()
         except Exception as exc:
             print(exc)
