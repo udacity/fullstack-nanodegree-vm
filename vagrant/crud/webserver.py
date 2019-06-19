@@ -6,14 +6,13 @@ import cgi
 import re
 
 
-class webserverHandler(BaseHTTPRequestHandler):
+engine = create_engine('sqlite:///restaurantmenu.db')
+Base.metadata.create_all(engine)
+DBSession = sessionmaker(bind = engine)
+session = DBSession()
 
-    def __open_sql_session(self):        
-        engine = create_engine('sqlite:///restaurantmenu.db')
-        Base.metadata.create_all(engine)
-        DBSession = sessionmaker(bind = engine)
-        session = DBSession()
-        return session
+
+class webserverHandler(BaseHTTPRequestHandler):
     
     def _set_headers(self):
         self.send_response(200)
@@ -59,7 +58,6 @@ class webserverHandler(BaseHTTPRequestHandler):
             elif self.path.endswith('/restaurants'):
                 self._set_headers()                    
                 output = '<html><body><ul>'
-                session = self.__open_sql_session()
                 restaurants_list = session.query(Restaurant).all()
                 for restaurant in restaurants_list:
                     rid = str(restaurant.id)
@@ -104,7 +102,6 @@ class webserverHandler(BaseHTTPRequestHandler):
                 self.wfile.write(response)
             elif split_path[1] == 'restaurants' and split_path[3] == 'delete':
                 rid = split_path[2]
-                session = self.__open_sql_session()
                 restaurant = session.query(Restaurant).get(rid)
                 self._set_headers()
                 output = '<html><body>'
@@ -147,21 +144,18 @@ class webserverHandler(BaseHTTPRequestHandler):
                 self.wfile.write(response)
             elif form.getvalue('restaurant_name') is not None:
                 self.__redirect('/restaurants')
-                session = self.__open_sql_session()
                 restaurant_object = Restaurant(
                     name=form.getvalue('restaurant_name'))
                 session.add(restaurant_object)
                 session.commit()
             elif form.getvalue('new_restaurant_name') is not None:
                 self.__redirect('/restaurants')
-                session = self.__open_sql_session()
                 restaurant = session.query(Restaurant).get(
                     form.getvalue('edit_id'))
                 restaurant.name = form.getvalue('new_restaurant_name')
                 session.commit()
             elif form.getvalue('delete_id') is not None:
                 self.__redirect('/restaurants')
-                session = self.__open_sql_session()
                 restaurant = session.query(Restaurant).get(
                     form.getvalue('delete_id'))
                 session.delete(restaurant)
