@@ -25,21 +25,7 @@ class MenuItem(Base):
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
 
+
 if __name__ == '__main__':
     engine = create_engine('sqlite:///restaurantmenu.db')
     Base.metadata.create_all(engine)
-    DBSession = sessionmaker(bind = engine)
-    session = DBSession()
-    restaurant_list = [
-        'Pizza Palace',
-        'Pizza Hut',
-        'Clover',
-        'The Pajer Don Pancho',
-        'El costumbrista',
-        'Pizza el Padrino'
-    ]
-    for restaurant in restaurant_list:
-        restaurant_object = Restaurant(name=restaurant)
-        session.add(restaurant_object)
-    session.commit()
-    session.query(Restaurant).all()
