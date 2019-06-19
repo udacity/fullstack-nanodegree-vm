@@ -25,7 +25,7 @@ class MenuItem(Base):
     restaurant_id = Column(Integer, ForeignKey('restaurant.id'))
     restaurant = relationship(Restaurant)
 
-if __name__ == '__init__':
+if __name__ == '__main__':
     engine = create_engine('sqlite:///restaurantmenu.db')
     Base.metadata.create_all(engine)
     DBSession = sessionmaker(bind = engine)
