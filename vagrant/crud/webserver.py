@@ -27,7 +27,6 @@ class webserverHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             split_path = self.path.split('/')
-            print(split_path)
             if self.path.endswith('/hello'):
                 self._set_headers()
                 output = '<html><body>Hello!'
@@ -58,6 +57,9 @@ class webserverHandler(BaseHTTPRequestHandler):
             elif self.path.endswith('/restaurants'):
                 self._set_headers()                    
                 output = '<html><body><ul>'
+                output += '<h1>Restaurants list</h1>'
+                output += '<h2><a href="/restaurants/new">'\
+                    'Create new restaurant</a></h2>'
                 restaurants_list = session.query(Restaurant).all()
                 for restaurant in restaurants_list:
                     rid = str(restaurant.id)
@@ -121,12 +123,13 @@ class webserverHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
+            split_path = self.path.split('/')
             form = cgi.FieldStorage(
                 fp=self.rfile,
                 headers=self.headers,
                 environ={'REQUEST_METHOD': 'POST'}
-            )
-            if form.getvalue('message') is not None:
+            ) 
+            if self.path.endswith('/hello'):
                 self._set_headers()
                 output = ''
                 output += '<html><body>'
@@ -142,19 +145,19 @@ class webserverHandler(BaseHTTPRequestHandler):
                 print(output)
                 response = bytes(output, 'UTF-8')
                 self.wfile.write(response)
-            elif form.getvalue('restaurant_name') is not None:
+            if self.path.endswith('/restaurants/new'):
                 self.__redirect('/restaurants')
                 restaurant_object = Restaurant(
                     name=form.getvalue('restaurant_name'))
                 session.add(restaurant_object)
                 session.commit()
-            elif form.getvalue('new_restaurant_name') is not None:
+            elif split_path[1] == 'restaurants' and split_path[3] == 'edit':
                 self.__redirect('/restaurants')
                 restaurant = session.query(Restaurant).get(
                     form.getvalue('edit_id'))
                 restaurant.name = form.getvalue('new_restaurant_name')
                 session.commit()
-            elif form.getvalue('delete_id') is not None:
+            elif split_path[1] == 'restaurants' and split_path[3] == 'delete':
                 self.__redirect('/restaurants')
                 restaurant = session.query(Restaurant).get(
                     form.getvalue('delete_id'))
