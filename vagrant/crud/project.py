@@ -42,17 +42,17 @@ def newMenuItem(restaurant_id):
     methods = ['GET', 'POST'])
 def editMenuItem(restaurant_id, menu_id):
     session = create_sql_session()
-    editedItem = session.query(MenuItem).filter_by(id = menu_id).one()
+    edited_item = session.query(MenuItem).filter_by(id = menu_id).one()
     if request.method == 'POST':
         if request.form['name']:
-            editedItem.name = request.form['name']
+            edited_item.name = request.form['name']
         if request.form['description']:
-            editedItem.description = request.form['description']
+            edited_item.description = request.form['description']
         if request.form['price']:
-            editedItem.price = request.form['price']
+            edited_item.price = request.form['price']
         if request.form['course']:
-            editedItem.course = request.form['course']
-        session.add(editedItem)
+            edited_item.course = request.form['course']
+        session.add(edited_item)
         session.commit()
         return redirect(
             url_for('restaurantMenu',restaurant_id=restaurant_id))
@@ -61,14 +61,28 @@ def editMenuItem(restaurant_id, menu_id):
             'editmenuitem.html',
             restaurant_id=restaurant_id,
             menu_id = menu_id,
-            item = editedItem
+            item = edited_item
         )
 
 
 
-@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete')
+@app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/delete',
+    methods = ['GET', 'POST'])
 def deleteMenuItem(restaurant_id, menu_id):
-    return "page to delete a menu item. Task 3 complete!"
+    session = create_sql_session()
+    deleted_item = session.query(MenuItem).get(menu_id)
+    if request.method == 'POST':
+        session.delete(deleted_item)
+        session.commit()
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+    else:
+        return render_template(
+            'deletemenuitem.html',
+            restaurant_id=restaurant_id,
+            menu_id = menu_id,
+            item = deleted_item
+        )
+
 
 if __name__ == '__main__':
     app.debug = True
