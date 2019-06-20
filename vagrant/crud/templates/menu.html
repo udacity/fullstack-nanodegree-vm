@@ -3,6 +3,7 @@
 <html>
     <head><meta http-equiv="Content-Type" content="text/html; charset=windows-1252"></head><body>
     <h1>{{restaurant.name}}</h1>
+    <p><a href ="{{ url_for('newMenuItem', restaurant_id=restaurant.id) }}">Create new item</a></p>
     {% for i in items %}  
     <div>      
         <p>{{i.name}}</p>
