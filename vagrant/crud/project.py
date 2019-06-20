@@ -28,6 +28,7 @@ def restaurantMenu(restaurant_id):
 @app.route('/restaurant/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
     if request.method == 'POST':
+        session = create_sql_session()
         newItem = MenuItem(
             name=request.form['name'], restaurant_id=restaurant_id)
         session.add(newItem)
