@@ -1,8 +1,10 @@
-from flask import Flask, render_template
-app = Flask(__name__)
+from flask import Flask, render_template, request, redirect, url_for
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from database_setup import Base, Restaurant, MenuItem
+
+app = Flask(__name__)
+
 
 def create_sql_session():
     engine = create_engine('sqlite:///restaurantmenu.db')
@@ -23,9 +25,16 @@ def restaurantMenu(restaurant_id):
         items=items
     )
 
-@app.route('/restaurants/<int:restaurant_id>/new')
+@app.route('/restaurant/<int:restaurant_id>/new/', methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
-    return "page to create a new menu item. Task 1 complete!"
+    if request.method == 'POST':
+        newItem = MenuItem(
+            name=request.form['name'], restaurant_id=restaurant_id)
+        session.add(newItem)
+        session.commit()
+        return redirect(url_for('restaurantMenu', restaurant_id=restaurant_id))
+    else:
+        return render_template('newmenuitem.html', restaurant_id=restaurant_id)
 
 
 @app.route('/restaurants/<int:restaurant_id>/<int:menu_id>/edit')
