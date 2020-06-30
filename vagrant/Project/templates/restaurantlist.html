@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='index.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.13.1/css/all.css"
+            integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q"
+            crossorigin="anonymous"
+        />
+        <title>Restaurants</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="{{ url_for('createRestaurant') }}">
+                        Create A New Restaurant
+                    </a>
+                </li>
+            </ul>
+        </nav>
+
+        <br />
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <ul>
+            {% for msg in messages %}
+            <li>
+                <strong>{{ msg }}</strong>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+        <br />
+
+        <div class="container">
+            {% for r in restaurants %}
+            <div>
+                <h1>
+                    <a href="{{ url_for('showMenu', restaurant_id=r.id) }}">
+                        {{ r.name }}
+                    </a>
+                </h1>
+                <span class="restaurantEdit">
+                    <a
+                        href="{{ url_for('editRestaurant', restaurant_id=r.id) }}"
+                    >
+                        <i class="far fa-edit"></i>
+                    </a>
+                </span>
+                <span class="restaurantDelete">
+                    <a
+                        href="{{ url_for('deleteRestaurant', restaurant_id=r.id) }}"
+                    >
+                        <i class="fas fa-trash-alt"></i>
+                    </a>
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </body>
+</html>

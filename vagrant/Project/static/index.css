@@ -1,0 +1,10 @@
+* {
+    margin: 0;
+    background-color: #ebe0a4;
+}
+
+.container {
+    width: 85%;
+    margin: auto;
+    text-align: center;
+}

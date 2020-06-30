@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='index.css') }}"
+        />
+        <title>Create a New Restaurant</title>
+    </head>
+    <body>
+        <div class="container">
+            <form
+                action="{{ url_for('createRestaurant') }}"
+                method="post"
+                id="menuForm"
+            >
+                <label for="menuFormName">Name:</label>
+                <input type="text" name="name" id="menuFormName" /><br /><br />
+                <input type="submit" value="Submit" />
+            </form>
+            <br />
+            <a href="{{ url_for('showRestaurants') }}">Cancel</a>
+        </div>
+    </body>
+</html>

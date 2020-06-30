@@ -1,0 +1,66 @@
+<html>
+    <head>
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='index.css') }}"
+        />
+        <link
+            rel="stylesheet"
+            href="https://use.fontawesome.com/releases/v5.13.1/css/all.css"
+            integrity="sha384-xxzQGERXS00kBmZW/6qxqJPyxW3UR0BPsL4c8ILaIWXva5kFi7TxkIIaMiKtqV1Q"
+            crossorigin="anonymous"
+        />
+        <title>{{ restaurant.name }}'s Menu Page</title>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('showRestaurants') }}">Back</a></li>
+                <li>
+                    <a
+                        href="{{ url_for('createMenuItem', restaurant_id=restaurant.id)  }}"
+                    >
+                        Create New Item
+                    </a>
+                </li>
+            </ul>
+        </nav>
+        <br />
+
+        {% with messages = get_flashed_messages() %} {% if messages %}
+        <ul>
+            {% for msg in messages %}
+            <li>
+                <strong>{{ msg }}</strong>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %} {% endwith %}
+        <br />
+
+        <div class="container">
+            <h1>{{ restaurant.name }}</h1>
+            <br />
+
+            {% for i in items %}
+            <div>
+                <h3>{{ i.name }}</h3>
+                <p>{{ i.description }}</p>
+                <p>{{ i.price }}</p>
+                <a
+                    href="{{ url_for('editMenuItem', restaurant_id=restaurant.id, menu_id=i.id) }}"
+                >
+                    <i class="far fa-edit"></i>
+                </a>
+                <a
+                    href="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, menu_id=i.id) }}"
+                >
+                    <i class="fas fa-trash-alt"></i>
+                </a>
+            </div>
+            <br />
+
+            {% endfor %}
+        </div>
+    </body>
+</html>

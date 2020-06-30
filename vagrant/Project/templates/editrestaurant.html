@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link
+            rel="stylesheet"
+            href="{{ url_for('static', filename='index.css') }}"
+        />
+        <title>Editing {{ restaurant.name }}</title>
+    </head>
+    <body>
+        <h1>What will {{ restaurant.name }} become?</h1>
+        <form
+            action="{{ url_for('editRestaurant', restaurant_id=restaurant.id) }}"
+            method="post"
+            id="restaurantEditForm"
+        >
+            <label for="restaurantEditFormName">Name:</label>
+            <input
+                type="text"
+                name="name"
+                id="restaurantEditFormName"
+                placeholder="{{ restaurant.name }}"
+            /><br /><br />
+            <input type="submit" value="Submit" />
+        </form>
+        <br />
+        <a href="{{ url_for('showRestaurants') }}">Cancel</a>
+    </body>
+</html>
