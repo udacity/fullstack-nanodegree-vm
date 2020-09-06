@@ -1,4 +1,7 @@
 <html>
+    <head>
+        <link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css')}}">
+    </head>
 
     <body>
 
@@ -22,7 +25,7 @@
         <a href='{{url_for('editMenuItem', restaurant_id = restaurant.id, menu_id = i.id) }}'>Edit</a>
         </br>
         <a href = '{{url_for('deleteMenuItem', restaurant_id = restaurant.id, menu_id = i.id ) }}'>Delete</a>
-        
+
         </div>
 
     {% endfor %}
