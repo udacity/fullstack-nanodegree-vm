@@ -1,0 +1,25 @@
+<html>
+    <head>
+		<title>New Restaurant</title>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+		<link rel=stylesheet type=text/css href="{{ url_for('static', filename='styles.css')}}">
+	</head>
+    <body>
+        <h1>
+            New Restaurant
+        </h1>
+
+        <form
+            action="{{ url_for('newRestaurant')}}"
+            method = 'post'>
+        <p>Name:</p>
+            <input type="text" size="30" name="name">
+
+            <input type="submit" value="Create">
+        </form>
+        
+    </body>
+</html>
