@@ -1,1 +1,9 @@
-vagrant/restaurantmenu.db
+vagrant/.db
+vagrant/static/images/.jpg
+vagrant/static/images/banner.mp4
+vagrant/static/images/banner.jpg
+vagrant/static/images/bg.jpg
+vagrant/static/images/cta01.jpg
+vagrant/static/images/pic01.jpg
+vagrant/static/images/pic02.jpg
+vagrant/static/images/pic03.jpg
