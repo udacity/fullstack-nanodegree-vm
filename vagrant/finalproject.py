@@ -67,8 +67,13 @@ def editRestaurant(restaurant_id):
 @app.route('/restaurants/<int:restaurant_id>/delete',
            methods=['GET', 'POST'])
 def deleteRestaurant(restaurant_id):
-    restaurant = session.query(Restaurant).filter_by(id=restaurant_id).one()
-    return 'This page will be for deleting restaurant %s' % restaurant_id
+    restaurantToDelete = session.query(MenuItem).filter_by(id=restaurant_id).one()
+    if request.method == 'POST':
+        session.delete(restaurantToDelete)
+        session.commit()
+        return redirect(url_for('showRestaurant'))
+    else:
+        return render_template('deleteRestaurant.html', restaurant=restaurantToDelete)
 
 # MENUS ------------------------------------------------------------------------
 # Restaurant Menu Page
