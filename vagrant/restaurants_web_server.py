@@ -9,6 +9,7 @@ from urlparse import urlparse
 import re
 
 CONTENT_TYPE_TEXT_HTML = 'text/html'
+ERROR_MISSIN_URL_PARAM = 'missing parameter in URL.'
 
 engine = create_engine('sqlite:///restaurantmenu.db')
 Base.metadata.bind = engine
@@ -56,34 +57,14 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 return
 
             if self.path.endswith('/edit'):
-                module = re.search('.*/([0-9]+)/edit', self.path)
-                if module:
-                    rest_id = module.group(1)
-                else:
-                    raise AttributeError('missing parameter in URL.')
-                edit_restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
-
-                if edit_restaurant != []:
-                    self.send_response(200)
-                    self.send_header('Content-type', CONTENT_TYPE_TEXT_HTML)
-                    self.end_headers()
-
-                    output = ""
-                    output += "<html><body>Edit Restaurant"
-                    output += "  <form method='POST' enctype='multipart/form-data' action='/restaurants/{}/edit'>".format(edit_restaurant.id)
-                    output += "    <label>Name: <input name='editedRestaurantName' type='text' placeholder='{}'></label>".format(edit_restaurant.name) 
-                    output += "    <input type='submit' value='Submit'>"
-                    output += "  </form></body></html>"
-
-                    self.wfile.write(output)
-                return
+                return self.editRestaurant()
 
             if self.path.endswith('/delete'):
                 module = re.search('.*/([0-9]+)/delete', self.path)
                 if module:
                     rest_id = module.group(1)
                 else:
-                    raise AttributeError('missing parameter in URL.')
+                    raise AttributeError(ERROR_MISSIN_URL_PARAM)
                 delete_restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
 
                 if delete_restaurant != []:
@@ -103,7 +84,28 @@ class WebServerHandler(BaseHTTPRequestHandler):
 
         except Exception:
             print("system error: {}".format(sys.exc_info()))
-            # self.send_header(404, 'File Not Found {}'.format(self.path))
+
+    def editRestaurant(self):
+        module = re.search('.*/([0-9]+)/edit', self.path)
+        if module:
+            rest_id = module.group(1)
+        else:
+            raise AttributeError('missing parameter in URL.')
+        edit_restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
+
+        if edit_restaurant != []:
+            self.send_response(200)
+            self.send_header('Content-type', CONTENT_TYPE_TEXT_HTML)
+            self.end_headers()
+
+            output = ""
+            output += "<html><body>Edit Restaurant"
+            output += "  <form method='POST' enctype='multipart/form-data' action='/restaurants/{}/edit'>".format(edit_restaurant.id)
+            output += "    <label>Name: <input name='editedRestaurantName' type='text' placeholder='{}'></label>".format(edit_restaurant.name) 
+            output += "    <input type='submit' value='Submit'>"
+            output += "  </form> </body></html>"
+
+            self.wfile.write(output)
 
     def do_POST(self):
         try:
@@ -127,7 +129,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 if module:
                     rest_id = module.group(1)
                 else:
-                    raise AttributeError('missing parameter in URL.')
+                    raise AttributeError(ERROR_MISSIN_URL_PARAM)
 
                 print("Editing restaurant (ID:{})".format(rest_id))
 
@@ -151,7 +153,7 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 if module:
                     rest_id = module.group(1)
                 else:
-                    raise AttributeError('missing parameter in URL.')
+                    raise AttributeError(ERROR_MISSIN_URL_PARAM)
 
                 delete_restaurant = session.query(Restaurant).filter_by(id=rest_id).one() 
                 session.delete(delete_restaurant)
