@@ -5,7 +5,7 @@ FORM = "<form method='POST' enctype='multipart/form-data' action='/hello'>" + \
     "<h2>What would you like to say?</h2><input name='message' type='text'>" + \
     "<input type='submit' Value='Submit'></form>"
 
-class webserverHandler(BaseHTTPRequestHandler):
+class WebServerHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             if self.path.endswith('/hello'):
@@ -61,7 +61,7 @@ class webserverHandler(BaseHTTPRequestHandler):
 def main():
     try:
         port = 8080
-        server = HTTPServer(('', port), webserverHandler)
+        server = HTTPServer(('', port), WebServerHandler)
         print('Web server running on port {}'.format(port))
         server.serve_forever()
 
