@@ -79,18 +79,26 @@ class WebServerHandler(BaseHTTPRequestHandler):
                 return
 
             if self.path.endswith('/delete'):
-                self.send_response(200)
-                self.send_header('Content-type', CONTENT_TYPE_TEXT_HTML)
-                self.end_headers()
+                module = re.search('.*/([0-9]+)/delete', self.path)
+                if module:
+                    rest_id = module.group(1)
+                else:
+                    raise AttributeError('missing parameter in URL.')
+                delete_restaurant = session.query(Restaurant).filter_by(id=rest_id).one()
 
-                output = ""
-                output += "<html><body>Delete Restaurant"
-        
-                # TODO
+                if delete_restaurant != []:
+                    self.send_response(200)
+                    self.send_header('Content-type', CONTENT_TYPE_TEXT_HTML)
+                    self.end_headers()
 
-                output += "</body></html>"
+                    output = ""
+                    output += "<html><body>Delete Restaurant"
+                    output += "  <form method='POST' enctype='multipart/form-data' action='/restaurants/{}/delete'>".format(delete_restaurant.id)
+                    output += "    <label>Name: {}".format(delete_restaurant.name)
+                    output += "    <input type='submit' value='Delete'></label>"
+                    output += "  </form></body></html>"
 
-                self.wfile.write(output)
+                    self.wfile.write(output)
                 return
 
         except Exception:
@@ -136,6 +144,20 @@ class WebServerHandler(BaseHTTPRequestHandler):
 
                 self.restaurantsRedirect()
 
+                return
+
+            if self.path.endswith('/delete'):
+                module = re.search('.*/([0-9]+)/delete', self.path)
+                if module:
+                    rest_id = module.group(1)
+                else:
+                    raise AttributeError('missing parameter in URL.')
+
+                delete_restaurant = session.query(Restaurant).filter_by(id=rest_id).one() 
+                session.delete(delete_restaurant)
+                session.commit()
+
+                self.restaurantsRedirect()
                 return
             
         except Exception:
