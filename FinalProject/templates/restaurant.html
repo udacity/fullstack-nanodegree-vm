@@ -1,0 +1,16 @@
+<html>
+    <body>
+        <h1>Restaurants</h1>
+
+        <a href='#'>New Item</a>
+
+        {% for item in items %}
+
+        <p>{{item.name}}</p>
+        <a href='#'>Edit Item</a>
+        </br>
+        <a href='#'>Delete Item</a>
+
+        {% endfor %}
+    </body>
+</html>

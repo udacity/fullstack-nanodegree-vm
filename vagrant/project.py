@@ -25,7 +25,6 @@ def menuItemJSON(restaurant_id, menu_id):
     return jsonify(item.serialize)
 
 
-
 # decorator wraps our function inside the app.route function that Flask has already created
 # if either these routes get sent from the browser, tha function that we define gets executed
 # <type:variable_name> is the rule to add variables to a URL

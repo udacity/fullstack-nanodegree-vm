@@ -1,0 +1,19 @@
+<html>
+    <body>
+        <h1>{{restaurant.name}}</h1>
+
+        <a href='#'>New Menu</a>
+
+        {% for item in items %}
+        
+        {% if item.course == 'Appetizer' %}
+
+        {% endif %}
+        <p>{{item.name}}</p>
+        <a href='#'>Edit Menu</a>
+        </br>
+        <a href='#'>Delete Menu</a>
+
+        {% endfor %}
+    </body>
+</html>
